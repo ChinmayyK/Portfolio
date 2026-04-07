@@ -6,3 +6,4 @@ module.exports = {
   outDir: 'public',
   exclude: ['/server-sitemap.xml'], // if applicable later
 };
+
