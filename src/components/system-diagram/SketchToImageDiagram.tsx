@@ -76,3 +76,4 @@ export function SketchToImageDiagram({ compact = false, mode = "normal" }: Sketc
     </SystemDiagram>
   );
 }
+
