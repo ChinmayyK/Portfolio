@@ -75,3 +75,4 @@ export function SectionTransition({ className = "" }: { className?: string }) {
     </div>
   );
 }
+
