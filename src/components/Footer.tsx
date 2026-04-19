@@ -220,3 +220,4 @@ export function Footer() {
     </footer>
   );
 }
+
