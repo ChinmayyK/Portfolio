@@ -140,4 +140,3 @@ export function Zone({ title, caption, tone, children }: ZoneProps) {
     </section>
   );
 }
-
