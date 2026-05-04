@@ -38,12 +38,13 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       return;
     }
 
-    // Removed blur filter to fix transition lag
+    // Premium cinematic slide-up and fade transition
     gsap.to(containerRef.current, {
+      yPercent: -100,
       opacity: 0,
-      scale: 1.1,
-      duration: 0.9,
-      ease: "power3.inOut",
+      scale: 0.95,
+      duration: 1.2,
+      ease: "expo.inOut",
       onComplete: () => {
         setDone(true);
       }

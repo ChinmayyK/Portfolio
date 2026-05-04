@@ -69,7 +69,7 @@ export function Hero() {
   const [scrollY, setScrollY] = useState(0);
   const desktopEffects = useDesktopEffects();
   const scrollVelocity = useScrollVelocity();
-  const blurClass = (typeof window !== 'undefined' && window.innerWidth < 768) ? "" : (scrollVelocity > 900 ? "scroll-blur-lg" : scrollVelocity > 450 ? "scroll-blur-md" : scrollVelocity > 200 ? "scroll-blur-sm" : "scroll-blur-none");
+  const blurClass = scrollVelocity > 900 ? "scroll-blur-lg" : scrollVelocity > 450 ? "scroll-blur-md" : scrollVelocity > 200 ? "scroll-blur-sm" : "scroll-blur-none";
   const [mouseXPos, setMouseXPos] = useState<number | null>(null);
   const [mouseYPos, setMouseYPos] = useState<number | null>(null);
   // Ref to the guarded focus function exposed by HiddenPhotoWidget
@@ -414,12 +414,12 @@ const getCommandOutput = (cmd: string): React.ReactNode => {
           <div><span className="text-[var(--accent)]">"name"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Chinmay Kudalkar"</span><span className="text-[var(--text)]">,</span></div>
           <div><span className="text-[var(--accent)]">"role"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Full-Stack Engineer"</span><span className="text-[var(--text)]">,</span></div>
           <div><span className="text-[var(--accent)]">"focus"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Full-Stack & AI/ML"</span><span className="text-[var(--text)]">,</span></div>
-          <div className="flex flex-wrap gap-x-1 mt-0.5">
+          <div>
             <span className="text-[var(--accent)]">"stack"</span><span className="text-[var(--text)]">: [</span>
-            <span className="text-[var(--teal)] whitespace-nowrap">"TypeScript"</span><span className="text-[var(--text)]">, </span>
-            <span className="text-[var(--teal)] whitespace-nowrap">"Next.js"</span><span className="text-[var(--text)]">, </span>
-            <span className="text-[var(--teal)] whitespace-nowrap">"Node.js"</span><span className="text-[var(--text)]">, </span>
-            <span className="text-[var(--teal)] whitespace-nowrap">"PostgreSQL"</span>
+            <span className="text-[var(--teal)]">"TypeScript"</span><span className="text-[var(--text)]">, </span>
+            <span className="text-[var(--teal)]">"Next.js"</span><span className="text-[var(--text)]">, </span>
+            <span className="text-[var(--teal)]">"Node.js"</span><span className="text-[var(--text)]">, </span>
+            <span className="text-[var(--teal)]">"PostgreSQL"</span>
             <span className="text-[var(--text)]">],</span>
           </div>
           <div><span className="text-[var(--accent)]">"status"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)] animate-pulse">"Visible on request"</span></div>
@@ -605,6 +605,7 @@ function HiddenPhotoWidget({
   const [isInteractive, setIsInteractive] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [history, setHistory] = useState<CommandEntry[]>([
+    { cmd: "sys.boot", output: <div className="text-[var(--success)] opacity-80 mt-1 mb-2 text-[10px] sm:text-xs">System initialized. Secure connection established.</div> },
     { cmd: "whoami", output: getCommandOutput("whoami") }
   ]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -779,7 +780,7 @@ function HiddenPhotoWidget({
                 ? "bg-[var(--accent)]/15 border-[var(--accent)]/40 text-[var(--accent)] shadow-[0_0_20px_rgba(245,158,11,0.15)]"
                 : "bg-[var(--surface-soft)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-accent)] shadow-sm"
             }`}
-            onPointerDown={(e) => {
+            onClick={(e) => {
               e.stopPropagation();
               triggerHaptic("medium");
               setIsHovered(prev => !prev);
@@ -1005,7 +1006,7 @@ function FakeUIContent({
         onWheel={(e) => e.stopPropagation()}
         onTouchMove={(e) => e.stopPropagation()}
         onScroll={(e) => onScroll(e.currentTarget.scrollTop)}
-        className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scrollbar-hide flex flex-col text-[11px] sm:text-sm text-[var(--muted)] leading-[1.4] sm:leading-relaxed relative z-10 whitespace-pre-wrap break-words"
+        className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scrollbar-hide flex flex-col text-[11px] sm:text-sm text-[var(--muted)] leading-[1.4] sm:leading-relaxed relative z-10 whitespace-pre-wrap break-all"
       >
         <div className="flex flex-col">
           {history.map((entry, idx) => (
