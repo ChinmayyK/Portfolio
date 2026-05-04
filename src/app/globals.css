@@ -1,0 +1,1460 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #0c1017;
+  --bg-elevated: rgba(15, 23, 42, 0.72);
+  --bg-strong: rgba(17, 25, 40, 0.92);
+  --text: #f3efe7;
+  --text-rgb: 243, 239, 231;
+  --muted: #b8bec8;
+  --soft: #8f98a8;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --accent: #f59e0b;
+  --accent-soft: #fcd34d;
+  --teal: #5eead4;
+  --success: #27c93f;
+  --error: #ff5f56;
+  --warning: #ffbd2e;
+  --surface-soft: rgba(255, 255, 255, 0.032);
+  --surface-muted: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(6, 10, 18, 0.72);
+  --surface-accent: rgba(245, 158, 11, 0.1);
+  --panel-fill: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+  --panel-fill-strong:
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  --panel-highlight: rgba(255, 255, 255, 0.04);
+  --panel-wash: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent 35%, transparent 65%, rgba(94, 234, 212, 0.06));
+  --divider-line: rgba(255, 255, 255, 0.12);
+  --hero-shell:
+    radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.18), transparent 26%),
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.09), transparent 16%),
+    radial-gradient(circle at 80% 84%, rgba(94, 234, 212, 0.14), transparent 22%),
+    linear-gradient(180deg, rgba(7, 12, 21, 0.4), rgba(7, 12, 21, 0.82));
+  --hero-stage:
+    radial-gradient(circle at 12% 14%, rgba(245, 158, 11, 0.16), transparent 28%),
+    radial-gradient(circle at 86% 16%, rgba(94, 234, 212, 0.12), transparent 26%),
+    radial-gradient(circle at 48% 100%, rgba(56, 189, 248, 0.08), transparent 30%),
+    linear-gradient(135deg, var(--bg) 0%, #121318 48%, #081415 100%);
+  --hero-stage-seam: linear-gradient(180deg, rgba(12, 16, 23, 0), var(--bg) 76%, var(--bg));
+  --hero-section-grid: rgba(255, 255, 255, 0.14);
+  --hero-halo:
+    radial-gradient(circle at 30% 20%, rgba(245, 200, 122, 0.28), transparent 32%),
+    radial-gradient(circle at 80% 78%, rgba(94, 234, 212, 0.18), transparent 34%);
+  --hero-visual-bg: linear-gradient(145deg, rgba(7, 10, 18, 0.98), rgba(12, 18, 28, 0.94) 48%, rgba(6, 18, 20, 0.96));
+  --hero-visual-wash:
+    radial-gradient(circle at 20% 16%, rgba(245, 200, 122, 0.16), transparent 24%),
+    radial-gradient(circle at 78% 22%, rgba(99, 179, 237, 0.1), transparent 24%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 20%, transparent 76%, rgba(94, 234, 212, 0.08));
+  --hero-visual-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  --hero-visual-border: rgba(255, 255, 255, 0.1);
+  --hero-visual-soft-border: rgba(255, 255, 255, 0.12);
+  --hero-visual-grid: rgba(255, 255, 255, 0.9);
+  --hero-visual-surface: rgba(255, 255, 255, 0.045);
+  --hero-visual-text: #ffffff;
+  --hero-visual-muted: rgba(255, 255, 255, 0.42);
+  --hero-visual-soft: rgba(255, 255, 255, 0.56);
+  --hero-visual-strong: rgba(255, 255, 255, 0.84);
+  --hero-visual-shadow: 0 44px 140px rgba(3, 6, 12, 0.42);
+  --hero-route-base: rgba(255, 255, 255, 0.12);
+  --hero-route-accent: rgba(245, 200, 122, 0.24);
+  --hero-chip-input-bg: rgba(255, 255, 255, 0.055);
+  --hero-chip-input-border: rgba(255, 255, 255, 0.1);
+  --hero-chip-input-text: rgba(255, 255, 255, 0.56);
+  --hero-chip-output-bg: rgba(245, 200, 122, 0.1);
+  --hero-chip-output-border: rgba(245, 200, 122, 0.22);
+  --hero-chip-output-text: rgba(255, 231, 179, 0.9);
+  --hero-photo-bg: transparent;
+  --hero-photo-border: rgba(255, 255, 255, 0.12);
+  --hero-photo-shadow: none;
+  --hero-photo-ring-offset: #070a12;
+  --hero-photo-shutter-left: linear-gradient(160deg, rgba(13, 18, 29, 0.98), rgba(19, 30, 35, 0.94));
+  --hero-photo-shutter-right: linear-gradient(20deg, rgba(13, 18, 29, 0.98), rgba(35, 27, 16, 0.94));
+  --hero-photo-mask:
+    radial-gradient(circle at 50% 38%, rgba(245, 200, 122, 0.15), transparent 32%),
+    linear-gradient(180deg, rgba(3, 6, 12, 0.08), rgba(3, 6, 12, 0.42));
+  --hero-photo-gradient: linear-gradient(180deg, transparent 42%, rgba(3, 6, 12, 0.8) 100%);
+  --hero-photo-footer: rgba(0, 0, 0, 0.32);
+  --hero-photo-footer-text: #ffffff;
+  --hero-photo-core: radial-gradient(circle, rgba(245, 200, 122, 0.95), rgba(245, 200, 122, 0.12) 58%, transparent 70%);
+  --diagram-surface: rgba(6, 10, 18, 0.52);
+  --diagram-grid: rgba(255, 255, 255, 0.08);
+  --diagram-boundary: rgba(255, 255, 255, 0.12);
+  --shadow-elevated: 0 24px 70px rgba(3, 6, 12, 0.18);
+  /* Terminal widget */
+  --terminal-bg: linear-gradient(180deg, rgba(8, 12, 20, 0.98), rgba(7, 10, 18, 0.96));
+  --terminal-inner-bg: rgba(5, 8, 14, 0.46);
+  --terminal-footer-bg: rgba(7, 10, 18, 0.88);
+  --terminal-panel-bg: linear-gradient(180deg, rgba(8, 12, 20, 0.86), rgba(10, 14, 22, 0.98));
+  --terminal-photo-overlay-mid: rgba(7, 10, 18, 0.18);
+  --terminal-photo-overlay-end: rgba(7, 10, 18, 0.96);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #e8e4de;
+  --bg-elevated: rgba(240, 237, 231, 0.95);
+  --bg-strong: rgba(235, 231, 224, 0.97);
+  --text: #0f172a;
+  --text-rgb: 15, 23, 42;
+  --muted: #1a2236;
+  --soft: #2d3a4e;
+  --line: rgba(15, 23, 42, 0.18);
+  --line-strong: rgba(15, 23, 42, 0.32);
+  --accent: #92400e;
+  --accent-soft: #78350f;
+  --teal: #065f46;
+  --success: #059669;
+  --error: #dc2626;
+  --warning: #d97706;
+  --surface-soft: rgba(255, 255, 255, 0.72);
+  --surface-muted: rgba(255, 255, 255, 0.88);
+  --surface-strong: rgba(245, 241, 234, 0.95);
+  --surface-accent: rgba(146, 64, 14, 0.1);
+  --panel-fill: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(245, 241, 234, 0.78));
+  --panel-fill-strong:
+    radial-gradient(circle at top right, rgba(146, 64, 14, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(240, 235, 225, 0.82));
+  --panel-highlight: rgba(255, 255, 255, 0.7);
+  --panel-wash: linear-gradient(135deg, rgba(146, 64, 14, 0.06), transparent 35%, transparent 65%, rgba(6, 95, 70, 0.05));
+  --divider-line: rgba(15, 23, 42, 0.24);
+  --hero-shell:
+    radial-gradient(circle at 20% 20%, rgba(146, 64, 14, 0.1), transparent 26%),
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.12), transparent 16%),
+    radial-gradient(circle at 80% 84%, rgba(6, 95, 70, 0.06), transparent 22%),
+    linear-gradient(180deg, rgba(15, 22, 34, 0.9), rgba(8, 13, 20, 0.98));
+  --hero-stage:
+    radial-gradient(circle at 10% 10%, rgba(146, 64, 14, 0.1), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(6, 95, 70, 0.06), transparent 26%),
+    radial-gradient(circle at 46% 94%, rgba(255, 255, 255, 0.3), transparent 34%),
+    linear-gradient(180deg, #ebe7e0 0%, #e8e4de 52%, #e5e0d8 100%);
+  --hero-stage-seam: linear-gradient(180deg, rgba(232, 228, 222, 0), #e8e4de 72%, #e8e4de);
+  --hero-section-grid: rgba(15, 23, 42, 0.08);
+  --hero-halo:
+    radial-gradient(circle at 30% 20%, rgba(146, 64, 14, 0.12), transparent 32%),
+    radial-gradient(circle at 80% 78%, rgba(6, 95, 70, 0.08), transparent 34%);
+  --hero-visual-bg: linear-gradient(145deg, rgba(248, 245, 240, 0.92), rgba(242, 238, 230, 0.88) 48%, rgba(235, 240, 236, 0.86));
+  --hero-visual-wash:
+    radial-gradient(circle at 20% 16%, rgba(146, 64, 14, 0.08), transparent 24%),
+    radial-gradient(circle at 78% 22%, rgba(6, 95, 70, 0.06), transparent 24%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.3), transparent 22%, transparent 74%, rgba(6, 95, 70, 0.04));
+  --hero-visual-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(245, 240, 232, 0.42));
+  --hero-visual-border: rgba(15, 23, 42, 0.18);
+  --hero-visual-soft-border: rgba(15, 23, 42, 0.2);
+  --hero-visual-grid: rgba(15, 23, 42, 0.32);
+  --hero-visual-surface: rgba(255, 255, 255, 0.52);
+  --hero-visual-text: #0f172a;
+  --hero-visual-muted: rgba(15, 23, 42, 0.65);
+  --hero-visual-soft: rgba(51, 65, 85, 0.88);
+  --hero-visual-strong: rgba(15, 23, 42, 0.92);
+  --hero-visual-shadow: 0 38px 110px rgba(80, 60, 30, 0.18);
+  --hero-route-base: rgba(15, 23, 42, 0.2);
+  --hero-route-accent: rgba(146, 64, 14, 0.36);
+  --hero-chip-input-bg: rgba(255, 255, 255, 0.6);
+  --hero-chip-input-border: rgba(15, 23, 42, 0.15);
+  --hero-chip-input-text: rgba(51, 65, 85, 0.86);
+  --hero-chip-output-bg: rgba(146, 64, 14, 0.08);
+  --hero-chip-output-border: rgba(146, 64, 14, 0.28);
+  --hero-chip-output-text: #6b3a0a;
+  --hero-photo-bg: transparent;
+  --hero-photo-border: rgba(15, 23, 42, 0.18);
+  --hero-photo-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --hero-photo-ring-offset: #e8e4de;
+  --hero-photo-shutter-left: linear-gradient(160deg, rgba(240, 236, 228, 0.98), rgba(226, 234, 229, 0.94));
+  --hero-photo-shutter-right: linear-gradient(20deg, rgba(240, 236, 228, 0.98), rgba(238, 230, 212, 0.94));
+  --hero-photo-mask:
+    radial-gradient(circle at 50% 38%, rgba(146, 64, 14, 0.1), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(15, 23, 42, 0.22));
+  --hero-photo-gradient: linear-gradient(180deg, transparent 42%, rgba(15, 23, 42, 0.5) 100%);
+  --hero-photo-footer: rgba(245, 241, 234, 0.85);
+  --hero-photo-footer-text: #0f172a;
+  --hero-photo-core: radial-gradient(circle, rgba(146, 64, 14, 0.85), rgba(146, 64, 14, 0.12) 58%, transparent 70%);
+  --diagram-surface: rgba(255, 255, 255, 0.78);
+  --diagram-grid: rgba(15, 23, 42, 0.1);
+  --diagram-boundary: rgba(15, 23, 42, 0.24);
+  --shadow-elevated: 0 24px 70px rgba(15, 23, 42, 0.16);
+  /* Terminal widget — warm parchment look in light mode */
+  --terminal-bg: linear-gradient(180deg, rgba(242, 238, 232, 0.98), rgba(236, 232, 225, 0.97));
+  --terminal-inner-bg: rgba(255, 255, 255, 0.55);
+  --terminal-footer-bg: rgba(238, 234, 226, 0.92);
+  --terminal-panel-bg: linear-gradient(180deg, rgba(245, 242, 236, 0.96), rgba(238, 234, 226, 0.98));
+  --terminal-photo-overlay-mid: rgba(232, 228, 220, 0.12);
+  --terminal-photo-overlay-end: rgba(232, 228, 220, 0.88);
+}
+
+/* ── Design-system tokens ─────────────────── */
+
+:root {
+  /* Modular Scale (Ratio: 1.25) */
+  --font-size-xs: 0.8rem;    /* 12.8px */
+  --font-size-sm: 1rem;      /* 16px (Base) */
+  --font-size-md: 1.25rem;   /* 20px */
+  --font-size-lg: 1.563rem;  /* 25px */
+  --font-size-xl: 1.953rem;  /* 31.25px */
+  --font-size-2xl: 2.441rem; /* 39px */
+  --font-size-3xl: 3.052rem; /* 48.8px */
+  --font-size-4xl: 3.815rem; /* 61px */
+}
+
+/* ── Base ─────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(245, 158, 11, 0.16), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(94, 234, 212, 0.12), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(56, 189, 248, 0.08), transparent 30%),
+    linear-gradient(180deg, #0d1118 0%, #0c1017 45%, #0b0e14 100%);
+  color: var(--text);
+}
+
+[data-theme="light"] body {
+  background:
+    radial-gradient(circle at top left, rgba(146, 64, 14, 0.08), transparent 26%),
+    radial-gradient(circle at 85% 12%, rgba(6, 95, 70, 0.05), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(6, 95, 70, 0.04), transparent 28%),
+    linear-gradient(180deg, #ece8e1 0%, #e8e4de 45%, #e2ded6 100%);
+}
+
+/* Push content above mobile bottom nav (64px bar + safe area) */
+@media (max-width: 767px) {
+  main {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+a {
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button[data-haptic-press="true"] {
+  animation: haptic-pop 140ms ease-out;
+}
+
+@keyframes haptic-pop {
+  0% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+  45% {
+    transform: translateY(-1px) scale(0.985);
+    filter: brightness(1.06);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+::selection {
+  background: rgba(245, 158, 11, 0.28);
+  color: var(--text);
+}
+
+[data-theme="light"] ::selection {
+  background: rgba(146, 64, 14, 0.2);
+  color: var(--text);
+}
+
+/* ── Focus ring system ──────────────────────── */
+
+:focus-visible {
+  outline: 2px solid rgba(245, 200, 122, 0.6);
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+}
+
+/* ── Lenis smooth scroll ─────────────────── */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+  /* Native scroll-behavior conflicts with Lenis — let Lenis own this */
+  scroll-behavior: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ── Ripple click effect ──────────────────── */
+
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,0.3), transparent 60%);
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.ripple-container:active::after {
+  opacity: 1;
+  transform: scale(2.5);
+  transition: opacity 0s, transform 0s;
+}
+
+/* ── Card shine effect ────────────────────── */
+
+.card-shine {
+  --shine-x: 50%;
+  --shine-y: 50%;
+}
+
+.card-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    400px circle at var(--shine-x) var(--shine-y),
+    rgba(255,255,255,0.04),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-shine:hover::after {
+  opacity: 1;
+}
+
+[data-theme="light"] .card-shine:hover::after {
+  background: radial-gradient(
+    400px circle at var(--shine-x) var(--shine-y),
+    rgba(0,0,0,0.02),
+    transparent 60%
+  );
+}
+
+/* ── Typography ──────────────────────────── */
+
+.eyebrow {
+  margin-bottom: 1rem;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  opacity: 0.8;
+}
+
+.section-title {
+  font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-3xl));
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--divider-line), transparent);
+}
+
+/* ── Panel ────────────────────────────────── */
+
+.panel {
+  position: relative;
+  overflow: clip;
+  border: 1px solid var(--line);
+  background: var(--panel-fill);
+  border-radius: 1.5rem;
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 280ms ease;
+}
+
+.panel:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 8px 30px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(245, 158, 11, 0.06);
+  /* Only promote to a compositor layer while actively animating */
+  will-change: transform;
+}
+
+/* On touch devices, don't lift panels on hover — avoids sticky hover state */
+@media (hover: none) {
+  .panel:hover {
+    transform: none;
+  }
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--panel-wash);
+  pointer-events: none;
+}
+
+/* Animated gradient border glow — only active while hovered */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-rotate {
+  to { --gradient-angle: 360deg; }
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    transparent 0%,
+    rgba(245, 158, 11, 0.15) 10%,
+    transparent 20%,
+    rgba(94, 234, 212, 0.1) 40%,
+    transparent 50%,
+    rgba(245, 158, 11, 0.12) 70%,
+    transparent 80%,
+    rgba(94, 234, 212, 0.08) 90%,
+    transparent 100%
+  );
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+.panel:hover::after {
+  opacity: 1;
+  animation: gradient-rotate 4s linear infinite;
+}
+
+.panel-strong {
+  background: var(--panel-fill-strong);
+}
+
+/* ── Light mode panel depth ────────────────── */
+
+[data-theme="light"] .panel {
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .panel:hover {
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .panel-strong {
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* ── System interaction utilities ─────────── */
+
+.sys-hover {
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+}
+
+.sys-hover:hover {
+  transform: translateY(-2px);
+}
+
+.sys-hover:active {
+  transform: scale(0.98);
+}
+
+/* ── Misc utilities ───────────────────────── */
+
+.surface-card {
+  background: var(--surface-soft);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.theme-logo-dark {
+  display: block;
+}
+
+.theme-logo-light {
+  display: none;
+}
+
+[data-theme="light"] .theme-logo-dark {
+  display: none;
+}
+
+[data-theme="light"] .theme-logo-light {
+  display: block;
+}
+
+/* ── View transitions ─────────────────────── */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ── Hero background layer ────────────────── */
+
+.hero-bg-layer {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-visual-shell {
+  background: var(--hero-shell);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* ── Aurora animated gradient blobs ──────── */
+
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+}
+
+.hero-aurora-1 {
+  top: -18%;
+  left: -8%;
+  width: 58%;
+  height: 58%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.18), transparent 70%);
+  animation: aurora-drift-1 18s ease-in-out infinite alternate;
+}
+
+.hero-aurora-2 {
+  top: 8%;
+  right: -12%;
+  width: 52%;
+  height: 52%;
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.13), transparent 70%);
+  animation: aurora-drift-2 22s ease-in-out infinite alternate;
+}
+
+.hero-aurora-3 {
+  bottom: -22%;
+  left: 18%;
+  width: 62%;
+  height: 48%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.08), transparent 70%);
+  animation: aurora-drift-3 26s ease-in-out infinite alternate;
+}
+
+.hero-aurora-4 {
+  top: 28%;
+  left: 38%;
+  width: 42%;
+  height: 42%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.06), transparent 60%);
+  animation: aurora-drift-4 20s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift-1 {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  50%  { opacity: 1; }
+  100% { transform: translate(8%, 14%) scale(1.18); opacity: 0.8; }
+}
+
+@keyframes aurora-drift-2 {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  100% { transform: translate(-14%, 10%) scale(1.12); opacity: 0.9; }
+}
+
+@keyframes aurora-drift-3 {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  100% { transform: translate(7%, -12%) scale(1.22); opacity: 0.7; }
+}
+
+@keyframes aurora-drift-4 {
+  0%   { transform: translate(0, 0) scale(0.9); opacity: 0.4; }
+  100% { transform: translate(-6%, 6%) scale(1.1); opacity: 0.7; }
+}
+
+[data-theme="light"] .hero-aurora-1 {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12), transparent 70%);
+}
+
+[data-theme="light"] .hero-aurora-2 {
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.08), transparent 70%);
+}
+
+[data-theme="light"] .hero-aurora-3 {
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.07), transparent 70%);
+}
+
+[data-theme="light"] .hero-aurora-4 {
+  background: radial-gradient(circle, rgba(200, 124, 16, 0.05), transparent 60%);
+}
+
+/* ── Hero name — animated gradient text ──── */
+
+.hero-name {
+  text-shadow: 0 0 80px rgba(245, 158, 11, 0.08);
+  background: linear-gradient(
+    135deg,
+    var(--text) 0%,
+    var(--text) 40%,
+    var(--accent-soft) 50%,
+    var(--text) 60%,
+    var(--text) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: hero-name-shimmer 6s ease-in-out infinite;
+}
+
+@keyframes hero-name-shimmer {
+  0%, 100% { background-position: 100% 50%; }
+  50%      { background-position: 0% 50%; }
+}
+
+[data-theme="light"] .hero-name {
+  text-shadow: none;
+}
+
+/* ── GravityText character drop ─────────── */
+
+.gravity-char {
+  will-change: transform, opacity;
+}
+
+.hero-name .gravity-char {
+  background: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+/* ── Badge & focus card hover glows ──────── */
+
+.hero-badge {
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+
+.hero-badge:hover {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+}
+
+.hero-focus-card {
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.hero-focus-card:hover {
+  box-shadow: 0 0 24px rgba(94, 234, 212, 0.06);
+}
+
+/* ── Primary CTA shimmer sweep ──────────── */
+
+.hero-cta-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15), 0 0 40px rgba(245, 158, 11, 0.05);
+  animation: cta-glow 3s ease-in-out infinite;
+}
+
+@keyframes cta-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.15), 0 0 40px rgba(245, 158, 11, 0.05); }
+  50%      { box-shadow: 0 0 28px rgba(245, 158, 11, 0.25), 0 0 56px rgba(245, 158, 11, 0.1); }
+}
+
+.hero-cta-primary:hover {
+  animation: none;
+  box-shadow: 0 0 32px rgba(245, 158, 11, 0.3), 0 0 60px rgba(245, 158, 11, 0.12);
+  transform: translateY(-1px);
+}
+
+.hero-cta-primary::after {
+  display: none;
+}
+
+@keyframes cta-shimmer {
+  0%        { transform: translateX(-120%); }
+  20%, 100% { transform: translateX(120%); }
+}
+
+/* ── CTA secondary hover ────────────────── */
+
+.hero-cta-secondary {
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.hero-cta-secondary:hover {
+  color: var(--accent-soft);
+}
+
+/* ── Mouse-following ambient light ──────── */
+
+.hero-ambient-light {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.06), transparent 70%);
+  filter: blur(40px);
+  /* Use transform — runs on compositor thread */
+  transform: translate(var(--light-x, -50%), var(--light-y, -50%));
+  transition: transform 300ms ease-out, opacity 400ms ease;
+  will-change: transform;
+  top: 0;
+  left: 0;
+}
+
+[data-theme="light"] .hero-ambient-light {
+  background: radial-gradient(circle, rgba(200, 124, 16, 0.04), transparent 70%);
+}
+
+/* ── Diagram mode states ─────────────────────── */
+
+[data-mode="failure"] .diagram-node {
+  animation: node-flicker 3.2s ease-in-out infinite;
+}
+
+@keyframes node-flicker {
+  0%, 100% { opacity: 1; }
+  12%       { opacity: 0.78; }
+  24%       { opacity: 1; }
+  52%       { opacity: 0.85; }
+  68%       { opacity: 1; }
+  84%       { opacity: 0.9; }
+}
+
+[data-mode="decisions"] [data-flow-pulse] {
+  animation-duration: 2.4s !important;
+}
+
+[data-mode="normal"] [data-flow-pulse] {
+  animation-duration: 1.8s !important;
+}
+
+/* ── Cursor trail — light mode blend fix ────── */
+/* Target via class to avoid fragile inline-style attribute matching */
+canvas.cursor-trail {
+  mix-blend-mode: screen;
+}
+
+[data-theme="light"] canvas.cursor-trail {
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+/* ── Terminal Cursor Animation ──────────────── */
+
+@keyframes terminal-cursor {
+  0%, 45%, 55%, 100% { opacity: 1; }
+  50%  { opacity: 0; }
+  48%  { opacity: 0.8; }
+  52%  { opacity: 0.9; }
+}
+
+.animate-terminal-cursor {
+  animation: terminal-cursor 1.2s step-end infinite;
+}
+
+.terminal-cursor-glow {
+  box-shadow:
+    0 0 4px rgba(var(--text-rgb), 0.4),
+    0 0 10px rgba(var(--text-rgb), 0.2),
+    0 0 20px rgba(var(--text-rgb), 0.1);
+}
+
+/* ── Reduced motion — single consolidated block ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Explicit hero overrides (belt-and-suspenders for GPU-layer elements) */
+  .hero-aurora-blob        { animation: none !important; }
+  .hero-name               { animation: none !important; background: none !important; -webkit-text-fill-color: var(--text) !important; }
+  .hero-cta-primary::after { animation: none !important; }
+}
+/* ══════════════════════════════════════════════════════
+   UPGRADED STYLES — Spectacular Visual Enhancements
+   ══════════════════════════════════════════════════════ */
+
+/* ── Grain / noise overlay ───────────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  opacity: 0.028;
+  mix-blend-mode: overlay;
+}
+
+[data-theme="light"] body::after {
+  opacity: 0.02;
+}
+
+/* ── Enhanced aurora blobs ───────────────────────── */
+.hero-aurora-1 {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.22), rgba(251, 191, 36, 0.08) 40%, transparent 70%);
+}
+.hero-aurora-2 {
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.18), rgba(45, 212, 191, 0.06) 40%, transparent 70%);
+}
+.hero-aurora-3 {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12), transparent 70%);
+}
+
+/* ── Glowing scrollbar ───────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.4), rgba(94, 234, 212, 0.3));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.7), rgba(94, 234, 212, 0.5));
+}
+
+/* ── Enhanced panel glow on hover ───────────────── */
+.panel-glow {
+  transition: box-shadow 300ms ease, border-color 300ms ease, transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.panel-glow:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 0 1px rgba(245, 158, 11, 0.12),
+    0 8px 40px rgba(245, 158, 11, 0.06),
+    0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Shimmer animation for skeleton/loading states ── */
+@keyframes shimmer-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+  animation: shimmer-sweep 2s ease-in-out infinite;
+}
+
+/* ── Data stream animation (hero background) ─────── */
+@keyframes data-stream {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* ── Neon text glow ──────────────────────────────── */
+.neon-amber {
+  color: var(--accent-soft);
+  text-shadow:
+    0 0 10px rgba(245, 200, 122, 0.6),
+    0 0 30px rgba(245, 158, 11, 0.3),
+    0 0 60px rgba(245, 158, 11, 0.1);
+}
+.neon-teal {
+  color: var(--teal);
+  text-shadow:
+    0 0 10px rgba(94, 234, 212, 0.6),
+    0 0 30px rgba(94, 234, 212, 0.3),
+    0 0 60px rgba(94, 234, 212, 0.1);
+}
+
+/* ── Gradient border utility ─────────────────────── */
+.gradient-border {
+  position: relative;
+  border-radius: inherit;
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.4), rgba(94, 234, 212, 0.3), rgba(56, 189, 248, 0.3));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* ── Float animation for badges ──────────────────── */
+@keyframes float-badge {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50%  { transform: translateY(-8px) rotate(1deg); }
+}
+.float-badge {
+  animation: float-badge 4s ease-in-out infinite;
+}
+.float-badge-delayed {
+  animation: float-badge 4s ease-in-out 1.3s infinite;
+}
+.float-badge-delayed-2 {
+  animation: float-badge 4s ease-in-out 2.6s infinite;
+}
+
+/* ── Section divider with animated glow ─────────── */
+.section-glow-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.4), rgba(94, 234, 212, 0.3), transparent);
+  position: relative;
+  overflow: visible;
+}
+.section-glow-divider::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 20%;
+  right: 20%;
+  height: 7px;
+  background: inherit;
+  filter: blur(6px);
+  opacity: 0.6;
+}
+
+/* ── Holographic shimmer for project cards ───────── */
+@keyframes holo-shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.holo-card {
+  background-size: 200% 200%;
+  animation: holo-shimmer 6s ease infinite;
+}
+
+/* ── Skill bar fill animation ────────────────────── */
+@keyframes skill-fill {
+  from { width: 0%; }
+  to   { width: var(--skill-width); }
+}
+
+/* ── Contact section enhanced glow ──────────────── */
+.contact-glow {
+  position: relative;
+}
+.contact-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(94,234,212,0.2), rgba(245,158,11,0.3));
+  z-index: -1;
+  background-size: 200% 200%;
+  animation: holo-shimmer 4s ease infinite;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.contact-glow:hover::before {
+  opacity: 1;
+}
+
+/* ── Scanline effect for terminal ────────────────── */
+.terminal-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ── Improved focus badge pulse ──────────────────── */
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); }
+}
+.badge-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+/* ── Text gradient utility ───────────────────────── */
+.text-gradient-amber {
+  background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-teal {
+  background: linear-gradient(135deg, #5eead4, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-full {
+  background: linear-gradient(135deg, var(--accent-soft) 0%, var(--teal) 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PERFORMANCE & ORGANIC ANIMATION ADDITIONS
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Respect system preference: no motion ───────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Reveal all GSAP-hidden elements */
+  [style*="opacity: 0"] { opacity: 1 !important; }
+}
+
+/* ── Defer paint for off-screen sections ─────────────────── */
+/* NOTE: content-visibility: auto is intentionally omitted —
+   it breaks next/image fill layout measurement */
+
+/* ── GPU compositing hints: scope tightly ────────────────── */
+.hero-aurora-blob {
+  will-change: transform;
+}
+canvas[aria-hidden] {
+  will-change: contents;
+}
+
+/* ── Remove backdrop-filter on touch/low-end devices ─────── */
+@media (max-width: 768px), (pointer: coarse) {
+  .backdrop-blur-xl { backdrop-filter: none; }
+  .backdrop-blur-md { backdrop-filter: none; }
+  .backdrop-blur-sm { backdrop-filter: none; }
+}
+
+/* ── Organic link hover: underline draws in from left ─────── */
+a:not([class*="btn"]):not([class*="button"]):not([class*="nav"]):not([class*="rounded"]) {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+a:not([class*="btn"]):not([class*="button"]):not([class*="nav"]):not([class*="rounded"]):hover {
+  background-size: 100% 1px;
+}
+
+/* ── Natural button press feel ───────────────────────────── */
+button:active,
+[role="button"]:active {
+  transform: scale(0.97) translateY(1px);
+  transition: transform 0.08s ease;
+}
+
+/* ── Aurora blobs: slower, more drift-like motion ────────── */
+@keyframes aurora-drift-1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(3%, 2%) scale(1.04); }
+  66%  { transform: translate(-2%, 4%) scale(0.97); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes aurora-drift-2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(-4%, -2%) scale(1.06); }
+  75%  { transform: translate(2%, -4%) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes aurora-drift-3 {
+  0%   { transform: translate(0, 0) scale(1.02); }
+  40%  { transform: translate(3%, 3%) scale(0.98); }
+  80%  { transform: translate(-2%, -2%) scale(1.04); }
+  100% { transform: translate(0, 0) scale(1.02); }
+}
+
+/* Override hero aurora keyframe names if your CSS uses them */
+.hero-aurora-1 { animation: aurora-drift-1 22s ease-in-out infinite; }
+.hero-aurora-2 { animation: aurora-drift-2 28s ease-in-out infinite; }
+.hero-aurora-3 { animation: aurora-drift-3 18s ease-in-out infinite; }
+.hero-aurora-4 { animation: aurora-drift-1 32s ease-in-out 4s infinite; }
+
+/* ── Magnetic button: transition dampened for snappier feel ── */
+.hero-cta-primary,
+.hero-cta-secondary {
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+}
+
+/* ── Panel hover: slight upward translate + shadow ─────────── */
+.panel {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+.panel:hover {
+  transform: translateY(-2px);
+}
+
+/* ── Smooth image load-in ─────────────────────────────────── */
+img {
+  transition: opacity 0.4s ease;
+}
+img[loading="lazy"] {
+  opacity: 0;
+}
+img[loading="lazy"].loaded,
+img:not([loading]) {
+  opacity: 1;
+}
+
+/* ── Eyebrow label: subtle letter-spacing animation ────────── */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  opacity: 0.85;
+}
+
+/* ── Section headings: ensure consistent render ─────────────── */
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+/* ── Scroll progress bar: smoother fill ─────────────────────── */
+#scroll-progress {
+  transition: width 0.05s linear;
+}
+
+/* ── Focus ring: visible and distinctive ────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   HANDCRAFTED DETAILS — the things that feel non-AI
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 1. CTA shimmer — replaces the pulsing animation ──────── */
+/* A single shimmer sweep that runs once on load, then on hover.
+   Looks like light catching a surface. Not a pulse. */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.cta-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.cta-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 2.8s cubic-bezier(0.16,1,0.3,1) 0.6s 1 forwards;
+  pointer-events: none;
+}
+.cta-shimmer:hover::after {
+  animation: shimmer-sweep 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+/* ── 2. Spring card hover — overshoots, settles ────────────── */
+/* Cards don't just lift — they spring up with a tiny overshoot
+   at 0.4 → -4px then settle at -2px. Feels alive. */
+@keyframes card-spring {
+  0%   { transform: translateY(0); }
+  40%  { transform: translateY(-5px); }
+  70%  { transform: translateY(-1px); }
+  100% { transform: translateY(-3px); }
+}
+
+.panel:hover {
+  animation: card-spring 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+.panel:not(:hover) {
+  transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease;
+  transform: translateY(0);
+}
+
+/* ── 3. Rubber stamp step numbers ──────────────────────────── */
+/* The "01" "02" "03" numbers look slightly stamped —
+   tiny rotation and mix-blend-mode make them feel printed. */
+.stamp-number {
+  display: inline-block;
+}
+.stamp-number[data-index="0"] { transform: rotate(-0.8deg); }
+.stamp-number[data-index="1"] { transform: rotate(0.5deg); }
+.stamp-number[data-index="2"] { transform: rotate(-0.3deg); }
+
+/* ── 4. Ink underline — draws in on scroll reveal ──────────── */
+/* Used on accent spans in section headings.
+   A single stroke that draws in from left — no glow, no fade.
+   Just ink on paper. */
+.ink-underline {
+  position: relative;
+}
+.ink-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: currentColor;
+  opacity: 0.5;
+  transition: width 0.9s cubic-bezier(0.16,1,0.3,1) 0.4s;
+  border-radius: 1px;
+}
+/* Trigger once parent enters viewport */
+[style*="opacity: 1"] .ink-underline::after,
+.ink-underline-active::after {
+  width: 100%;
+}
+
+/* ── 5. Breathing eyebrow labels ───────────────────────────── */
+/* The section labels breathe their letter-spacing.
+   6-second cycle, almost imperceptible — just enough to feel
+   like the page is alive, not static. */
+@keyframes eyebrow-breathe {
+  0%, 100% { letter-spacing: 0.22em; opacity: 0.85; }
+  50%       { letter-spacing: 0.26em; opacity: 1; }
+}
+
+.eyebrow {
+  animation: eyebrow-breathe 6s ease-in-out infinite;
+}
+
+/* ── 6. Scroll-velocity blur on headings ────────────────────── */
+/* Applied via JS class. See useScrollVelocity hook. */
+.scroll-blur-sm  { filter: blur(0.8px); }
+.scroll-blur-md  { filter: blur(1.8px); }
+.scroll-blur-lg  { filter: blur(3px);   }
+/* Clear when not scrolling */
+.scroll-blur-none { filter: blur(0); transition: filter 0.15s ease; }
+
+/* ── 7. Section title with ink reveal ──────────────────────── */
+/* Section titles clip-reveal from bottom — like ink spreading.
+   Works via GSAP ScrollTrigger on .section-title class. */
+.section-title {
+  text-wrap: balance;
+}
+
+/* ── 8. Image lazy-load fade-in ────────────────────────────── */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* ── 9. Hero headline word hover — subtle depth shift ──────── */
+/* Each accented word in the headline gets a micro depth effect:
+   translateZ pulls it slightly toward the viewer */
+.hero-word-accent {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), text-shadow 0.4s ease;
+}
+.hero-word-accent:hover {
+  transform: scale(1.03) translateY(-1px);
+}
+
+/* ── 10. Link underline — draws from left ──────────────────── */
+/* Only on prose links — not nav, not buttons */
+.prose-link,
+article a:not([class]),
+.panel a:not([class*="btn"]):not([class*="rounded"]) {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.prose-link:hover,
+article a:not([class]):hover,
+.panel a:not([class*="btn"]):not([class*="rounded"]):hover {
+  background-size: 100% 1px;
+}
+
+/* ── 11. Acent-soft divider line ─────────────────────────────── */
+/* The accent-soft CSS variable was missing — define it for dividers */
+:root {
+  --accent-soft: #fcd34d;
+}
+[data-theme="light"] {
+  --accent-soft: #78350f;
+}
+
+/* ── 12. Natural button micro-press ───────────────────────────── */
+/* More physical than scale(0.97) — adds a hint of x-tilt */
+button:active,
+[role="button"]:active {
+  transform: scale(0.965) translateY(1px);
+  transition: transform 0.06s ease;
+}
+
+/* ── 13. Performance: layout containment ──────────────────────── */
+/* content-visibility: auto intentionally omitted — breaks next/image fill.
+   Use lazy loading (Image priority={false}) for off-screen images instead. */
+
+/* ── 14. Reduced motion — global safety net ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cta-shimmer::after { display: none; }
+  .eyebrow { animation: none; }
+  .panel:hover { animation: none; transform: none; }
+  [style*="opacity: 0"] { opacity: 1 !important; }
+}
+
