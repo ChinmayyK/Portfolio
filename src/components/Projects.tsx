@@ -100,6 +100,8 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
   const [loadedSrcs, setLoadedSrcs] = useState<Set<string>>(new Set());
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startTimeRef = useRef<number>(0);
+  const pausedAtRef = useRef<number>(0);
   const autoplayDuration = 4000;
 
   // Preload all slide images so subsequent slides don't flash blank
@@ -112,7 +114,10 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
   }, [slides]);
 
   const go = useCallback((i: number, d?: 1 | -1) => {
-    setDir(d ?? (i > active ? 1 : -1)); setActive(i);
+    setDir(d ?? (i > active ? 1 : -1)); 
+    setActive(i);
+    // Reset pause state when manually navigating
+    pausedAtRef.current = 0;
   }, [active]);
 
   useEffect(() => {
@@ -125,20 +130,27 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
     }
 
     if (hovered) {
+      pausedAtRef.current = Date.now();
       return;
     }
 
-    setProgress(0);
-    const startedAt = Date.now();
+    // Resume or start fresh
+    const now = Date.now();
+    const resumeOffset = pausedAtRef.current > 0 ? (pausedAtRef.current - startTimeRef.current) : 0;
+    startTimeRef.current = now - resumeOffset;
+    
+    const remaining = autoplayDuration - resumeOffset;
 
     timer.current = setTimeout(() => {
       setDir(1);
       setActive(p => (p + 1) % slides.length);
-    }, autoplayDuration);
+      pausedAtRef.current = 0; // Clear pause for next slide
+    }, remaining);
 
     progressTimer.current = setInterval(() => {
-      const elapsed = Date.now() - startedAt;
-      setProgress(Math.min(100, (elapsed / autoplayDuration) * 100));
+      const elapsed = Date.now() - startTimeRef.current;
+      const pct = Math.min(100, (elapsed / autoplayDuration) * 100);
+      setProgress(pct);
     }, 16);
 
     return () => {
@@ -184,10 +196,10 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
           <>
             {/* Top dark gradient to ensure progress bar contrast against bright images */}
             <div className="absolute left-0 top-0 z-10 h-16 w-full bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
-            <div className="absolute left-0 top-0 z-20 h-[3px] w-full overflow-hidden bg-white/20">
+            <div className="absolute left-0 top-0 z-20 h-[3px] w-full overflow-hidden bg-white/10">
               <div
-                className="h-full origin-left bg-[var(--accent)] shadow-[0_0_10px_var(--accent)] transition-[width] duration-75 ease-linear"
-                style={{ width: `${progress}%` }}
+                className="h-full w-full origin-left bg-[var(--accent)] shadow-[0_0_12px_var(--accent)]"
+                style={{ transform: `scaleX(${progress / 100})` }}
               />
             </div>
           </>
