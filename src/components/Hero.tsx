@@ -661,6 +661,12 @@ function HiddenPhotoWidget({
     };
   }, [focusRef]);
 
+  const handleToggleHover = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    triggerHaptic("medium");
+    setIsHovered((prev) => !prev);
+  };
+
   const getSuggestion = (input: string) => {
     if (!input) return "";
     const commands = [
@@ -788,11 +794,9 @@ function HiddenPhotoWidget({
                 ? "bg-[var(--accent)]/15 border-[var(--accent)]/40 text-[var(--accent)] shadow-[0_0_20px_rgba(245,158,11,0.15)]"
                 : "bg-[var(--surface-soft)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-accent)] shadow-sm"
             }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              triggerHaptic("medium");
-              setIsHovered(prev => !prev);
-            }}
+            onClick={handleToggleHover}
+            onPointerDown={handleToggleHover}
+            onTouchStart={handleToggleHover}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
           >
             {isHovered ? (
