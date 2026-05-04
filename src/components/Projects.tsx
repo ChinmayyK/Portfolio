@@ -166,7 +166,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
   return (
     <div className="relative rounded-xl overflow-hidden border border-[var(--line)] bg-[var(--surface-soft)] group"
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-      <div className={`relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-muted)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.02)_0%,transparent_50%,rgba(245,158,11,0.03)_100%)] transition-all duration-300 ${!isLoaded ? 'animate-pulse' : ''}`}>
+      <div className={`relative w-full aspect-video overflow-hidden bg-[var(--surface-muted)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.02)_0%,transparent_50%,rgba(245,158,11,0.03)_100%)] transition-all duration-300 ${!isLoaded ? 'animate-pulse' : ''}`}>
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div key={active} custom={dir}
             variants={{
@@ -182,7 +182,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
               alt={s.label}
               fill
               sizes="(max-width:768px) 92vw, 50vw"
-              className="object-cover object-top"
+              className="object-contain"
               loading="eager"
               unoptimized
             />
