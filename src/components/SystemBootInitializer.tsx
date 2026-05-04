@@ -41,9 +41,9 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
     // Removed blur filter to fix transition lag
     gsap.to(containerRef.current, {
       opacity: 0,
-      scale: 1.15,
-      duration: 0.8,
-      ease: "power2.inOut",
+      scale: 1.1,
+      duration: 0.9,
+      ease: "power3.inOut",
       onComplete: () => {
         setDone(true);
       }
@@ -594,7 +594,7 @@ const STYLES = `
 
   /* ── Mobile ── */
   @media (max-width: 640px) {
-    .ck-name  { font-size: 34px; letter-spacing: 0.02em; }
+    .ck-name  { font-size: clamp(20px, 7vw, 34px); letter-spacing: 0.02em; white-space: nowrap; }
     .ck-titles {
       gap: 6px;
       margin-bottom: 32px;
