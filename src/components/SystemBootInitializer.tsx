@@ -97,7 +97,8 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
 
       // Phase 1: High-Speed Intro
       timeline.to(".ck-sweep", { scaleY: 1, duration: 0.8, ease: "expo.inOut" })
-        .to(".ck-hline", { scaleX: 1, duration: 1.0, ease: "power4.inOut" }, "<0.2");
+        .to(".ck-hline", { scaleX: 1, duration: 1.0, ease: "power4.inOut" }, "<0.2")
+        .fromTo(".ck-grid", { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" }, "<");
 
       // Phase 2: The Core Identity Reveal (Glitch + Stagger)
       timeline.to(".ck-chip", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, "-=0.4");
@@ -119,14 +120,14 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
 
         // Subtle Glitch Effect during reveal
         timeline.to(nameChars, {
-          x: () => (Math.random() - 0.5) * 10,
-          opacity: () => 0.5 + Math.random() * 0.5,
-          duration: 0.1,
-          repeat: 3,
+          x: () => (Math.random() - 0.5) * 12,
+          opacity: () => 0.4 + Math.random() * 0.6,
+          duration: 0.08,
+          repeat: 4,
           yoyo: true,
           stagger: 0.02,
           ease: "none"
-        }, "<0.2");
+        }, "<0.15");
       }
 
       timeline.to(".ck-progress-row", { opacity: 1, duration: 0.6 }, "-=0.8");
@@ -135,8 +136,8 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       const progData = { val: 0 };
       timeline.to(progData, {
         val: 100,
-        duration: 2.0,
-        ease: "power2.inOut",
+        duration: 1.8,
+        ease: "power3.inOut",
         onUpdate: () => {
           const p = progData.val;
           setProgressPct(Math.round(p));
@@ -147,7 +148,7 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
         }
       }, "<");
 
-      timeline.to(".ck-name-rule", { scaleX: 1, duration: 2.0, ease: "power2.inOut" }, "<");
+      timeline.to(".ck-name-rule", { scaleX: 1, duration: 1.8, ease: "power3.inOut" }, "<");
 
       // Phase 3: Secondary Elements
       timeline.to(".ck-title", { 
@@ -157,7 +158,7 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
         duration: 0.8, 
         stagger: 0.1, 
         ease: "power3.out" 
-      }, "-=1.2");
+      }, "-=1.0");
 
       timeline.to(".ck-link", {
         opacity: 1,
@@ -165,21 +166,27 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
         duration: 0.8,
         stagger: 0.1,
         ease: "power3.out"
-      }, "-=0.8");
+      }, "-=0.6");
 
-      // Conclusion
-      timeline.to(".ck-init", { opacity: 0, display: "none", duration: 0.1 }, "-=0.4")
+      // Conclusion - Cinematic flash and zoom out
+      timeline.to(".ck-init", { opacity: 0, display: "none", duration: 0.1 }, "-=0.2")
         .to(".ck-online", { opacity: 1, display: "inline-block", duration: 0.3 }, "<")
         .to(".ck-stage", { 
-          filter: "brightness(1.8) contrast(1.2)", 
-          scale: 1.02, 
-          duration: 0.2, 
+          filter: "brightness(2) contrast(1.3)", 
+          scale: 1.05, 
+          duration: 0.15, 
           yoyo: true, 
-          repeat: 1 
+          repeat: 1,
+          ease: "power2.inOut"
         }, "<");
 
       timeline.call(() => { triggerHaptic("success"); }, [], "<");
-      timeline.to({}, { duration: 0.8 });
+      timeline.to(".ck-boot", {
+        background: "transparent",
+        duration: 0.5,
+        ease: "power2.out"
+      }, "+=0.2");
+      timeline.to({}, { duration: 0.4 });
     };
 
     void start();
@@ -275,47 +282,24 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
 }
 
 const STYLES = `
-  /* ── Boot screen tokens — mirror the portfolio's actual design system ── */
-  :root {
-    --ck-accent-rgb: 245, 158, 11;
-    --ck-bg: #0c1017;
-    --ck-bg-elevated: rgba(15, 23, 42, 0.72);
-    --ck-text: #f3efe7;
-    --ck-muted: #b8bec8;
-    --ck-soft: #8f98a8;
-    --ck-line: rgba(255, 255, 255, 0.08);
-    --ck-line-strong: rgba(255, 255, 255, 0.14);
-    --ck-accent: #f59e0b;
-    --ck-teal: #5eead4;
-    --ck-surface: rgba(255, 255, 255, 0.032);
-    --ck-grid-dot: rgba(255, 255, 255, 0.055);
-    --ck-vignette: rgba(0, 0, 0, 0.55);
-    --ck-scan-color: rgba(0, 0, 0, 0.04);
-    --ck-sweep-color: rgba(245, 158, 11, 0.06);
-    --ck-name-glow: rgba(245, 158, 11, 0.28);
-    --ck-hline-color: rgba(255, 255, 255, 0.1);
-    --ck-sep-color: rgba(255, 255, 255, 0.18);
-  }
+  /* ── Boot screen tokens — mapped directly to portfolio's design system ── */
+  .ck-boot {
+    --ck-bg: var(--bg, #0c1017);
+    --ck-text: var(--text, #f3efe7);
+    --ck-muted: var(--muted, #b8bec8);
+    --ck-soft: var(--soft, #8f98a8);
+    --ck-line: var(--line, rgba(255, 255, 255, 0.08));
+    --ck-line-strong: var(--line-strong, rgba(255, 255, 255, 0.14));
+    --ck-accent: var(--accent, #f59e0b);
+    --ck-teal: var(--teal, #5eead4);
 
-  [data-theme="light"] {
-    --ck-accent-rgb: 146, 64, 14;
-    --ck-bg: #e8e4de;
-    --ck-bg-elevated: rgba(240, 237, 231, 0.95);
-    --ck-text: #0f172a;
-    --ck-muted: #1a2236;
-    --ck-soft: #475569;
-    --ck-line: rgba(15, 23, 42, 0.12);
-    --ck-line-strong: rgba(15, 23, 42, 0.22);
-    --ck-accent: #92400e;
-    --ck-teal: #065f46;
-    --ck-surface: rgba(255, 255, 255, 0.55);
-    --ck-grid-dot: rgba(15, 23, 42, 0.055);
-    --ck-vignette: rgba(15, 23, 42, 0.06);
-    --ck-scan-color: rgba(15, 23, 42, 0.025);
-    --ck-sweep-color: rgba(146, 64, 14, 0.05);
-    --ck-name-glow: rgba(146, 64, 14, 0.22);
-    --ck-hline-color: rgba(15, 23, 42, 0.16);
-    --ck-sep-color: rgba(15, 23, 42, 0.2);
+    --ck-vignette: color-mix(in srgb, var(--ck-bg) 55%, black);
+    --ck-scan-color: color-mix(in srgb, var(--ck-text) 4%, transparent);
+    --ck-sweep-color: color-mix(in srgb, var(--ck-accent) 6%, transparent);
+    --ck-name-glow: color-mix(in srgb, var(--ck-accent) 28%, transparent);
+    --ck-hline-color: color-mix(in srgb, var(--ck-text) 10%, transparent);
+    --ck-sep-color: color-mix(in srgb, var(--ck-text) 18%, transparent);
+    --ck-grid-dot: color-mix(in srgb, var(--ck-text) 5.5%, transparent);
   }
 
   /* ── Layout ── */
@@ -384,7 +368,7 @@ const STYLES = `
     width: 55%;
     height: 55%;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(var(--ck-accent-rgb), 0.12) 0%, transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--ck-accent) 12%, transparent) 0%, transparent 65%);
     filter: blur(60px);
   }
   .ck-aurora::after {
@@ -400,7 +384,7 @@ const STYLES = `
   }
 
   [data-theme="light"] .ck-aurora::before {
-    background: radial-gradient(circle, rgba(146, 64, 14, 0.08) 0%, transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--ck-accent) 8%, transparent) 0%, transparent 65%);
   }
   [data-theme="light"] .ck-aurora::after {
     background: radial-gradient(circle, rgba(6, 95, 70, 0.06) 0%, transparent 65%);
@@ -448,9 +432,9 @@ const STYLES = `
     letter-spacing: 0.35em;
     text-transform: uppercase;
     padding: 6px 14px;
-    border: 1px solid rgba(var(--ck-accent-rgb), 0.3);
+    border: 1px solid color-mix(in srgb, var(--ck-accent) 30%, transparent);
     border-radius: 999px;
-    background: rgba(var(--ck-accent-rgb), 0.06);
+    background: color-mix(in srgb, var(--ck-accent) 6%, transparent);
     backdrop-filter: blur(8px);
   }
   .ck-chip-dot {
@@ -458,12 +442,12 @@ const STYLES = `
     height: 5px;
     background: var(--ck-accent);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(var(--ck-accent-rgb), 0.8);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--ck-accent) 80%, transparent);
     animation: ck-pulse 2s ease-in-out infinite;
   }
   @keyframes ck-pulse {
-    0%, 100% { box-shadow: 0 0 6px rgba(var(--ck-accent-rgb), 0.8); }
-    50%       { box-shadow: 0 0 14px rgba(var(--ck-accent-rgb), 1); }
+    0%, 100% { box-shadow: 0 0 6px color-mix(in srgb, var(--ck-accent) 80%, transparent); }
+    50%       { box-shadow: 0 0 14px var(--ck-accent); }
   }
 
   /* ── Name ── */
@@ -484,7 +468,7 @@ const STYLES = `
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--ck-accent), transparent);
     margin-top: 14px;
-    box-shadow: 0 0 20px rgba(var(--ck-accent-rgb), 0.5);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--ck-accent) 50%, transparent);
   }
 
   /* ── Title lines ── */
@@ -536,11 +520,11 @@ const STYLES = `
   .ck-bar-fill {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, var(--ck-accent), rgba(var(--ck-accent-rgb), 0.7));
+    background: linear-gradient(90deg, var(--ck-accent), color-mix(in srgb, var(--ck-accent) 70%, transparent));
     transform-origin: left center;
     transform: scaleX(0);
     border-radius: 1px;
-    box-shadow: 0 0 8px rgba(var(--ck-accent-rgb), 0.5);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--ck-accent) 50%, transparent);
   }
   .ck-bar-dot {
     position: absolute;
@@ -551,7 +535,7 @@ const STYLES = `
     height: 7px;
     background: var(--ck-accent);
     border-radius: 50%;
-    box-shadow: 0 0 12px rgba(var(--ck-accent-rgb), 0.9);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--ck-accent) 90%, transparent);
     z-index: 2;
   }
   .ck-pct {
