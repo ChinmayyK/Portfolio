@@ -219,14 +219,23 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
         <div className="absolute inset-0 ring-1 ring-inset ring-white/[0.06] rounded-[inherit] pointer-events-none z-30" />
       </div>
       {slides.length > 1 && (
-        <div className="flex gap-1 p-1.5 overflow-x-auto bg-black/20 scrollbar-hide sm:gap-1.5 sm:p-2">
+        <div className="flex gap-2 p-2 overflow-x-auto bg-black/30 scrollbar-hide sm:gap-3 sm:p-3 backdrop-blur-md">
           {slides.map((sl, i) => (
             <button key={i} onClick={e => { e.stopPropagation(); triggerHaptic("light"); go(i, i > active ? 1 : -1); }}
-              className={`relative shrink-0 w-12 h-7 rounded overflow-hidden transition-all duration-300 border sm:w-14 sm:h-8 ${i === active ? "opacity-100 border-[var(--accent-soft)] shadow-[0_0_6px_rgba(245,158,11,0.15)]" : "opacity-40 hover:opacity-70 border-transparent"}`}
+              className={`relative shrink-0 w-16 h-10 rounded-lg overflow-hidden transition-all duration-500 border sm:w-20 sm:h-12 ${
+                i === active 
+                  ? "opacity-100 border-[var(--accent)] shadow-[0_0_12px_rgba(245,158,11,0.3)] scale-105" 
+                  : "opacity-40 hover:opacity-80 border-white/10 hover:border-white/20"
+              }`}
               aria-label={`Go to ${sl.label}`}>
-              <Image src={sl.src} alt="" fill sizes="56px" className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-              <span className="absolute inset-x-0 bottom-0 p-0.5 text-center text-[6px] font-mono uppercase tracking-widest text-white/90">{sl.label}</span>
+              <Image src={sl.src} alt="" fill sizes="80px" className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-1 flex justify-center items-center">
+                <span className="text-[7px] sm:text-[8px] font-mono font-bold uppercase tracking-[0.15em] text-white/90 drop-shadow-md text-center line-clamp-1">{sl.label}</span>
+              </div>
+              {i === active && (
+                <div className="absolute inset-0 bg-[var(--accent)]/5 pointer-events-none" />
+              )}
             </button>
           ))}
         </div>
