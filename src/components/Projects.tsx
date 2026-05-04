@@ -228,13 +228,14 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
                   : "opacity-40 hover:opacity-80 border-white/10 hover:border-white/20"
               }`}
               aria-label={`Go to ${sl.label}`}>
-              <Image src={sl.src} alt="" fill sizes="80px" className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-1 flex justify-center items-center">
-                <span className="text-[7px] sm:text-[8px] font-mono font-bold uppercase tracking-[0.15em] text-white/90 drop-shadow-md text-center line-clamp-1">{sl.label}</span>
+              <Image src={sl.src} alt="" fill sizes="100px" className="object-cover" />
+              <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-[2px] flex justify-center items-center">
+                <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-widest text-white/90 text-center line-clamp-1 px-1">{sl.label}</span>
               </div>
-              {i === active && (
-                <div className="absolute inset-0 bg-[var(--accent)]/5 pointer-events-none" />
+              {i === active ? (
+                <div className="absolute inset-0 ring-2 ring-inset ring-[var(--accent)] pointer-events-none" />
+              ) : (
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors pointer-events-none" />
               )}
             </button>
           ))}
