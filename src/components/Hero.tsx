@@ -605,7 +605,17 @@ function HiddenPhotoWidget({
   const [isInteractive, setIsInteractive] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [history, setHistory] = useState<CommandEntry[]>([
-    { cmd: "sys.boot", output: <div className="text-[var(--success)] opacity-80 mt-1 mb-2 text-[10px] sm:text-xs">System initialized. Secure connection established.</div> },
+    { 
+      cmd: "sys.boot", 
+      output: (
+        <div className="text-[var(--muted)] opacity-80 mt-1 mb-3 text-[10px] sm:text-xs leading-relaxed font-mono">
+          <div>[ OK ] Loaded Kernel Architecture.</div>
+          <div>[ OK ] Mounted Root Filesystem.</div>
+          <div>[ OK ] Started System Services.</div>
+          <div className="text-[var(--success)] mt-1.5 animate-pulse">Connection established. Terminal active.</div>
+        </div>
+      ) 
+    },
     { cmd: "whoami", output: getCommandOutput("whoami") }
   ]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -999,7 +1009,7 @@ function FakeUIContent({
       {/* Glossy overlay */}
       <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
       {/* Scanlines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,1)_50%)] bg-[length:100%_4px]" />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.04] bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,1)_50%)] bg-[length:100%_4px]" />
 
       <div
         ref={scrollRef}
@@ -1017,7 +1027,7 @@ function FakeUIContent({
             <span className="text-[var(--text)] relative min-h-[20px] min-w-[2px] inline-flex items-center">
               {inputValue}
               {showGhost && !inputValue && (
-                 <span className="absolute left-4 sm:left-5 text-[var(--muted)] whitespace-nowrap pointer-events-none opacity-40">
+                 <span className="absolute left-4 sm:left-5 text-[var(--muted)] whitespace-nowrap pointer-events-none opacity-40 animate-pulse">
                    Type &quot;help&quot; to explore
                  </span>
               )}

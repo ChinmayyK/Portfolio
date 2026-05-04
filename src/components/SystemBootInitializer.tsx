@@ -591,7 +591,16 @@ const STYLES = `
     display: inline-block;
   }
   .ck-name-char {
-    text-shadow: 0 0 20px var(--ck-name-glow);
+    text-shadow: 
+      0 0 20px var(--ck-name-glow),
+      2px 0 0 rgba(255, 95, 86, 0.3),
+      -2px 0 0 rgba(45, 212, 191, 0.3);
+  }
+
+  [data-theme="light"] .ck-name-char {
+    text-shadow: 
+      1px 0 0 rgba(255, 95, 86, 0.2),
+      -1px 0 0 rgba(45, 212, 191, 0.2);
   }
 
   /* ── Status text ── */
