@@ -231,6 +231,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
                 sizes="100px" 
                 className="object-cover"
                 unoptimized
+                priority
               />
               <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-sm flex justify-center items-center z-10">
                 <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-widest text-white/90 text-center line-clamp-1 px-1">{sl.label}</span>
