@@ -634,7 +634,8 @@ function HiddenPhotoWidget({
   useEffect(() => {
     if (!focusRef) return;
     focusRef.current = () => {
-      inputRef.current?.focus();
+      setIsHovered(false);
+      setTimeout(() => inputRef.current?.focus(), 50);
     };
     return () => {
       if (focusRef) focusRef.current = null;
@@ -744,7 +745,7 @@ function HiddenPhotoWidget({
 
   if (!mounted) {
     return (
-      <div className="relative w-full aspect-square sm:aspect-[1/1.15] bg-[var(--bg)] rounded-xl border border-[var(--line)]" />
+      <div className="relative w-full aspect-[4/5] sm:aspect-[1/1.15] bg-[var(--bg)] rounded-xl border border-[var(--line)]" />
     );
   }
 
@@ -771,7 +772,13 @@ function HiddenPhotoWidget({
             onClick={(e) => {
               e.stopPropagation();
               triggerHaptic("medium");
-              setIsHovered(prev => !prev);
+              setIsHovered(prev => {
+                if (prev) {
+                  // Going from photo to terminal
+                  setTimeout(() => inputRef.current?.focus(), 100);
+                }
+                return !prev;
+              });
             }}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
           >
@@ -791,7 +798,7 @@ function HiddenPhotoWidget({
       </div>
 
       <div
-        className="relative w-full max-w-full overflow-hidden aspect-square sm:aspect-[1/1.15] bg-[var(--bg)] cursor-text"
+        className="relative w-full max-w-full overflow-hidden aspect-[4/5] sm:aspect-[1/1.15] bg-[var(--bg)] cursor-text"
         onClick={(e) => {
           e.stopPropagation();
           hasInteractedRef.current = true;
