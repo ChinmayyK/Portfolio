@@ -283,13 +283,26 @@ const STYLES = `
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: var(--ck-bg);
+    background:
+      radial-gradient(circle at top left, rgba(245, 158, 11, 0.16), transparent 28%),
+      radial-gradient(circle at 85% 12%, rgba(94, 234, 212, 0.12), transparent 24%),
+      radial-gradient(circle at 50% 100%, rgba(56, 189, 248, 0.08), transparent 30%),
+      linear-gradient(180deg, #0d1118 0%, #0c1017 45%, #0b0e14 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     perspective: 1000px;
     cursor: pointer;
     overflow: hidden;
+  }
+
+  [data-theme="light"] .ck-boot {
+    --ck-vignette: color-mix(in srgb, var(--ck-bg) 75%, #bcaea3);
+    background:
+      radial-gradient(circle at top left, rgba(146, 64, 14, 0.08), transparent 26%),
+      radial-gradient(circle at 85% 12%, rgba(6, 95, 70, 0.05), transparent 24%),
+      radial-gradient(circle at 50% 100%, rgba(6, 95, 70, 0.04), transparent 28%),
+      linear-gradient(180deg, #ece8e1 0%, #e8e4de 45%, #e2ded6 100%);
   }
 
   /* ── Background layers ── */
