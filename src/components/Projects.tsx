@@ -184,11 +184,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
               sizes="(max-width:768px) 92vw, 50vw"
               className="object-contain object-center"
               loading="eager"
-              onError={(e) => {
-                // Show a subtle placeholder instead of a black void
-                const img = e.currentTarget as HTMLImageElement;
-                img.style.opacity = "0";
-              }}
+              unoptimized
             />
           </motion.div>
         </AnimatePresence>
@@ -228,7 +224,12 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
                   : "opacity-40 hover:opacity-80 border-white/10 hover:border-white/20"
               }`}
               aria-label={`Go to ${sl.label}`}>
-              <Image src={sl.src} alt="" fill sizes="100px" className="object-cover" />
+              <img 
+                src={sl.src} 
+                alt="" 
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+              />
               <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-[2px] flex justify-center items-center">
                 <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-widest text-white/90 text-center line-clamp-1 px-1">{sl.label}</span>
               </div>
