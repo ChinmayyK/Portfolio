@@ -217,28 +217,30 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
       {slides.length > 1 && (
         <div className="flex gap-2 p-2 overflow-x-auto bg-black/30 scrollbar-hide sm:gap-3 sm:p-3 backdrop-blur-md">
           {slides.map((sl, i) => (
-            <button key={i} onClick={e => { e.stopPropagation(); triggerHaptic("light"); go(i, i > active ? 1 : -1); }}
-              className={`relative shrink-0 w-16 h-10 rounded-lg overflow-hidden transition-all duration-500 border sm:w-20 sm:h-12 ${
+            <div key={i} role="button" onClick={e => { e.stopPropagation(); triggerHaptic("light"); go(i, i > active ? 1 : -1); }}
+              className={`relative shrink-0 w-16 h-10 rounded-lg overflow-hidden transition-all duration-500 border sm:w-20 sm:h-12 cursor-pointer ${
                 i === active 
                   ? "opacity-100 border-[var(--accent)] shadow-[0_0_12px_rgba(245,158,11,0.3)] scale-105" 
-                  : "opacity-40 hover:opacity-80 border-white/10 hover:border-white/20"
+                  : "opacity-50 hover:opacity-100 border-white/10 hover:border-white/20"
               }`}
               aria-label={`Go to ${sl.label}`}>
-              <img 
+              <Image 
                 src={sl.src} 
-                alt="" 
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
+                alt={sl.label} 
+                fill 
+                sizes="100px" 
+                className="object-cover"
+                unoptimized
               />
-              <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-[2px] flex justify-center items-center">
+              <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-sm flex justify-center items-center z-10">
                 <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-widest text-white/90 text-center line-clamp-1 px-1">{sl.label}</span>
               </div>
               {i === active ? (
-                <div className="absolute inset-0 ring-2 ring-inset ring-[var(--accent)] pointer-events-none" />
+                <div className="absolute inset-0 ring-2 ring-inset ring-[var(--accent)] pointer-events-none z-20" />
               ) : (
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors pointer-events-none" />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors pointer-events-none z-20" />
               )}
-            </button>
+            </div>
           ))}
         </div>
       )}
