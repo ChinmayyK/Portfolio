@@ -246,7 +246,8 @@ export function Hero() {
 
             {/* Subheadline */}
             <p className="hidden sm:block mt-6 lg:mt-8 text-sm sm:text-lg lg:text-xl text-[var(--muted)] max-w-2xl leading-relaxed">
-              Turning complex backend architectures into elegant, highly-interactive user experiences.
+              Turning complex backend architectures into elegant, <br className="hidden lg:block" />
+              highly-interactive user experiences.
             </p>
 
             {/* Actions */}
@@ -743,7 +744,7 @@ function HiddenPhotoWidget({
 
   if (!mounted) {
     return (
-      <div className="relative w-full aspect-[4/3] sm:aspect-[1/1.15] bg-[var(--bg)] rounded-xl border border-[var(--line)]" />
+      <div className="relative w-full aspect-square sm:aspect-[1/1.15] bg-[var(--bg)] rounded-xl border border-[var(--line)]" />
     );
   }
 
@@ -790,7 +791,7 @@ function HiddenPhotoWidget({
       </div>
 
       <div
-        className="relative w-full max-w-full overflow-hidden aspect-[4/3] sm:aspect-[1/1.15] bg-[var(--bg)] cursor-text"
+        className="relative w-full max-w-full overflow-hidden aspect-square sm:aspect-[1/1.15] bg-[var(--bg)] cursor-text"
         onClick={(e) => {
           e.stopPropagation();
           hasInteractedRef.current = true;
@@ -1004,7 +1005,7 @@ function FakeUIContent({
             <span className="text-[var(--text)] relative min-h-[20px] min-w-[2px] inline-flex items-center">
               {inputValue}
               {showGhost && !inputValue && (
-                 <span className="absolute left-0 text-[var(--muted)] whitespace-nowrap pointer-events-none opacity-40">
+                 <span className="absolute left-4 sm:left-5 text-[var(--muted)] whitespace-nowrap pointer-events-none opacity-40">
                    Type &quot;help&quot; to explore
                  </span>
               )}

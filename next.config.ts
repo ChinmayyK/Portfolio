@@ -10,10 +10,10 @@ const nextConfig: NextConfig = {
   },
 
   // Explicitly set the project root for Turbopack to avoid workspace inference issues
+  // where it might pick up a lockfile in the home directory.
   turbopack: {
     root: process.cwd(),
   },
-
   // cacheComponents for faster TTFB
   cacheComponents: true,
 

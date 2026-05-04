@@ -38,12 +38,12 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       return;
     }
 
-    containerRef.current.classList.add("ck-exit");
-
+    // Removed blur filter to fix transition lag
     gsap.to(containerRef.current, {
       opacity: 0,
-      duration: 0.6,
-      ease: "expo.inOut",
+      scale: 1.15,
+      duration: 0.8,
+      ease: "power2.inOut",
       onComplete: () => {
         setDone(true);
       }
@@ -81,12 +81,11 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       const nameChars = gsap.utils.toArray(nameRef.current ? nameRef.current.querySelectorAll(".ck-name-char") : []);
       if (nameChars.length) {
         gsap.set(nameChars, {
-          y: 60,
+          y: 40,
           opacity: 0,
-          rotateX: -90,
           scale: 0.5,
-          filter: "blur(20px)",
-          transformOrigin: "50% 50% -100px"
+          rotateX: 45,
+          filter: "blur(15px)"
         });
       }
 
@@ -107,27 +106,16 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
         timeline.to(nameChars, {
           y: 0,
           opacity: 1,
-          rotateX: 0,
           scale: 1,
+          rotateX: 0,
           filter: "blur(0px)",
-          duration: 1.5,
+          duration: 1.2,
           stagger: {
             each: 0.04,
-            from: "center"
+            from: "start"
           },
           ease: "expo.out"
         }, "<");
-
-        // Subtle Glitch Effect during reveal
-        timeline.to(nameChars, {
-          x: () => (Math.random() - 0.5) * 12,
-          opacity: () => 0.4 + Math.random() * 0.6,
-          duration: 0.08,
-          repeat: 4,
-          yoyo: true,
-          stagger: 0.02,
-          ease: "none"
-        }, "<0.15");
       }
 
       timeline.to(".ck-progress-row", { opacity: 1, duration: 0.6 }, "-=0.8");
@@ -170,22 +158,9 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
 
       // Conclusion - Cinematic flash and zoom out
       timeline.to(".ck-init", { opacity: 0, display: "none", duration: 0.1 }, "-=0.2")
-        .to(".ck-online", { opacity: 1, display: "inline-block", duration: 0.3 }, "<")
-        .to(".ck-stage", { 
-          filter: "brightness(2) contrast(1.3)", 
-          scale: 1.05, 
-          duration: 0.15, 
-          yoyo: true, 
-          repeat: 1,
-          ease: "power2.inOut"
-        }, "<");
+        .to(".ck-online", { opacity: 1, display: "inline-block", duration: 0.3 }, "<");
 
       timeline.call(() => { triggerHaptic("success"); }, [], "<");
-      timeline.to(".ck-boot", {
-        background: "transparent",
-        duration: 0.5,
-        ease: "power2.out"
-      }, "+=0.2");
       timeline.to({}, { duration: 0.4 });
     };
 
@@ -314,11 +289,6 @@ const STYLES = `
     perspective: 1000px;
     cursor: pointer;
     overflow: hidden;
-  }
-
-  .ck-exit {
-    clip-path: circle(0% at 50% 50%);
-    transition: clip-path 0.8s cubic-bezier(0.85, 0, 0.15, 1);
   }
 
   /* ── Background layers ── */
@@ -457,10 +427,10 @@ const STYLES = `
     text-align: center;
   }
   .ck-name {
-    font-size: clamp(22px, 6.5vw, 88px);
+    font-size: clamp(36px, 8.5vw, 100px);
     font-weight: 800;
     color: var(--ck-text);
-    letter-spacing: -0.02em;
+    letter-spacing: 0.04em;
     line-height: 1;
     text-transform: uppercase;
   }
@@ -482,7 +452,7 @@ const STYLES = `
   }
   .ck-title {
     font-family: monospace;
-    font-size: 11px;
+    font-size: 13px;
     color: var(--ck-soft);
     text-transform: uppercase;
     letter-spacing: 0.22em;
@@ -510,7 +480,7 @@ const STYLES = `
     margin-bottom: 36px;
   }
   .ck-bar {
-    width: 220px;
+    width: 280px;
     height: 2px;
     background: var(--ck-line-strong);
     position: relative;
@@ -624,21 +594,21 @@ const STYLES = `
 
   /* ── Mobile ── */
   @media (max-width: 640px) {
-    .ck-name  { font-size: 26px; }
+    .ck-name  { font-size: 34px; letter-spacing: 0.02em; }
     .ck-titles {
-      gap: 0;
+      gap: 6px;
       margin-bottom: 32px;
       flex-direction: column;
       align-items: center;
     }
-    .ck-title { font-size: 9px; letter-spacing: 0.14em; padding: 4px 0; }
+    .ck-title { font-size: 10px; letter-spacing: 0.18em; padding: 0; }
     .ck-sep { display: none; }
     .ck-progress-row { margin-bottom: 28px; }
-    .ck-bar   { width: 160px; }
-    .ck-chip  { margin-bottom: 28px; font-size: 8px; }
+    .ck-bar   { width: 200px; }
+    .ck-chip  { margin-bottom: 24px; font-size: 9px; padding: 4px 12px; }
     .ck-links { gap: 16px; }
     .ck-link  { font-size: 9px; }
-    .ck-corner { font-size: 7px; opacity: 0.55; }
+    .ck-corner { font-size: 8px; opacity: 0.65; }
     .ck-tl, .ck-tr { top: 18px; }
     .ck-bl, .ck-br { bottom: 18px; }
     .ck-tl { left: 18px; }
