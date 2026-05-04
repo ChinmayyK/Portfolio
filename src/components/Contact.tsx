@@ -161,7 +161,9 @@ export function Contact() {
           <ScrollScramble text="Let's build" as="span" duration={600} delay={200} />{" "}
           <span className="text-gradient-full italic">systems</span>{" "}
           <br className="sm:hidden" />
-          <ScrollScramble text="that last." as="span" duration={500} delay={350} />
+          <ScrollScramble text="that" as="span" duration={500} delay={350} />
+          {" "}
+          <ScrollScramble text="last." as="span" duration={500} delay={450} />
         </motion.h2>
 
         <motion.p

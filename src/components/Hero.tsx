@@ -102,8 +102,9 @@ export function Hero() {
     return b1 + Math.max(0, Math.min(1, t)) * (b2 - b1);
   };
 
-  const y = map(scrollY, 0, 1000, 0, (isMounted && typeof window !== 'undefined' && window.innerWidth < 768) ? 80 : 200);
-  const opacity = 1 - map(scrollY, (isMounted && typeof window !== 'undefined' && window.innerWidth < 768) ? 150 : 300, (isMounted && typeof window !== 'undefined' && window.innerWidth < 768) ? 500 : 1000, 0, 1);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const y = isMobile ? 0 : map(scrollY, 0, 1000, 0, 200);
+  const opacity = isMobile ? 1 : 1 - map(scrollY, 300, 1000, 0, 1);
 
   const handleMouseMove = useCallback(({ currentTarget, clientX, clientY }: React.MouseEvent) => {
     const { left, top } = currentTarget.getBoundingClientRect();
@@ -780,17 +781,8 @@ function HiddenPhotoWidget({
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              e.preventDefault();
               triggerHaptic("medium");
-              setIsHovered(prev => {
-                if (prev) {
-                  // Going from photo to terminal
-                  if (window.innerWidth >= 768) {
-                    setTimeout(() => inputRef.current?.focus(), 100);
-                  }
-                }
-                return !prev;
-              });
+              setIsHovered(prev => !prev);
             }}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
           >
