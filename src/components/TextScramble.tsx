@@ -100,7 +100,7 @@ export function TextScramble({
           currentWord = [];
         }
         elements.push(
-          <span key={`space-${i}`} style={{ display: "inline", whiteSpace: "pre" }}>
+          <span key={`space-${i}`} style={{ display: "inline", whiteSpace: "pre-wrap" }}>
             {char}
           </span>
         );

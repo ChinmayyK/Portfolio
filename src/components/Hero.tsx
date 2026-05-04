@@ -82,7 +82,16 @@ export function Hero() {
 
   // Parallax and opacity fallbacks (map scrollY 0-1000 -> y:0-200, opacity 300-1000 -> 1-0)
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY || window.pageYOffset || 0);
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY || window.pageYOffset || 0);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -93,8 +102,8 @@ export function Hero() {
     return b1 + Math.max(0, Math.min(1, t)) * (b2 - b1);
   };
 
-  const y = map(scrollY, 0, 1000, 0, 200);
-  const opacity = 1 - map(scrollY, 300, 1000, 0, 1);
+  const y = map(scrollY, 0, 1000, 0, (isMounted && typeof window !== 'undefined' && window.innerWidth < 768) ? 80 : 200);
+  const opacity = 1 - map(scrollY, (isMounted && typeof window !== 'undefined' && window.innerWidth < 768) ? 150 : 300, (isMounted && typeof window !== 'undefined' && window.innerWidth < 768) ? 500 : 1000, 0, 1);
 
   const handleMouseMove = useCallback(({ currentTarget, clientX, clientY }: React.MouseEvent) => {
     const { left, top } = currentTarget.getBoundingClientRect();
@@ -771,11 +780,14 @@ function HiddenPhotoWidget({
             }`}
             onClick={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               triggerHaptic("medium");
               setIsHovered(prev => {
                 if (prev) {
                   // Going from photo to terminal
-                  setTimeout(() => inputRef.current?.focus(), 100);
+                  if (window.innerWidth >= 768) {
+                    setTimeout(() => inputRef.current?.focus(), 100);
+                  }
                 }
                 return !prev;
               });
@@ -943,7 +955,7 @@ function TerminalEntry({ entry, index }: { entry: CommandEntry; index: number })
   return (
     <div ref={entryRef} className="mb-4 sm:mb-5" style={{ opacity: 0 }}>
       <div className="flex items-center flex-nowrap font-mono">
-        <span className="text-[var(--teal)] font-medium shrink-0"><span className="hidden sm:inline">chinmay@system</span><span className="sm:hidden">ck@sys</span></span><span className="text-[var(--soft)]">:</span><span className="text-[var(--accent)]">~</span><span className="text-[var(--soft)] mr-1">$</span>
+        <span className="text-[var(--teal)] font-medium shrink-0">chinmayk@sys</span><span className="text-[var(--soft)]">:</span><span className="text-[var(--accent)]">~</span><span className="text-[var(--soft)] mr-1">$</span>
         <span className="text-[var(--text)] truncate">{renderCmd(entry.cmd)}</span>
       </div>
       {entry.output && (
@@ -1008,7 +1020,7 @@ function FakeUIContent({
             <TerminalEntry key={idx} entry={entry} index={idx} />
           ))}
           <div className="flex items-center mt-1 relative pr-16 sm:pr-0 flex-nowrap font-mono">
-            <span className="text-[var(--teal)] font-medium shrink-0"><span className="hidden sm:inline">chinmay@system</span><span className="sm:hidden">ck@sys</span></span><span className="text-[var(--soft)]">:</span><span className="text-[var(--accent)]">~</span><span className="text-[var(--soft)] mr-0.5">$</span>
+            <span className="text-[var(--teal)] font-medium shrink-0">chinmayk@sys</span><span className="text-[var(--soft)]">:</span><span className="text-[var(--accent)]">~</span><span className="text-[var(--soft)] mr-0.5">$</span>
             <span className="text-[var(--text)] relative min-h-[20px] min-w-[2px] inline-flex items-center">
               {inputValue}
               {showGhost && !inputValue && (
