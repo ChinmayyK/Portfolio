@@ -403,7 +403,7 @@ const getCommandOutput = (cmd: string): React.ReactNode => {
         <div className="pl-4 sm:pl-6 flex flex-col gap-1 border-l border-[var(--line)] ml-1.5 my-1 sm:my-1.5 py-0.5 sm:py-1">
           <div><span className="text-[var(--accent)]">"name"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Chinmay Kudalkar"</span><span className="text-[var(--text)]">,</span></div>
           <div><span className="text-[var(--accent)]">"role"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Full-Stack Engineer"</span><span className="text-[var(--text)]">,</span></div>
-          <div><span className="text-[var(--accent)]">"focus"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Scalable Systems & DevOps"</span><span className="text-[var(--text)]">,</span></div>
+          <div><span className="text-[var(--accent)]">"focus"</span><span className="text-[var(--text)]">:</span> <span className="text-[var(--teal)]">"Full-Stack & AI/ML"</span><span className="text-[var(--text)]">,</span></div>
           <div>
             <span className="text-[var(--accent)]">"stack"</span><span className="text-[var(--text)]">: [</span>
             <span className="text-[var(--teal)]">"TypeScript"</span><span className="text-[var(--text)]">, </span>

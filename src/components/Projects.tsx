@@ -182,7 +182,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
               alt={s.label}
               fill
               sizes="(max-width:768px) 92vw, 50vw"
-              className="object-contain object-center"
+              className="object-cover object-top"
               loading="eager"
               unoptimized
             />
