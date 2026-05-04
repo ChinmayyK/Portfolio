@@ -608,11 +608,9 @@ function HiddenPhotoWidget({
     { 
       cmd: "sys.boot", 
       output: (
-        <div className="text-[var(--muted)] opacity-80 mt-1 mb-3 text-[10px] sm:text-xs leading-relaxed font-mono">
-          <div>[ OK ] Loaded Kernel Architecture.</div>
-          <div>[ OK ] Mounted Root Filesystem.</div>
-          <div>[ OK ] Started System Services.</div>
-          <div className="text-[var(--success)] mt-1.5 animate-pulse">Connection established. Terminal active.</div>
+        <div className="text-[var(--muted)] opacity-80 mt-1 mb-2 text-[10px] sm:text-xs leading-relaxed font-mono">
+          <div>[ OK ] Kernel initialized.</div>
+          <div className="text-[var(--success)] mt-1 animate-pulse">Connection established.</div>
         </div>
       ) 
     },

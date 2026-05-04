@@ -13,7 +13,7 @@ import { triggerHaptic } from "@/lib/haptics";
 
 const NAME = "Chinmay Kudalkar";
 const TITLE_LINES = ["Performance", "Maintainability", "Scalability"];
-const LINKS = ["github.com/ChinmayyK", "linkedin.com/in/chinmayyk"];
+const LINKS = ["github.com/chinmayyk", "linkedin.com/in/chinmayyk"];
 const CHIP_LABEL = "SYSTEM v2.4.0";
 
 export function SystemBootInitializer({ children }: { children: React.ReactNode }) {
@@ -38,12 +38,9 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       return;
     }
 
-    // Premium cinematic slide-up and fade transition
     gsap.to(containerRef.current, {
       yPercent: -100,
-      opacity: 0,
-      scale: 0.95,
-      duration: 1.2,
+      duration: 0.9,
       ease: "expo.inOut",
       onComplete: () => {
         setDone(true);
@@ -68,13 +65,15 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
 
       if (cancelled || deadRef.current) return;
 
+      const isMobile = window.innerWidth < 768;
+
       // Initial States
       gsap.set(".ck-sweep", { scaleY: 0, transformOrigin: "top left" });
       gsap.set(".ck-chip", { opacity: 0, y: 15 });
       gsap.set(".ck-name-wrap", { opacity: 1 });
       gsap.set(".ck-progress-row", { opacity: 0 });
       gsap.set(".ck-link", { opacity: 0, y: 8 });
-      gsap.set(".ck-title", { opacity: 0, y: 10, filter: "blur(4px)" });
+      gsap.set(".ck-title", { opacity: 0, y: 10 }); // Removed blur
       gsap.set(".ck-name-rule", { scaleX: 0, transformOrigin: "center" });
       gsap.set(".ck-hline", { scaleX: 0, transformOrigin: "center" });
       gsap.set(".ck-bar-fill", { scaleX: 0, transformOrigin: "left" });
@@ -84,32 +83,26 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
         gsap.set(nameChars, {
           y: 40,
           opacity: 0,
-          scale: 0.5,
-          rotateX: 45,
-          filter: "blur(15px)"
+          rotateX: 45 // Removed scale and blur for performance
         });
       }
 
       timeline = gsap.timeline({ onComplete: skip });
-
-      const isMobile = window.innerWidth < 768;
       timeline.timeScale(isMobile ? 1.4 : 1);
 
       // Phase 1: High-Speed Intro
       timeline.to(".ck-sweep", { scaleY: 1, duration: 0.8, ease: "expo.inOut" })
         .to(".ck-hline", { scaleX: 1, duration: 1.0, ease: "power4.inOut" }, "<0.2")
-        .fromTo(".ck-grid", { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" }, "<");
+        .fromTo(".ck-grid", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" }, "<"); // Removed scale
 
-      // Phase 2: The Core Identity Reveal (Glitch + Stagger)
+      // Phase 2: The Core Identity Reveal
       timeline.to(".ck-chip", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, "-=0.4");
       
       if (nameChars.length) {
         timeline.to(nameChars, {
           y: 0,
           opacity: 1,
-          scale: 1,
           rotateX: 0,
-          filter: "blur(0px)",
           duration: 1.2,
           stagger: {
             each: 0.04,
@@ -143,7 +136,6 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       timeline.to(".ck-title", { 
         opacity: 1, 
         y: 0, 
-        filter: "blur(0px)", 
         duration: 0.8, 
         stagger: 0.1, 
         ease: "power3.out" 
