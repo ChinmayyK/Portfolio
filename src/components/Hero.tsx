@@ -622,11 +622,12 @@ function HiddenPhotoWidget({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // On some mobile browsers, a touch interaction can emit both Pointer events
-  // and a follow-up click. We toggle on PointerUp for touch and ignore the
-  // subsequent click to prevent double-toggles.
-  const ignoreNextToggleClickRef = useRef(false);
-  const clearIgnoreClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Some mobile browsers emit multiple activation events for a single tap
+  // (pointer/touch + a follow-up click). Track the most recent non-click
+  // activation so we can ignore the synthetic click without swallowing real
+  // subsequent taps.
+  const lastNonClickToggleAtRef = useRef(0);
+  const lastToggleAtRef = useRef(0);
 
   // Synchronization refs for the two doors
   const leftScrollRef = useRef<HTMLDivElement>(null);
@@ -642,14 +643,6 @@ function HiddenPhotoWidget({
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (clearIgnoreClickTimeoutRef.current) {
-        clearTimeout(clearIgnoreClickTimeoutRef.current);
-      }
-    };
   }, []);
 
   useEffect(() => {
@@ -673,54 +666,57 @@ function HiddenPhotoWidget({
     };
   }, [focusRef]);
 
-  const handleToggleHover = (e?: React.SyntheticEvent) => {
+  const performToggle = (e?: React.SyntheticEvent, source: "click" | "pointer" | "touch" | "key" = "click") => {
     e?.stopPropagation();
+
+    const now = Date.now();
+    // Prevent duplicate toggles when multiple events fire for a single gesture.
+    if (now - lastToggleAtRef.current < 150) return;
+    lastToggleAtRef.current = now;
+
+    if (source !== "click") {
+      lastNonClickToggleAtRef.current = now;
+    }
+
     triggerHaptic("medium");
     setIsHovered((prev) => !prev);
-  };
-
-  const markTouchToggleHandled = () => {
-    ignoreNextToggleClickRef.current = true;
-    if (clearIgnoreClickTimeoutRef.current) {
-      clearTimeout(clearIgnoreClickTimeoutRef.current);
-    }
-    clearIgnoreClickTimeoutRef.current = setTimeout(() => {
-      ignoreNextToggleClickRef.current = false;
-    }, 700);
   };
 
   const handleTogglePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     // Pointer capture helps keep the interaction consistent even if the button
     // scales slightly while pressed (active:scale-95).
-    if (e.pointerType === "touch" || e.pointerType === "pen") {
-      try {
-        e.currentTarget.setPointerCapture(e.pointerId);
-      } catch {
-        // Ignore browsers that don't support pointer capture.
-      }
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // Ignore browsers that don't support pointer capture.
     }
   };
 
   const handleTogglePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (e.pointerType === "touch" || e.pointerType === "pen") {
-      markTouchToggleHandled();
-      handleToggleHover(e);
-    }
+    // Only respond to primary/left interactions.
+    if (typeof e.button === "number" && e.button !== 0) return;
+    performToggle(e, "pointer");
+  };
+
+  const handleToggleTouchEnd = (e: React.TouchEvent<HTMLButtonElement>) => {
+    performToggle(e, "touch");
   };
 
   const handleToggleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (ignoreNextToggleClickRef.current) {
+    const now = Date.now();
+    // Ignore the synthetic click that often follows a touch/pointer activation.
+    if (now - lastNonClickToggleAtRef.current < 450) {
       e.preventDefault();
       e.stopPropagation();
       return;
     }
-    handleToggleHover(e);
+    performToggle(e, "click");
   };
 
   const handleButtonKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      handleToggleHover();
+      performToggle(e, "key");
     }
   };
 
@@ -866,6 +862,7 @@ function HiddenPhotoWidget({
             }`}
             onPointerDown={handleTogglePointerDown}
             onPointerUp={handleTogglePointerUp}
+            onTouchEnd={handleToggleTouchEnd}
             onClick={handleToggleClick}
             onKeyDown={handleButtonKeyDown}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
