@@ -159,7 +159,7 @@ export function Contact() {
           transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
           <ScrollScramble text="Let's build" as="span" duration={600} delay={200} />{" "}
-          <span className="text-gradient-full italic block sm:inline">systems</span>{" "}
+          <span className="text-gradient-full italic">systems</span>{" "}
           <br className="sm:hidden" />
           <ScrollScramble text="that" as="span" duration={500} delay={350} />
           {" "}

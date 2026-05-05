@@ -637,7 +637,6 @@ function HiddenPhotoWidget({
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -661,10 +660,29 @@ function HiddenPhotoWidget({
     };
   }, [focusRef]);
 
-  const handleToggleHover = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
+  const handleToggleHover = (e?: React.SyntheticEvent) => {
+    e?.stopPropagation();
     triggerHaptic("medium");
     setIsHovered((prev) => !prev);
+  };
+
+  const handleButtonKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleToggleHover();
+    }
+  };
+
+  const leftDoorStyle: React.CSSProperties = {
+    transform: isHovered ? "translateX(-100%)" : "translateX(0%)",
+    transition: "transform .45s cubic-bezier(.22,1,.36,1)",
+    clipPath: "polygon(0 0, 50.5% 0, 50.5% 100%, 0 100%)",
+  };
+
+  const rightDoorStyle: React.CSSProperties = {
+    transform: isHovered ? "translateX(100%)" : "translateX(0%)",
+    transition: "transform .45s cubic-bezier(.22,1,.36,1)",
+    clipPath: "polygon(49.5% 0, 100% 0, 100% 100%, 49.5% 100%)",
   };
 
   const getSuggestion = (input: string) => {
@@ -794,9 +812,8 @@ function HiddenPhotoWidget({
                 ? "bg-[var(--accent)]/15 border-[var(--accent)]/40 text-[var(--accent)] shadow-[0_0_20px_rgba(245,158,11,0.15)]"
                 : "bg-[var(--surface-soft)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-accent)] shadow-sm"
             }`}
-            onClick={handleToggleHover}
-            onPointerDown={handleToggleHover}
-            onTouchStart={handleToggleHover}
+            onPointerUp={handleToggleHover}
+            onKeyDown={handleButtonKeyDown}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
           >
             {isHovered ? (
@@ -863,9 +880,8 @@ function HiddenPhotoWidget({
         <div 
           className="absolute inset-0 z-20 overflow-y-auto scrollbar-hide"
           onScroll={(e) => {
-            const st = e.currentTarget.scrollTop;
-            if (leftScrollRef.current) leftScrollRef.current.scrollTop = st;
-            if (rightScrollRef.current) rightScrollRef.current.scrollTop = st;
+            syncScroll(e.currentTarget.scrollTop, "left");
+            syncScroll(e.currentTarget.scrollTop, "right");
           }}
           onClick={(e) => {
             // Forward clicks to the input
@@ -889,7 +905,7 @@ function HiddenPhotoWidget({
 
         {/* Left Door - Visual Only */}
         <div
-          style={{ transform: isHovered ? "translateX(-100%)" : "translateX(0%)", transition: "transform .45s cubic-bezier(.22,1,.36,1)" , clipPath: "polygon(0 0, 50.5% 0, 50.5% 100%, 0 100%)" } as any}
+          style={leftDoorStyle}
           className="absolute inset-0 bg-[var(--bg)] z-10 pointer-events-none"
         >
           <FakeUIContent
@@ -904,7 +920,7 @@ function HiddenPhotoWidget({
 
         {/* Right Door - Visual Only */}
         <div
-          style={{ transform: isHovered ? "translateX(100%)" : "translateX(0%)", transition: "transform .45s cubic-bezier(.22,1,.36,1)" , clipPath: "polygon(49.5% 0, 100% 0, 100% 100%, 49.5% 100%)" } as any}
+          style={rightDoorStyle}
           className="absolute inset-0 bg-[var(--bg)] z-10 pointer-events-none"
         >
           <FakeUIContent 
@@ -997,11 +1013,11 @@ function FakeUIContent({
 
   // Ghost text timeout logic
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
     if (!inputValue) {
       timeout = setTimeout(() => setShowGhost(true), 3500);
     } else {
-      setShowGhost(false);
+      timeout = setTimeout(() => setShowGhost(false), 0);
     }
     return () => clearTimeout(timeout);
   }, [inputValue]);
