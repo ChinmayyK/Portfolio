@@ -12,7 +12,6 @@ const NeuralMesh = dynamic(() => import("./NeuralMesh").then((m) => m.NeuralMesh
 const BackgroundLogs = dynamic(() => import("./BackgroundLogs").then((m) => m.BackgroundLogs), { ssr: false, loading: () => null });
 import { useTheme } from "../hooks/useTheme";
 import { useDesktopEffects } from "../hooks/useDesktopEffects";
-import { useScrollVelocity } from "../hooks/useScrollVelocity";
 import { MagneticButton } from "./MagneticButton";
 import { TiltCard } from "./TiltCard";
 import { triggerHaptic } from "@/lib/haptics";
@@ -68,16 +67,14 @@ export function Hero() {
   const [isCTAHovered, setIsCTAHovered] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const desktopEffects = useDesktopEffects();
-  const scrollVelocity = useScrollVelocity();
-  const blurClass = scrollVelocity > 900 ? "scroll-blur-lg" : scrollVelocity > 450 ? "scroll-blur-md" : scrollVelocity > 200 ? "scroll-blur-sm" : "scroll-blur-none";
   const [mouseXPos, setMouseXPos] = useState<number | null>(null);
   const [mouseYPos, setMouseYPos] = useState<number | null>(null);
   // Ref to the guarded focus function exposed by HiddenPhotoWidget
   const terminalFocusRef = useRef<(() => void) | null>(null);
   
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsMounted(true);
+    const t = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(t);
   }, []);
 
   // Parallax and opacity fallbacks (map scrollY 0-1000 -> y:0-200, opacity 300-1000 -> 1-0)
@@ -249,7 +246,7 @@ export function Hero() {
             {isMounted && <SystemStatusHeader className="hidden lg:flex" />}
 
             {/* Headline */}
-            <h1 className={`text-[1.7rem] leading-[1.1] sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.5rem] font-bold tracking-tight text-[var(--text)] sm:leading-[1.05] max-w-4xl ${blurClass}`}
+            <h1 className="text-[1.7rem] leading-[1.1] sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.5rem] font-bold tracking-tight text-[var(--text)] sm:leading-[1.05] max-w-4xl"
             >
               Building systems that <span className="inline-block text-gradient-amber italic pr-2 drop-shadow-[0_0_25px_rgba(245,158,11,0.35)] hover:scale-[1.04] transition-all duration-300 cursor-default origin-bottom-left">scale</span> <br className="hidden sm:block" /> and interfaces that <span className="relative inline-block text-[var(--teal)] italic drop-shadow-[0_0_15px_rgba(94,234,212,0.25)] hover:scale-[1.04] hover:drop-shadow-[0_0_25px_rgba(94,234,212,0.6)] transition-all duration-300 cursor-default origin-bottom-left group">feel alive.<span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[var(--teal)] group-hover:w-full transition-all duration-500 ease-out shadow-[0_0_8px_var(--teal)] rounded-full"></span></span>
             </h1>
@@ -637,15 +634,17 @@ function HiddenPhotoWidget({
   }, []);
 
   useEffect(() => {
-    setMounted(true);
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCanOpen(true);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsInteractive(true);
+    const t = setTimeout(() => {
+      setCanOpen(true);
+      setIsInteractive(true);
+    }, 0);
+    return () => clearTimeout(t);
   }, [mounted]);
 
   // Expose a focus function to the parent (Hero)
@@ -807,12 +806,13 @@ function HiddenPhotoWidget({
 
         {canOpen && (
           <button
+            type="button"
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] sm:text-xs font-medium tracking-wide cursor-pointer transition-all duration-200 active:scale-95 border backdrop-blur-md ${
               isHovered
                 ? "bg-[var(--accent)]/15 border-[var(--accent)]/40 text-[var(--accent)] shadow-[0_0_20px_rgba(245,158,11,0.15)]"
                 : "bg-[var(--surface-soft)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-accent)] shadow-sm"
             }`}
-            onPointerUp={handleToggleHover}
+            onClick={handleToggleHover}
             onKeyDown={handleButtonKeyDown}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
           >
