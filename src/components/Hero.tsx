@@ -622,6 +622,12 @@ function HiddenPhotoWidget({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // On some mobile browsers, a touch interaction can emit both Pointer events
+  // and a follow-up click. We toggle on PointerUp for touch and ignore the
+  // subsequent click to prevent double-toggles.
+  const ignoreNextToggleClickRef = useRef(false);
+  const clearIgnoreClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Synchronization refs for the two doors
   const leftScrollRef = useRef<HTMLDivElement>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
@@ -636,6 +642,14 @@ function HiddenPhotoWidget({
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (clearIgnoreClickTimeoutRef.current) {
+        clearTimeout(clearIgnoreClickTimeoutRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -663,6 +677,44 @@ function HiddenPhotoWidget({
     e?.stopPropagation();
     triggerHaptic("medium");
     setIsHovered((prev) => !prev);
+  };
+
+  const markTouchToggleHandled = () => {
+    ignoreNextToggleClickRef.current = true;
+    if (clearIgnoreClickTimeoutRef.current) {
+      clearTimeout(clearIgnoreClickTimeoutRef.current);
+    }
+    clearIgnoreClickTimeoutRef.current = setTimeout(() => {
+      ignoreNextToggleClickRef.current = false;
+    }, 700);
+  };
+
+  const handleTogglePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    // Pointer capture helps keep the interaction consistent even if the button
+    // scales slightly while pressed (active:scale-95).
+    if (e.pointerType === "touch" || e.pointerType === "pen") {
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch {
+        // Ignore browsers that don't support pointer capture.
+      }
+    }
+  };
+
+  const handleTogglePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (e.pointerType === "touch" || e.pointerType === "pen") {
+      markTouchToggleHandled();
+      handleToggleHover(e);
+    }
+  };
+
+  const handleToggleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (ignoreNextToggleClickRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    handleToggleHover(e);
   };
 
   const handleButtonKeyDown = (e: React.KeyboardEvent) => {
@@ -807,12 +859,14 @@ function HiddenPhotoWidget({
         {canOpen && (
           <button
             type="button"
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] sm:text-xs font-medium tracking-wide cursor-pointer transition-all duration-200 active:scale-95 border backdrop-blur-md ${
+            className={`touch-manipulation flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] sm:text-xs font-medium tracking-wide cursor-pointer transition-all duration-200 active:scale-95 border backdrop-blur-md ${
               isHovered
                 ? "bg-[var(--accent)]/15 border-[var(--accent)]/40 text-[var(--accent)] shadow-[0_0_20px_rgba(245,158,11,0.15)]"
                 : "bg-[var(--surface-soft)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-accent)] shadow-sm"
             }`}
-            onClick={handleToggleHover}
+            onPointerDown={handleTogglePointerDown}
+            onPointerUp={handleTogglePointerUp}
+            onClick={handleToggleClick}
             onKeyDown={handleButtonKeyDown}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
           >
