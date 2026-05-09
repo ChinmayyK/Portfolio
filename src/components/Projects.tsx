@@ -24,20 +24,6 @@ interface Project {
 
 const allProjects: Project[] = [
   {
-    name: "CLIPRELAY", type: "Continuity Infrastructure", year: "2026",
-    tagline: "Local-first mesh routing. Rust core. E2E Encrypted.",
-    description: "A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies. Learn more at cliprelay.chinmaykudalkar.com.",
-    metric: "100% Local Mesh", archKey: "p2p-encryption",
-    stack: ["Rust", "Tokio", "React", "ChaCha20"],
-    githubUrl: "https://github.com/ChinmayyK/cliprelay", websiteUrl: "https://cliprelay.chinmaykudalkar.com", diagramKey: "cliprelay", isFlagship: true,
-    previewImages: [],
-    decisions: [
-      { choice: "mDNS over Cloud", reason: "Zero latency and absolute privacy on local network." },
-      { choice: "Rust Core vs Electron", reason: "Tiny memory footprint and native OS integrations." },
-      { choice: "X25519 Handshake", reason: "Trust-on-first-use authentication without central accounts." },
-    ],
-  },
-  {
     name: "LINEUP", type: "Flagship SaaS", year: "2025-26",
     tagline: "Async workflows. Scalable systems. Reliable integrations.",
     description: "Multi-tenant recruitment platform processing 10k+ jobs daily through event-driven architecture with BullMQ queues, PostgreSQL persistence, and Zoho CRM sync.",
@@ -75,6 +61,20 @@ const allProjects: Project[] = [
       { choice: "E2EE vs KMS", reason: "Eliminate host trust entirely." },
       { choice: "ZK Proofs", reason: "Server verifies rules without reading plaintext." },
       { choice: "IPFS over S3", reason: "Remove single point of failure." },
+    ],
+  },
+  {
+    name: "CLIPRELAY", type: "Continuity Infrastructure", year: "2026",
+    tagline: "Local-first mesh routing. Rust core. E2E Encrypted.",
+    description: "A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies. Learn more at cliprelay.chinmaykudalkar.com.",
+    metric: "100% Local Mesh", archKey: "p2p-encryption",
+    stack: ["Rust", "Tokio", "React", "ChaCha20"],
+    githubUrl: "https://github.com/ChinmayyK/cliprelay", websiteUrl: "https://cliprelay.chinmaykudalkar.com", diagramKey: "cliprelay", isFlagship: true,
+    previewImages: [],
+    decisions: [
+      { choice: "mDNS over Cloud", reason: "Zero latency and absolute privacy on local network." },
+      { choice: "Rust Core vs Electron", reason: "Tiny memory footprint and native OS integrations." },
+      { choice: "X25519 Handshake", reason: "Trust-on-first-use authentication without central accounts." },
     ],
   },
   {
