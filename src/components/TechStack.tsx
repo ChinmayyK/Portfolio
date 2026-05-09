@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { SectionLabel } from "./SectionLabel";
 import { Server, Zap, Database, Cloud, Layout, ChevronDown } from "lucide-react";
 import { triggerHaptic } from "@/lib/haptics";
 
@@ -199,12 +200,14 @@ export function TechStack() {
 
       {/* Header */}
       <motion.div
+        className="relative z-10 mx-auto max-w-7xl text-center px-5 sm:px-8 mb-12 sm:mb-20"
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 mb-12 sm:mb-20 text-center"
+        transition={{ duration: 0.6 }}
       >
-        <p className="eyebrow mx-auto mb-4">Capabilities</p>
+        <div className="flex justify-center mb-4">
+          <SectionLabel>Capabilities</SectionLabel>
+        </div>
         <h2 className="section-title mx-auto">
           What I use to build{" "}
           <span className="text-gradient-full italic">scalable systems.</span>

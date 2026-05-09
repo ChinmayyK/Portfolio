@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useScroll, useTransform, motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { SectionLabel } from "./SectionLabel";
 import { ScrollReveal, ScrollRevealGroup, ScrollRevealItem } from "./ScrollReveal";
 import { ScrollScramble } from "./TextScramble";
 import { TiltCard } from "./TiltCard";
@@ -43,6 +44,7 @@ export function Experience() {
 
   const lineWidth = useTransform(scrollYProgress, [0, 0.3, 0.5], ["0%", "100%", "100%"]);
   const lineOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const fadeOut = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
 
   useGSAP(() => {
     if (!sectionRef.current) return;
@@ -65,14 +67,16 @@ export function Experience() {
   return (
     <section id="experience" ref={sectionRef} className="py-8 sm:py-16 md:py-32">
       <div className="exp-heading mb-8 sm:mb-12 md:mb-16">
-        <p className="eyebrow">Experience</p>
-        <h2 className="section-title max-w-3xl">
+        <motion.div style={{ opacity: fadeOut }}>
+          <SectionLabel>Experience</SectionLabel>
+          <h2 className="section-title max-w-3xl">
             <ScrollScramble
               text="System Design & Delivery"
               as="span"
               duration={760}
             />
           </h2>
+        </motion.div>
       </div>
 
       <article className="panel panel-strong overflow-visible exp-card relative">

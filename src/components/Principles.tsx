@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Layers3, ShieldCheck, TimerReset } from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal";
 import { ScrollScramble } from "./TextScramble";
+import { SectionLabel } from "./SectionLabel";
 
 const principles = [
   {
@@ -116,14 +117,16 @@ export function Principles() {
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-stretch lg:gap-12">
         <ScrollReveal direction="up" distance={26} className="flex flex-col h-full">
-          <p className="eyebrow">How I build</p>
-          <h2 className="section-title max-w-xl">
-            <ScrollScramble
-              text="Systems that stay calm under pressure."
-              as="span"
-              duration={800}
-            />
-          </h2>
+          <div className="mb-12">
+            <SectionLabel>How I build</SectionLabel>
+            <h2 className="section-title max-w-xl">
+              <ScrollScramble
+                text="Systems that stay calm under pressure."
+                as="span"
+                duration={800}
+              />
+            </h2>
+          </div>
           <p className="mt-3 text-[13px] sm:text-[15px] leading-6 sm:leading-7 text-[var(--muted)] sm:text-base">
             The goal is not just shipping features. It is making the product feel simple on the surface while the system underneath stays resilient.
           </p>

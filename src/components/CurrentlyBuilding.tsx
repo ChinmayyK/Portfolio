@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Github } from "lucide-react";
 import dynamic from "next/dynamic";
+import { SectionLabel } from "./SectionLabel";
 
 const ClipRelayDiagram = dynamic(() => import('./system-diagram/ClipRelayDiagram').then(m => m.ClipRelayDiagram), { ssr: false });
 
@@ -21,10 +22,7 @@ export function CurrentlyBuilding() {
 
         {/* ── Header ── */}
         <div className="mb-8 lg:mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--teal)]/20 bg-[var(--teal)]/5 mb-5 shadow-sm">
-             <span className="w-1.5 h-1.5 rounded-full bg-[var(--teal)] animate-pulse" />
-             <span className="font-mono text-sm sm:text-base uppercase tracking-[0.2em] text-[var(--teal)] font-bold">Currently Building</span>
-          </div>
+          <SectionLabel color="var(--teal)">Currently Building</SectionLabel>
           <h2 className="section-title drop-shadow-sm">ClipRelay.</h2>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-[50ch]">
             A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies.
