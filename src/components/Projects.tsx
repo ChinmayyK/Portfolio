@@ -429,7 +429,7 @@ export function Projects() {
         <div className="mb-8 lg:mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--accent)]/20 bg-[var(--accent)]/5 mb-5 shadow-sm">
              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-semibold">Selected Work</span>
+             <span className="font-mono text-sm sm:text-base uppercase tracking-[0.2em] text-[var(--accent)] font-bold">Selected Work</span>
           </div>
           <h2 className="section-title drop-shadow-sm">Core Systems.</h2>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-[40ch]">Production-grade architectures engineered with real constraints — not just toy demos.</p>

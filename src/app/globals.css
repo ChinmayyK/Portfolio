@@ -1239,7 +1239,7 @@ img:not([loading]) {
 /* ── Eyebrow label: subtle letter-spacing animation ────────── */
 .eyebrow {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.85rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--accent-soft);

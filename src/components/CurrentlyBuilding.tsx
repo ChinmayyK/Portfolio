@@ -23,7 +23,7 @@ export function CurrentlyBuilding() {
         <div className="mb-8 lg:mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--teal)]/20 bg-[var(--teal)]/5 mb-5 shadow-sm">
              <span className="w-1.5 h-1.5 rounded-full bg-[var(--teal)] animate-pulse" />
-             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--teal)] font-semibold">Currently Building</span>
+             <span className="font-mono text-sm sm:text-base uppercase tracking-[0.2em] text-[var(--teal)] font-bold">Currently Building</span>
           </div>
           <h2 className="section-title drop-shadow-sm">ClipRelay.</h2>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-[50ch]">
