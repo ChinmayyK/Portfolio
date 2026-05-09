@@ -95,7 +95,7 @@ export function CurrentlyBuilding() {
               </div>
             </div>
 
-            <div className="lg:w-1/2 rounded-xl overflow-hidden bg-[#080c12] border border-[var(--line-strong)] ring-1 ring-white/5 flex items-center justify-center min-h-[300px]">
+            <div className="lg:w-1/2 rounded-xl flex flex-col items-center justify-center min-h-[300px]">
               <div className="w-full h-full p-4 md:p-6 overflow-x-auto flex items-center justify-center">
                 <ClipRelayDiagram compact mode="normal" />
               </div>
