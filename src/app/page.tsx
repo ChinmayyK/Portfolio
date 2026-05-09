@@ -7,6 +7,7 @@ import { ParallaxLayer } from "@/components/ParallaxLayer";
 const Statement  = dynamic(() => import("@/components/Statement").then(m => m.Statement));
 const Experience = dynamic(() => import("@/components/Experience").then(m => m.Experience));
 const Projects   = dynamic(() => import("@/components/Projects").then(m => m.Projects));
+const CurrentlyBuilding = dynamic(() => import("@/components/CurrentlyBuilding").then(m => m.CurrentlyBuilding));
 const Principles = dynamic(() => import("@/components/Principles").then(m => m.Principles));
 const TechStack  = dynamic(() => import("@/components/TechStack").then(m => m.TechStack));
 const Contact    = dynamic(() => import("@/components/Contact").then(m => m.Contact));
@@ -32,6 +33,11 @@ export default function Home() {
           <Experience />
         </div>
       </ParallaxLayer>
+
+      <SectionTransition />
+
+      {/* ③ Currently Building */}
+      <CurrentlyBuilding />
 
       <SectionTransition />
 

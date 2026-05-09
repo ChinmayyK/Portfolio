@@ -11,14 +11,13 @@ const LineupDiagram = dynamic(() => import('./system-diagram/LineupDiagram').the
 const BlockvaultDiagram = dynamic(() => import('./system-diagram/BlockvaultDiagram').then(m => m.BlockvaultDiagram), { ssr: false });
 const SketchToImageDiagram = dynamic(() => import('./system-diagram/SketchToImageDiagram').then(m => m.SketchToImageDiagram), { ssr: false });
 const DeployWatchDiagram = dynamic(() => import('./system-diagram/DeployWatchDiagram').then(m => m.DeployWatchDiagram), { ssr: false });
-const ClipRelayDiagram = dynamic(() => import('./system-diagram/ClipRelayDiagram').then(m => m.ClipRelayDiagram), { ssr: false });
 
 interface ScreenshotSlide { src: string; label: string; }
 interface Decision { choice: string; reason: string; }
 interface Project {
   name: string; type: string; year?: string; tagline: string; description: string; status?: string;
   metric: string; archKey: string; stack: string[];
-  githubUrl?: string; websiteUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch" | "cliprelay";
+  githubUrl?: string; websiteUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch";
   previewImages: ScreenshotSlide[]; isFlagship?: boolean; decisions: Decision[];
 }
 
@@ -61,20 +60,6 @@ const allProjects: Project[] = [
       { choice: "E2EE vs KMS", reason: "Eliminate host trust entirely." },
       { choice: "ZK Proofs", reason: "Server verifies rules without reading plaintext." },
       { choice: "IPFS over S3", reason: "Remove single point of failure." },
-    ],
-  },
-  {
-    name: "CLIPRELAY", type: "Continuity Infrastructure", year: "2026",
-    tagline: "Local-first mesh routing. Rust core. E2E Encrypted.",
-    description: "A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies. Learn more at cliprelay.chinmaykudalkar.com.",
-    metric: "100% Local Mesh", archKey: "p2p-encryption",
-    stack: ["Rust", "Tokio", "React", "ChaCha20"],
-    githubUrl: "https://github.com/ChinmayyK/cliprelay", websiteUrl: "https://cliprelay.chinmaykudalkar.com", diagramKey: "cliprelay", isFlagship: true, status: "Building",
-    previewImages: [],
-    decisions: [
-      { choice: "mDNS over Cloud", reason: "Zero latency and absolute privacy on local network." },
-      { choice: "Rust Core vs Electron", reason: "Tiny memory footprint and native OS integrations." },
-      { choice: "X25519 Handshake", reason: "Trust-on-first-use authentication without central accounts." },
     ],
   },
   {
@@ -375,7 +360,6 @@ function ActiveProjectDisplay({ p }: { p: Project }) {
                   {p.diagramKey === "blockvault" && <BlockvaultDiagram compact mode="normal" />}
                   {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
                   {p.diagramKey === "sketch" && <SketchToImageDiagram compact mode="normal" />}
-                  {p.diagramKey === "cliprelay" && <ClipRelayDiagram compact mode="normal" />}
                 </div>
               )}
             </div>
@@ -418,7 +402,6 @@ function MobileProjectVisuals({ p }: { p: Project }) {
             {p.diagramKey === "blockvault" && <BlockvaultDiagram compact mode="normal" />}
             {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
             {p.diagramKey === "sketch" && <SketchToImageDiagram compact mode="normal" />}
-            {p.diagramKey === "cliprelay" && <ClipRelayDiagram compact mode="normal" />}
           </div>
         )}
       </div>
