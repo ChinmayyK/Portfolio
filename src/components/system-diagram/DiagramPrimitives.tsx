@@ -38,7 +38,7 @@ export function FlowRow({
   const items: ReactNode[] = [];
   nodes.forEach((node, i) => {
     items.push(
-      <div key={`node-${i}`} className="min-w-0 flex-1">
+      <div key={`node-${i}`} className="min-w-0 flex-1 flex flex-col">
         {node}
       </div>
     );

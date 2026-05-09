@@ -199,9 +199,9 @@ export function DiagramNode({ label, subLabel, tone = "neutral", insight, nodeIn
     : undefined;
 
   return (
-    <div className="relative min-w-0 w-full">
+    <div className="relative min-w-0 w-full h-full">
       <motion.div
-        className={`relative w-full min-w-0 rounded-[0.875rem] border px-4 py-4 ${s.border} ${s.bg} ${insight ? "cursor-help" : ""}`}
+        className={`relative h-full flex flex-col justify-center w-full min-w-0 rounded-[0.875rem] border px-4 py-4 ${s.border} ${s.bg} ${insight ? "cursor-help" : ""}`}
         animate={{
           ...flickerAnimation,
           ...(isDecisions && {
