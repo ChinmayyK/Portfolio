@@ -11,10 +11,10 @@ export function SectionLabel({
 }) {
   return (
     <div 
-      className={`inline-flex items-center gap-2.5 px-4 py-1.5 mb-6 rounded-lg border border-white/10 bg-[#0c1015]/80 shadow-[0_2px_12px_rgba(0,0,0,0.4)] backdrop-blur-md relative overflow-hidden group transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5 ${className}`}
+      className={`inline-flex items-center gap-2.5 px-4 py-1.5 mb-6 rounded-lg border border-[var(--line-strong)] bg-[var(--surface-soft)] shadow-md backdrop-blur-md relative overflow-hidden group transition-all duration-300 hover:border-[var(--line-strong)] hover:bg-[var(--surface-muted)] hover:-translate-y-0.5 ${className}`}
     >
       {/* Glossy top highlight */}
-      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50" />
+      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--line-strong)] to-transparent opacity-60" />
       
       {/* Glowing dot */}
       <div className="relative flex h-2 w-2 items-center justify-center">
