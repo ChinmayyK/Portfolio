@@ -16,7 +16,7 @@ const ClipRelayDiagram = dynamic(() => import('./system-diagram/ClipRelayDiagram
 interface ScreenshotSlide { src: string; label: string; }
 interface Decision { choice: string; reason: string; }
 interface Project {
-  name: string; type: string; year?: string; tagline: string; description: string;
+  name: string; type: string; year?: string; tagline: string; description: string; status?: string;
   metric: string; archKey: string; stack: string[];
   githubUrl?: string; websiteUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch" | "cliprelay";
   previewImages: ScreenshotSlide[]; isFlagship?: boolean; decisions: Decision[];
@@ -69,7 +69,7 @@ const allProjects: Project[] = [
     description: "A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies. Learn more at cliprelay.chinmaykudalkar.com.",
     metric: "100% Local Mesh", archKey: "p2p-encryption",
     stack: ["Rust", "Tokio", "React", "ChaCha20"],
-    githubUrl: "https://github.com/ChinmayyK/cliprelay", websiteUrl: "https://cliprelay.chinmaykudalkar.com", diagramKey: "cliprelay", isFlagship: true,
+    githubUrl: "https://github.com/ChinmayyK/cliprelay", websiteUrl: "https://cliprelay.chinmaykudalkar.com", diagramKey: "cliprelay", isFlagship: true, status: "Building",
     previewImages: [],
     decisions: [
       { choice: "mDNS over Cloud", reason: "Zero latency and absolute privacy on local network." },
@@ -295,9 +295,13 @@ function ActiveProjectDisplay({ p }: { p: Project }) {
                 </a>
               )}
               {p.websiteUrl && (
-                <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center h-8 w-8 rounded-full bg-[var(--surface-soft)] border border-[var(--line)] text-[var(--soft)] hover:text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95" aria-label="Website">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-muted)] border border-[var(--line)] text-[10px] font-mono uppercase tracking-wider text-[var(--soft)] hover:text-[var(--text)] transition-colors" aria-label="Website">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  Website
                 </a>
+              )}
+              {p.status && (
+                <span className="ml-2 px-2 py-0.5 text-xs font-mono uppercase rounded bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30">{p.status}</span>
               )}
             </div>
             
@@ -504,8 +508,12 @@ export function Projects() {
                           )}
                           {p.websiteUrl && (
                             <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-muted)] border border-[var(--line)] text-[10px] font-mono uppercase tracking-wider text-[var(--soft)] hover:text-[var(--text)] transition-colors" aria-label="Website">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Link
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                              Website
                             </a>
+                          )}
+                          {p.status && (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-mono uppercase rounded bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30">{p.status}</span>
                           )}
                         </div>
 
