@@ -25,7 +25,7 @@ export function CurrentlyBuilding() {
              <span className="w-1.5 h-1.5 rounded-full bg-[var(--teal)] animate-pulse" />
              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--teal)] font-semibold">Currently Building</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--text)] mb-4 drop-shadow-sm">ClipRelay.</h2>
+          <h2 className="section-title drop-shadow-sm">ClipRelay.</h2>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-[50ch]">
             A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies.
           </p>

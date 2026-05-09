@@ -431,7 +431,7 @@ export function Projects() {
              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-semibold">Selected Work</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--text)] mb-4 drop-shadow-sm">Core Systems.</h2>
+          <h2 className="section-title drop-shadow-sm">Core Systems.</h2>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-[40ch]">Production-grade architectures engineered with real constraints — not just toy demos.</p>
         </div>
 
