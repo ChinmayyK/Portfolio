@@ -11,17 +11,32 @@ const LineupDiagram = dynamic(() => import('./system-diagram/LineupDiagram').the
 const BlockvaultDiagram = dynamic(() => import('./system-diagram/BlockvaultDiagram').then(m => m.BlockvaultDiagram), { ssr: false });
 const SketchToImageDiagram = dynamic(() => import('./system-diagram/SketchToImageDiagram').then(m => m.SketchToImageDiagram), { ssr: false });
 const DeployWatchDiagram = dynamic(() => import('./system-diagram/DeployWatchDiagram').then(m => m.DeployWatchDiagram), { ssr: false });
+const ClipRelayDiagram = dynamic(() => import('./system-diagram/ClipRelayDiagram').then(m => m.ClipRelayDiagram), { ssr: false });
 
 interface ScreenshotSlide { src: string; label: string; }
 interface Decision { choice: string; reason: string; }
 interface Project {
   name: string; type: string; year?: string; tagline: string; description: string;
   metric: string; archKey: string; stack: string[];
-  githubUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch";
+  githubUrl?: string; websiteUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch" | "cliprelay";
   previewImages: ScreenshotSlide[]; isFlagship?: boolean; decisions: Decision[];
 }
 
 const allProjects: Project[] = [
+  {
+    name: "CLIPRELAY", type: "Continuity Infrastructure", year: "2026",
+    tagline: "Local-first mesh routing. Rust core. E2E Encrypted.",
+    description: "A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies. Learn more at cliprelay.chinmaykudalkar.com.",
+    metric: "100% Local Mesh", archKey: "p2p-encryption",
+    stack: ["Rust", "Tokio", "React", "ChaCha20"],
+    githubUrl: "https://github.com/ChinmayyK/cliprelay", websiteUrl: "https://cliprelay.chinmaykudalkar.com", diagramKey: "cliprelay", isFlagship: true,
+    previewImages: [],
+    decisions: [
+      { choice: "mDNS over Cloud", reason: "Zero latency and absolute privacy on local network." },
+      { choice: "Rust Core vs Electron", reason: "Tiny memory footprint and native OS integrations." },
+      { choice: "X25519 Handshake", reason: "Trust-on-first-use authentication without central accounts." },
+    ],
+  },
   {
     name: "LINEUP", type: "Flagship SaaS", year: "2025-26",
     tagline: "Async workflows. Scalable systems. Reliable integrations.",
@@ -279,6 +294,11 @@ function ActiveProjectDisplay({ p }: { p: Project }) {
                   <Github className="h-4 w-4" strokeWidth={2} />
                 </a>
               )}
+              {p.websiteUrl && (
+                <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center h-8 w-8 rounded-full bg-[var(--surface-soft)] border border-[var(--line)] text-[var(--soft)] hover:text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95" aria-label="Website">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                </a>
+              )}
             </div>
             
             <p className="text-sm leading-relaxed text-[var(--muted)] max-w-[60ch] sm:text-[15px]">{p.description}</p>
@@ -351,6 +371,7 @@ function ActiveProjectDisplay({ p }: { p: Project }) {
                   {p.diagramKey === "blockvault" && <BlockvaultDiagram compact mode="normal" />}
                   {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
                   {p.diagramKey === "sketch" && <SketchToImageDiagram compact mode="normal" />}
+                  {p.diagramKey === "cliprelay" && <ClipRelayDiagram compact mode="normal" />}
                 </div>
               )}
             </div>
@@ -393,6 +414,7 @@ function MobileProjectVisuals({ p }: { p: Project }) {
             {p.diagramKey === "blockvault" && <BlockvaultDiagram compact mode="normal" />}
             {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
             {p.diagramKey === "sketch" && <SketchToImageDiagram compact mode="normal" />}
+            {p.diagramKey === "cliprelay" && <ClipRelayDiagram compact mode="normal" />}
           </div>
         )}
       </div>
@@ -478,6 +500,11 @@ export function Projects() {
                           {p.githubUrl && (
                             <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-muted)] border border-[var(--line)] text-[10px] font-mono uppercase tracking-wider text-[var(--soft)] hover:text-[var(--text)] transition-colors" aria-label="GitHub">
                               <Github className="h-3 w-3" strokeWidth={2} /> GitHub
+                            </a>
+                          )}
+                          {p.websiteUrl && (
+                            <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-muted)] border border-[var(--line)] text-[10px] font-mono uppercase tracking-wider text-[var(--soft)] hover:text-[var(--text)] transition-colors" aria-label="Website">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Link
                             </a>
                           )}
                         </div>

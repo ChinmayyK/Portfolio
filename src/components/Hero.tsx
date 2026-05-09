@@ -622,12 +622,9 @@ function HiddenPhotoWidget({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Some mobile browsers emit multiple activation events for a single tap
-  // (pointer/touch + a follow-up click). Track the most recent non-click
-  // activation so we can ignore the synthetic click without swallowing real
-  // subsequent taps.
-  const lastNonClickToggleAtRef = useRef(0);
-  const lastToggleAtRef = useRef(0);
+  // Touch devices may emit a synthetic click after a pointer interaction.
+  // We toggle on touch pointerdown and ignore that follow-up click.
+  const ignoreNextToggleClickRef = useRef(false);
 
   // Synchronization refs for the two doors
   const leftScrollRef = useRef<HTMLDivElement>(null);
@@ -666,57 +663,41 @@ function HiddenPhotoWidget({
     };
   }, [focusRef]);
 
-  const performToggle = (e?: React.SyntheticEvent, source: "click" | "pointer" | "touch" | "key" = "click") => {
+  const toggleProfile = (e?: React.SyntheticEvent) => {
     e?.stopPropagation();
-
-    const now = Date.now();
-    // Prevent duplicate toggles when multiple events fire for a single gesture.
-    if (now - lastToggleAtRef.current < 150) return;
-    lastToggleAtRef.current = now;
-
-    if (source !== "click") {
-      lastNonClickToggleAtRef.current = now;
-    }
-
     triggerHaptic("medium");
     setIsHovered((prev) => !prev);
   };
 
   const handleTogglePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
-    // Pointer capture helps keep the interaction consistent even if the button
-    // scales slightly while pressed (active:scale-95).
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // Ignore browsers that don't support pointer capture.
+    // On Android Chrome, pointerup/click can be flaky if the finger drifts a
+    // pixel while the button scales on active. PointerDown is the most reliable
+    // tap signal. We still capture to keep the sequence consistent.
+    if (e.pointerType === "touch" || e.pointerType === "pen") {
+      ignoreNextToggleClickRef.current = true;
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch {
+        // Ignore browsers that don't support pointer capture.
+      }
+      toggleProfile(e);
     }
   };
 
-  const handleTogglePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
-    // Only respond to primary/left interactions.
-    if (typeof e.button === "number" && e.button !== 0) return;
-    performToggle(e, "pointer");
-  };
-
-  const handleToggleTouchEnd = (e: React.TouchEvent<HTMLButtonElement>) => {
-    performToggle(e, "touch");
-  };
-
   const handleToggleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const now = Date.now();
-    // Ignore the synthetic click that often follows a touch/pointer activation.
-    if (now - lastNonClickToggleAtRef.current < 450) {
+    if (ignoreNextToggleClickRef.current) {
+      ignoreNextToggleClickRef.current = false;
       e.preventDefault();
       e.stopPropagation();
       return;
     }
-    performToggle(e, "click");
+    toggleProfile(e);
   };
 
   const handleButtonKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      performToggle(e, "key");
+      toggleProfile(e);
     }
   };
 
@@ -861,8 +842,6 @@ function HiddenPhotoWidget({
                 : "bg-[var(--surface-soft)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-accent)] shadow-sm"
             }`}
             onPointerDown={handleTogglePointerDown}
-            onPointerUp={handleTogglePointerUp}
-            onTouchEnd={handleToggleTouchEnd}
             onClick={handleToggleClick}
             onKeyDown={handleButtonKeyDown}
             aria-label={isHovered ? "Switch to terminal view" : "View developer profile photo"}
