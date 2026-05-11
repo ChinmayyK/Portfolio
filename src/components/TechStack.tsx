@@ -5,6 +5,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { SectionLabel } from "./SectionLabel";
 import { Server, Zap, Database, Cloud, Layout, ChevronDown } from "lucide-react";
 import { triggerHaptic } from "@/lib/haptics";
+import { WaveformStability } from "./GhostLayers";
 
 const domains = [
   {
@@ -64,8 +65,9 @@ function DomainCard({ domain, index, isFirst }: { domain: typeof domains[0]; ind
           ? `linear-gradient(135deg, rgba(${domain.accentRgb},0.07) 0%, transparent 60%)`
           : "var(--panel-fill)",
         boxShadow: hovered
-          ? `0 0 0 1px rgba(${domain.accentRgb},0.12), 0 8px 40px rgba(${domain.accentRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.04)`
+          ? `0 0 0 1px rgba(${domain.accentRgb},0.12), 0 12px 40px rgba(${domain.accentRgb},0.08), inset 0 1px 0 rgba(255,255,255,0.06)`
           : "inset 0 1px 0 rgba(255,255,255,0.03)",
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
       }}
     >
       {/* Background glow orb */}
@@ -194,7 +196,8 @@ export function TechStack() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="stack" ref={ref} className="relative py-12 sm:py-24 md:py-32">
+    <section id="stack" ref={ref} className="relative py-12 sm:py-24 md:py-32 overflow-hidden">
+      <WaveformStability />
       {/* Grid pattern */}
       <div className="absolute inset-0 opacity-[0.022] pointer-events-none [background-image:linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:72px_72px]" />
 

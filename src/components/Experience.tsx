@@ -9,6 +9,7 @@ import { ScrollReveal, ScrollRevealGroup, ScrollRevealItem } from "./ScrollRevea
 import { ScrollScramble } from "./TextScramble";
 import { TiltCard } from "./TiltCard";
 import { Cpu, GitBranch, BarChart3 } from "lucide-react";
+import { BlueprintGrid } from "./GhostLayers";
 
 const systems = [
   {
@@ -65,8 +66,9 @@ export function Experience() {
   }, { scope: sectionRef });
 
   return (
-    <section id="experience" ref={sectionRef} className="py-8 sm:py-16 md:py-32">
-      <div className="exp-heading mb-8 sm:mb-12 md:mb-16">
+    <section id="experience" ref={sectionRef} className="relative py-8 sm:py-16 md:py-32">
+      <BlueprintGrid />
+      <div className="exp-heading relative z-10 mb-8 sm:mb-12 md:mb-16">
         <motion.div style={{ opacity: fadeOut }}>
           <SectionLabel>Experience</SectionLabel>
           <h2 className="section-title max-w-3xl">
@@ -79,10 +81,13 @@ export function Experience() {
         </motion.div>
       </div>
 
-      <article className="panel panel-strong overflow-visible exp-card relative">
+      <article className="panel panel-strong overflow-visible exp-card relative z-10 group">
         {/* Ambient glow behind card */}
-        <div className="absolute -inset-px rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 50%, rgba(94,234,212,0.04) 100%)" }}
+        <div className="absolute -inset-2 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none blur-xl"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.1) 0%, transparent 50%, rgba(94,234,212,0.1) 100%)" }}
+        />
+        <div className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.12) 0%, transparent 50%, rgba(94,234,212,0.08) 100%)" }}
         />
 
         {/* Header */}

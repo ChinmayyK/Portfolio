@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ScrollScramble } from "./TextScramble";
+import { VerticalFlowMap } from "./GhostLayers";
 
 const systemSteps = [
   {
@@ -38,13 +39,7 @@ export function Statement() {
   return (
     <section ref={ref} className="relative overflow-hidden px-5 py-14 sm:py-28 md:py-36 sm:px-8 bg-[var(--bg)]">
       {/* Background grid pattern */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+      <VerticalFlowMap />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-30" />
 
       <div className="relative mx-auto max-w-5xl">

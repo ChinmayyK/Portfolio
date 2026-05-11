@@ -5,6 +5,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { onSystemStatus } from "@/lib/systemEvents";
 import { triggerHaptic } from "@/lib/haptics";
+import { FooterTopology } from "./GhostLayers";
 
 const stackItems = [
   "Next.js (App Router)",
@@ -78,6 +79,8 @@ export function Footer() {
 
   return (
     <footer id="system-footer" ref={ref} className={`relative overflow-hidden px-6 pb-24 pt-12 sm:pb-12 sm:pt-16 sm:px-8 lg:px-8 bg-[var(--bg)] transition-all duration-500 ${pulse ? "ring-1 ring-[var(--accent)]/30" : ""}`}>
+      <FooterTopology />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1/2 bg-[radial-gradient(ellipse_50%_50%_at_50%_0%,rgba(245,158,11,0.06),transparent_100%)] pointer-events-none blur-3xl" />
       {/* Animated gradient divider */}
       <div className="mx-auto max-w-5xl">
         <div className="relative h-px">

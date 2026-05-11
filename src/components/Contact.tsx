@@ -7,6 +7,7 @@ import { MagneticButton } from "./MagneticButton";
 import { triggerHaptic } from "@/lib/haptics";
 import { RESUME_URL } from "@/lib/resume";
 import { ScrollScramble } from "./TextScramble";
+import { FooterContourMap } from "./GhostLayers";
 
 function TypedEmail() {
   const email = "chinmayy.kudalkar@gmail.com";
@@ -119,6 +120,9 @@ export function Contact() {
       ref={sectionRef}
       className="relative overflow-hidden px-6 pb-12 pt-14 sm:pt-28 sm:px-8 md:pb-20 md:pt-36 lg:px-12"
     >
+      {/* Background Ghost Layer */}
+      <FooterContourMap />
+
       {/* Cursor-reactive ambient gradient — replaces bouncing orbs */}
       <AmbientGradient />
 
