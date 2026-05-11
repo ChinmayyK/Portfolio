@@ -6,7 +6,7 @@ import { Layers3, ShieldCheck, TimerReset } from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal";
 import { ScrollScramble } from "./TextScramble";
 import { SectionLabel } from "./SectionLabel";
-import { WaveformStability } from "./GhostLayers";
+import { VerticalFlowMap } from "./GhostLayers";
 
 const principles = [
   {
@@ -113,8 +113,8 @@ export function Principles() {
         className="pointer-events-none absolute inset-0 overflow-hidden"
         style={{ y: reduceMotion ? 0 : bgY }}
       >
-        <WaveformStability />
-        <div className="absolute inset-0 opacity-[0.04] [background:radial-gradient(ellipse_60%_38%_at_50%_38%,rgba(94,234,212,0.18),transparent_65%)]" />
+        <VerticalFlowMap />
+        <div className="absolute inset-0 opacity-[0.04] [background:radial-gradient(ellipse_60%_38%_at_50%_38%,rgba(245,158,11,0.18),transparent_65%)]" />
       </motion.div>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-stretch lg:gap-12">

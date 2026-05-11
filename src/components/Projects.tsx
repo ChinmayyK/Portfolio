@@ -265,9 +265,6 @@ function ActiveProjectDisplay({ p }: { p: Project }) {
       {/* Background ambient glow based on project */}
       <div className="absolute -top-[40%] -right-[20%] w-[80%] h-[80%] rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.06),transparent_60%)] pointer-events-none blur-[80px]" />
       
-      {/* Infrastructure blueprint grid background for the card */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] dark:opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-      
       <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col h-full">
         <div className="flex flex-col gap-6 md:gap-8 flex-1">
           {/* Header section */}

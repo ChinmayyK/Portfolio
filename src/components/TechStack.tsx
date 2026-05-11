@@ -58,16 +58,15 @@ function DomainCard({ domain, index, isFirst }: { domain: typeof domains[0]; ind
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative group p-6 sm:p-8 rounded-2xl border transition-all duration-400 overflow-hidden flex flex-col gap-4 ${isFirst ? "md:col-span-2 md:flex-row md:items-start md:gap-12" : ""}`}
+      className={`relative group p-6 sm:p-8 rounded-2xl border transition-all duration-400 overflow-hidden flex flex-col gap-4 ${isFirst ? "md:col-span-2 md:flex-row md:items-center md:justify-between md:gap-8" : ""}`}
       style={{
         borderColor: hovered ? `rgba(${domain.accentRgb},0.25)` : "var(--line)",
         background: hovered
           ? `linear-gradient(135deg, rgba(${domain.accentRgb},0.07) 0%, transparent 60%)`
           : "var(--panel-fill)",
         boxShadow: hovered
-          ? `0 0 0 1px rgba(${domain.accentRgb},0.12), 0 12px 40px rgba(${domain.accentRgb},0.08), inset 0 1px 0 rgba(255,255,255,0.06)`
+          ? `0 0 0 1px rgba(${domain.accentRgb},0.12), 0 8px 40px rgba(${domain.accentRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.04)`
           : "inset 0 1px 0 rgba(255,255,255,0.03)",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
       }}
     >
       {/* Background glow orb */}
@@ -77,7 +76,7 @@ function DomainCard({ domain, index, isFirst }: { domain: typeof domains[0]; ind
       />
 
       {/* Icon + header */}
-      <div className={`flex flex-col gap-3 ${isFirst ? "md:shrink-0 md:w-[260px]" : ""}`}>
+      <div className={`flex flex-col gap-3 ${isFirst ? "md:shrink-1 md:max-w-xl" : ""}`}>
         <div
           className="w-11 h-11 flex items-center justify-center rounded-xl border transition-all duration-300 group-hover:scale-110"
           style={{
@@ -97,7 +96,7 @@ function DomainCard({ domain, index, isFirst }: { domain: typeof domains[0]; ind
       </div>
 
       {/* Tools */}
-      <div className={`flex flex-wrap gap-2 mt-auto ${isFirst ? "md:flex-1" : ""}`}>
+      <div className={`flex flex-wrap gap-2 mt-auto ${isFirst ? "md:mt-0 md:shrink-0 md:justify-end" : ""}`}>
         {domain.tools.map((tool, ti) => (
           <motion.span
             key={tool}

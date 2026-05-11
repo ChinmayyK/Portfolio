@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
 import { SectionTransition } from "@/components/SectionTransition";
 import { ParallaxLayer } from "@/components/ParallaxLayer";
+import { CinematicSpotlight } from "@/components/CinematicSpotlight";
 
 // ─── Lazy-load everything below the fold ───────────────────────────────────
 const Statement  = dynamic(() => import("@/components/Statement").then(m => m.Statement));
@@ -18,7 +19,8 @@ const SECTION_WRAP = `mx-auto w-full max-w-6xl ${SECTION_X}`;
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
+      <CinematicSpotlight />
       {/* ① Hero — eager, above the fold */}
       <Hero />
 

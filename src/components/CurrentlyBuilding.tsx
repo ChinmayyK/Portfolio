@@ -5,7 +5,6 @@ import { motion, useInView } from "framer-motion";
 import { Github } from "lucide-react";
 import dynamic from "next/dynamic";
 import { SectionLabel } from "./SectionLabel";
-import { NetworkTopology } from "./GhostLayers";
 
 const ClipRelayDiagram = dynamic(() => import('./system-diagram/ClipRelayDiagram').then(m => m.ClipRelayDiagram), { ssr: false });
 
@@ -15,8 +14,7 @@ export function CurrentlyBuilding() {
 
   return (
     <section id="currently-building" ref={ref} className="relative py-12 sm:py-24 md:py-32 overflow-hidden">
-      <NetworkTopology />
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_80%_0%,rgba(45,212,191,0.06),transparent)]" aria-hidden />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_80%_0%,rgba(45,212,191,0.04),transparent)]" aria-hidden />
 
       <motion.div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
