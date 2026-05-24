@@ -183,3 +183,4 @@ export function ScrollRevealItem({
     </div>
   );
 }
+
