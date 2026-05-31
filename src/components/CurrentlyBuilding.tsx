@@ -1,16 +1,50 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Github } from "lucide-react";
+import { useRef, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { Github, Network, Image, ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import { SectionLabel } from "./SectionLabel";
+import { triggerHaptic } from "@/lib/haptics";
 
-const ClipRelayDiagram = dynamic(() => import('./system-diagram/ClipRelayDiagram').then(m => m.ClipRelayDiagram), { ssr: false });
+const DeskdropDiagram = dynamic(() => import('./system-diagram/DeskdropDiagram').then(m => m.DeskdropDiagram), { ssr: false });
+
+const screenshots = [
+  { url: "/projects/deskdrop-macos-dashboard.png", caption: "macOS Continuity Dashboard Dashboard" },
+  { url: "/projects/deskdrop-mobile-dashboard.jpg", caption: "Android Companion App Dashboard Dashboard" },
+  { url: "/projects/deskdrop-camera-macos.png", caption: "Camera Continuity macOS Viewer" },
+  { url: "/projects/deskdrop-camera-mobile.jpg", caption: "Camera Continuity Android Streamer" },
+  { url: "/projects/deskdrop-phone-mobile.jpg", caption: "Phone Continuity Android Settings" },
+  { url: "/projects/deskdrop-call-banner.png", caption: "macOS Incoming Call Alert Banner Banner" },
+  { url: "/projects/deskdrop-activity-feed.jpg", caption: "Timeline-First Mobile Activity Feed Feed" },
+  { url: "/projects/deskdrop-mobile-pairing.jpg", caption: "mDNS Subnet Pairing Request Dialog Dialog" },
+];
 
 export function CurrentlyBuilding() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const [activeTab, setActiveTab] = useState<"arch" | "ss">("arch");
+  const [screenshotIndex, setScreenshotIndex] = useState(0);
+
+  const nextScreenshot = () => {
+    triggerHaptic("light");
+    setScreenshotIndex((prev) => (prev + 1) % screenshots.length);
+  };
+
+  const prevScreenshot = () => {
+    triggerHaptic("light");
+    setScreenshotIndex((prev) => (prev - 1 + screenshots.length) % screenshots.length);
+  };
+
+  const selectScreenshot = (index: number) => {
+    triggerHaptic("light");
+    setScreenshotIndex(index);
+  };
+
+  const switchTab = (tab: "arch" | "ss") => {
+    triggerHaptic("medium");
+    setActiveTab(tab);
+  };
 
   return (
     <section id="currently-building" ref={ref} className="relative py-12 sm:py-24 md:py-32 overflow-hidden">
@@ -23,9 +57,9 @@ export function CurrentlyBuilding() {
         {/* ── Header ── */}
         <div className="mb-8 lg:mb-10">
           <SectionLabel color="var(--teal)">Currently Building</SectionLabel>
-          <h2 className="section-title drop-shadow-sm">ClipRelay.</h2>
+          <h2 className="section-title drop-shadow-sm">Deskdrop.</h2>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-[50ch]">
-            A decentralized alternative to Apple's Universal Clipboard. Seamlessly syncs clipboard state and files across macOS, Windows, Linux, and Android over local mDNS without cloud dependencies.
+            A decentralized alternative to Apple's Universal Clipboard and Continuity suite. Seamlessly syncs clipboard state, streams real-time mobile camera lens, relays active call notifications, and transfers files across macOS, Windows, Linux, and Android over local subnets without cloud dependencies.
           </p>
         </div>
 
@@ -45,10 +79,10 @@ export function CurrentlyBuilding() {
                 <h3 className="text-2xl font-bold tracking-tight text-[var(--text)] mb-3">Local-first mesh routing. Rust core. E2E Encrypted.</h3>
                 
                 <div className="flex items-center gap-3 mt-5">
-                  <a href="https://github.com/ChinmayyK/cliprelay" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
+                  <a href="https://github.com/ChinmayyK/Deskdrop" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
                     <Github className="h-4 w-4" /> GitHub
                   </a>
-                  <a href="https://cliprelay.chinmaykudalkar.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
+                  <a href="https://deskdrop-web.vercel.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Website
                   </a>
                 </div>
@@ -60,7 +94,7 @@ export function CurrentlyBuilding() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--teal)] opacity-50"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--teal)]"></span>
                   </span>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--text)] font-semibold">100% Local Mesh</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--text)] font-semibold">100% Local Subnet Mesh</span>
                 </div>
                 <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-[var(--teal)] shadow-[0_0_8px_rgba(45,212,191,0.5)]" />
@@ -72,31 +106,123 @@ export function CurrentlyBuilding() {
                 <span className="block font-mono text-[9px] uppercase tracking-[0.2em] text-[var(--soft)] mb-3 pl-1">Key Engineering Decisions</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5 p-3.5 rounded-xl bg-[var(--surface-soft)] border border-[var(--line)] transition-colors hover:border-[var(--line-strong)]">
-                    <span className="font-mono text-[11px] font-semibold text-[var(--text)] tracking-tight">mDNS over Cloud</span>
-                    <span className="text-[12px] text-[var(--muted)] leading-snug">Zero latency and absolute privacy on local network.</span>
+                    <span className="font-mono text-[11px] font-semibold text-[var(--text)] tracking-tight">mDNS over Cloud Relay</span>
+                    <span className="text-[12px] text-[var(--muted)] leading-snug">Zero latency and absolute privacy on local Wi-Fi or mobile hotspots.</span>
                   </div>
                   <div className="flex flex-col gap-1.5 p-3.5 rounded-xl bg-[var(--surface-soft)] border border-[var(--line)] transition-colors hover:border-[var(--line-strong)]">
-                    <span className="font-mono text-[11px] font-semibold text-[var(--text)] tracking-tight">Rust Core vs Electron</span>
-                    <span className="text-[12px] text-[var(--muted)] leading-snug">Tiny memory footprint and native OS integrations.</span>
+                    <span className="font-mono text-[11px] font-semibold text-[var(--text)] tracking-tight">Rust Core daemon</span>
+                    <span className="text-[12px] text-[var(--muted)] leading-snug">Tiny memory footprint, native OS hook bindings, and blazing speed.</span>
                   </div>
                   <div className="flex flex-col gap-1.5 p-3.5 rounded-xl bg-[var(--surface-soft)] border border-[var(--line)] transition-colors hover:border-[var(--line-strong)] sm:col-span-2">
-                    <span className="font-mono text-[11px] font-semibold text-[var(--text)] tracking-tight">X25519 Handshake</span>
-                    <span className="text-[12px] text-[var(--muted)] leading-snug">Trust-on-first-use authentication without central accounts.</span>
+                    <span className="font-mono text-[11px] font-semibold text-[var(--text)] tracking-tight">X25519 Cryptographic Trust</span>
+                    <span className="text-[12px] text-[var(--muted)] leading-snug">Permanent cryptographically signed device pairings without central account databases.</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-1.5 mt-auto">
-                {["Rust", "Tokio", "React", "ChaCha20"].map(t => (
+                {["Rust", "Tokio", "SwiftUI", "Kotlin", "ChaCha20", "Next.js"].map(t => (
                   <span key={t} className="rounded-full border border-[var(--line)] bg-[var(--surface-soft)] px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-[var(--text)] font-medium shadow-sm">{t}</span>
                 ))}
               </div>
             </div>
 
-            <div className="lg:w-1/2 rounded-xl flex flex-col items-center justify-center min-h-[300px]">
-              <div className="w-full h-full p-4 md:p-6 overflow-x-auto flex items-center justify-center">
-                <ClipRelayDiagram compact mode="normal" />
+            {/* Interactive Showcase Panel */}
+            <div className="lg:w-1/2 rounded-xl flex flex-col items-center justify-start min-h-[420px] bg-[var(--surface-soft)] border border-[var(--line)] p-4 sm:p-6 relative overflow-hidden">
+              
+              {/* Tab Selector */}
+              <div className="flex gap-2 p-1 bg-[var(--surface-muted)] border border-[var(--line)] rounded-xl mb-6 relative z-10">
+                <button
+                  onClick={() => switchTab("arch")}
+                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg font-mono tracking-tight transition-all duration-300 relative ${
+                    activeTab === "arch" ? "text-[var(--teal)] bg-[var(--surface)] shadow-md border border-[var(--line-strong)]" : "text-[var(--muted)] hover:text-[var(--text)]"
+                  }`}
+                >
+                  <Network className="h-3.5 w-3.5" /> ARCHITECTURE
+                </button>
+                <button
+                  onClick={() => switchTab("ss")}
+                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg font-mono tracking-tight transition-all duration-300 relative ${
+                    activeTab === "ss" ? "text-[var(--teal)] bg-[var(--surface)] shadow-md border border-[var(--line-strong)]" : "text-[var(--muted)] hover:text-[var(--text)]"
+                  }`}
+                >
+                  <Image className="h-3.5 w-3.5" /> UI SHOWCASE
+                </button>
               </div>
+
+              {/* Dynamic Viewport */}
+              <div className="w-full flex-1 flex items-center justify-center relative min-h-[300px]">
+                <AnimatePresence mode="wait">
+                  {activeTab === "arch" ? (
+                    <motion.div
+                      key="architecture"
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="w-full h-full flex items-center justify-center overflow-x-auto"
+                    >
+                      <DeskdropDiagram compact mode="normal" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="showcase"
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="w-full flex flex-col items-center justify-center"
+                    >
+                      {/* Image Viewer */}
+                      <div className="relative w-full aspect-[16/10] sm:aspect-[16/9.5] rounded-xl overflow-hidden border border-[var(--line-strong)] bg-zinc-950/40 shadow-xl group">
+                        <img
+                          src={screenshots[screenshotIndex].url}
+                          alt={screenshots[screenshotIndex].caption}
+                          className="w-full h-full object-contain"
+                        />
+                        
+                        {/* Slide Navigation Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); prevScreenshot(); }}
+                            className="w-8 h-8 rounded-full bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/50 flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95 pointer-events-auto shadow-md"
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); nextScreenshot(); }}
+                            className="w-8 h-8 rounded-full bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/50 flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95 pointer-events-auto shadow-md"
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Image Caption & Dots */}
+                      <div className="w-full mt-4 flex flex-col items-center gap-3">
+                        <span className="text-xs sm:text-sm font-semibold tracking-tight text-[var(--text)] text-center h-5">
+                          {screenshots[screenshotIndex].caption}
+                        </span>
+
+                        {/* Slide Dots Indicator */}
+                        <div className="flex gap-1.5 mt-1">
+                          {screenshots.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() => selectScreenshot(i)}
+                              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                                i === screenshotIndex ? "w-4 bg-[var(--teal)]" : "bg-[var(--line-strong)] hover:bg-[var(--soft)]"
+                              }`}
+                              aria-label={`Show screenshot ${i + 1}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
             </div>
           </div>
         </div>
