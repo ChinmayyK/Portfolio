@@ -82,7 +82,7 @@ export function CurrentlyBuilding() {
                   <a href="https://github.com/ChinmayyK/Deskdrop" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
                     <Github className="h-4 w-4" /> GitHub
                   </a>
-                  <a href="https://deskdrop-web.vercel.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
+                  <a href="https://deskdrop.chinmaykudalkar.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Website
                   </a>
                 </div>
