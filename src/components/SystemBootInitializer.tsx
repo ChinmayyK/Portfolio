@@ -529,13 +529,13 @@ const STYLES = `
   }
   .ck-link {
     font-family: monospace;
-    font-size: 10px;
+    font-size: 13px;
     color: var(--ck-soft);
     opacity: 0;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     transition: color 0.2s;
     position: relative;
-    padding-bottom: 2px;
+    padding-bottom: 3px;
   }
   .ck-link::after {
     content: '';
@@ -631,7 +631,7 @@ const STYLES = `
     .ck-bar   { width: 200px; }
     .ck-chip  { margin-bottom: 24px; font-size: 9px; padding: 4px 12px; }
     .ck-links { gap: 16px; }
-    .ck-link  { font-size: 9px; }
+    .ck-link  { font-size: 11px; }
     .ck-corner { font-size: 8px; opacity: 0.65; }
     .ck-tl, .ck-tr { top: 18px; }
     .ck-bl, .ck-br { bottom: 18px; }
