@@ -118,7 +118,11 @@ function ContactForm() {
     
     const formData = new FormData(e.currentTarget);
     try {
-      const response = await fetch("/api/contact", {
+      const baseUrl = window.location.hostname === "chinmaykudalkar.com" 
+        ? "https://www.chinmaykudalkar.com" 
+        : "";
+        
+      const response = await fetch(`${baseUrl}/api/contact`, {
         method: "POST",
         body: formData,
       });
