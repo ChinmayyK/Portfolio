@@ -23,7 +23,7 @@ const screenshots = [
 export function CurrentlyBuilding() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-  const [activeTab, setActiveTab] = useState<"arch" | "ss">("arch");
+  const [activeTab, setActiveTab] = useState<"arch" | "ss">("ss");
   const [screenshotIndex, setScreenshotIndex] = useState(0);
 
   const nextScreenshot = () => {
