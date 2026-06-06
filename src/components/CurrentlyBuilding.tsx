@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Github, Network, Image, ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
+import NextImage from "next/image";
 import { SectionLabel } from "./SectionLabel";
 import { triggerHaptic } from "@/lib/haptics";
 
@@ -192,10 +193,12 @@ export function CurrentlyBuilding() {
                     >
                       {/* Image Viewer */}
                       <div className="relative w-full aspect-[16/10] sm:aspect-[16/9.5] rounded-xl overflow-hidden border border-[var(--line-strong)] bg-zinc-950/40 shadow-xl group">
-                        <img
+                        <NextImage
                           src={screenshots[screenshotIndex].url}
                           alt={screenshots[screenshotIndex].caption}
-                          className="w-full h-full object-contain"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 800px"
+                          className="object-contain"
                         />
                         
                         {/* Slide Navigation Overlay */}

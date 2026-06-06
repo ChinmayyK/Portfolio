@@ -179,15 +179,13 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
             initial="enter" animate="center" exit="exit"
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0">
-            <Image
-              src={s.src}
-              alt={s.label}
-              fill
-              sizes="(max-width:768px) 92vw, 50vw"
-              className="object-contain"
-              loading="eager"
-              unoptimized
-            />
+              <Image
+                src={s.src}
+                alt={s.label}
+                fill
+                sizes="(max-width:768px) 92vw, 50vw"
+                className="object-contain"
+              />
           </motion.div>
         </AnimatePresence>
         {slides.length > 1 && (
@@ -232,8 +230,6 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
                 fill 
                 sizes="100px" 
                 className="object-cover"
-                unoptimized
-                priority
               />
               <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-sm flex justify-center items-center z-10">
                 <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-widest text-white/90 text-center line-clamp-1 px-1">{sl.label}</span>
