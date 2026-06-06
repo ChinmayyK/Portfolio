@@ -7,7 +7,6 @@ import { MagneticButton } from "./MagneticButton";
 import { triggerHaptic } from "@/lib/haptics";
 import { RESUME_URL } from "@/lib/resume";
 import { ScrollScramble } from "./TextScramble";
-import { sendContactEmail } from "@/app/actions/contact";
 
 function TypedEmail() {
   const email = "chinmayy.kudalkar@gmail.com";
@@ -119,9 +118,14 @@ function ContactForm() {
     
     const formData = new FormData(e.currentTarget);
     try {
-      const res = await sendContactEmail(null, formData);
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
       
-      if (res.success) {
+      const res = await response.json();
+      
+      if (response.ok && res.success) {
         setStatus("success");
         triggerHaptic("success");
         e.currentTarget.reset();
@@ -132,7 +136,7 @@ function ContactForm() {
       }
     } catch (err: any) {
       setStatus("error");
-      setErrorMsg("Network error. Make sure Vercel environment variables are set.");
+      setErrorMsg("Network error. Please try again or email directly.");
       triggerHaptic("error");
       console.error(err);
     }
