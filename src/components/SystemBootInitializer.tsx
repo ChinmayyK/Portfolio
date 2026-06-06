@@ -56,6 +56,26 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
     let timeline: gsap.core.Timeline | undefined;
     let cancelled = false;
 
+    // Set initial states immediately (synchronously) to prevent FOUC
+    gsap.set(".ck-sweep", { scaleY: 0, transformOrigin: "top left" });
+    gsap.set(".ck-chip", { opacity: 0, y: 15 });
+    gsap.set(".ck-name-wrap", { opacity: 1 });
+    gsap.set(".ck-progress-row", { opacity: 0 });
+    gsap.set(".ck-link", { opacity: 0, y: 8 });
+    gsap.set(".ck-title", { opacity: 0, y: 10 });
+    gsap.set(".ck-name-rule", { scaleX: 0, transformOrigin: "center" });
+    gsap.set(".ck-hline", { scaleX: 0, transformOrigin: "center" });
+    gsap.set(".ck-bar-fill", { scaleX: 0, transformOrigin: "left" });
+    
+    const nameChars = gsap.utils.toArray(nameRef.current ? nameRef.current.querySelectorAll(".ck-name-char") : []);
+    if (nameChars.length) {
+      gsap.set(nameChars, {
+        y: 40,
+        opacity: 0,
+        rotateX: 45
+      });
+    }
+
     const start = async () => {
       try {
         if (document.fonts?.ready) {
@@ -66,26 +86,6 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       if (cancelled || deadRef.current) return;
 
       const isMobile = window.innerWidth < 768;
-
-      // Initial States
-      gsap.set(".ck-sweep", { scaleY: 0, transformOrigin: "top left" });
-      gsap.set(".ck-chip", { opacity: 0, y: 15 });
-      gsap.set(".ck-name-wrap", { opacity: 1 });
-      gsap.set(".ck-progress-row", { opacity: 0 });
-      gsap.set(".ck-link", { opacity: 0, y: 8 });
-      gsap.set(".ck-title", { opacity: 0, y: 10 }); // Removed blur
-      gsap.set(".ck-name-rule", { scaleX: 0, transformOrigin: "center" });
-      gsap.set(".ck-hline", { scaleX: 0, transformOrigin: "center" });
-      gsap.set(".ck-bar-fill", { scaleX: 0, transformOrigin: "left" });
-      
-      const nameChars = gsap.utils.toArray(nameRef.current ? nameRef.current.querySelectorAll(".ck-name-char") : []);
-      if (nameChars.length) {
-        gsap.set(nameChars, {
-          y: 40,
-          opacity: 0,
-          rotateX: 45 // Removed scale and blur for performance
-        });
-      }
 
       timeline = gsap.timeline({ onComplete: skip });
       timeline.timeScale(isMobile ? 1.4 : 1);
