@@ -118,29 +118,34 @@ export function Hero() {
         <a
           href="#top"
           onClick={() => triggerHaptic("light")}
-          className="flex min-h-[40px] md:min-h-[44px] items-center gap-3 rounded-full border border-[var(--line-strong)] bg-[var(--surface-soft)] p-2 md:px-4 md:py-2.5 text-left text-[var(--text)] shadow-[var(--shadow-elevated)] backdrop-blur-xl hover:bg-[var(--surface-accent)] transition-all cursor-pointer group"
+          className="group flex items-center rounded-full border border-[var(--line-strong)] bg-[var(--surface-soft)] p-1.5 shadow-[var(--shadow-elevated)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[var(--surface-accent)] cursor-pointer overflow-hidden"
+          aria-label="Dynamic Status Island"
         >
-          <div className="relative flex h-8 w-8 md:h-9 md:w-9 items-center justify-center shrink-0 rounded-full border border-[var(--line)] bg-[var(--surface-muted)] overflow-hidden shadow-inner group-hover:scale-110 group-hover:rotate-[12deg] transition-all duration-500 ease-out">
+          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface-muted)] overflow-hidden shadow-inner group-hover:scale-105 group-hover:rotate-[5deg] transition-all duration-500 ease-out z-10">
             <Image src="/lightLogo.png" alt="Logo" fill sizes="(max-width: 768px) 32px, 36px" priority className="theme-logo-light object-cover" />
             <Image src="/logo.png" alt="Logo" fill sizes="(max-width: 768px) 32px, 36px" priority className="theme-logo-dark object-cover" />
             
             {/* Glass Bubble Overlay */}
             <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-              {/* Top Highlight (Main Shine) */}
               <div className="absolute top-0 left-0 right-0 h-[60%] bg-gradient-to-b from-white/30 to-transparent rounded-t-full" />
-              
-              {/* Secondary Highlight (Bottom Reflection) */}
               <div className="absolute bottom-[5%] left-[20%] right-[20%] h-[20%] bg-white/10 rounded-full blur-[1px]" />
-              
               <div className="absolute top-[15%] left-[20%] w-[25%] h-[25%] bg-white/40 rounded-full blur-[2px]" />
             </div>
             
             {/* Outer Glass Rim */}
             <div className="absolute inset-0 z-20 rounded-full border border-white/20 pointer-events-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]" />
           </div>
-          <div className="flex flex-col items-start justify-center hidden md:flex">
-            <span className="block font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--accent-soft)]">Portfolio 2026</span>
-            <span className="block text-sm font-medium text-[var(--text)]">Chinmay Kudalkar</span>
+          
+          {/* Expandable Text Area (Dynamic Island) */}
+          <div className="flex flex-col items-start justify-center max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] whitespace-nowrap overflow-hidden pl-0 group-hover:pl-3 pr-0 group-hover:pr-4">
+            <div className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--muted)]">
+              <span className="relative flex h-1.5 w-1.5 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--teal)] opacity-75"></span>
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--teal)] shadow-[0_0_8px_rgba(45,212,191,0.8)]"></span>
+              </span>
+              Currently Building
+            </div>
+            <span className="block text-[13px] font-semibold text-[var(--text)] tracking-tight">Deskdrop App</span>
           </div>
         </a>
         <div className="flex items-center gap-4">
