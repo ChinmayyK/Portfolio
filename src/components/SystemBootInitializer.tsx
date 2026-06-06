@@ -90,13 +90,28 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       timeline = gsap.timeline({ onComplete: skip });
       timeline.timeScale(isMobile ? 1.4 : 1);
 
-      // Phase 1: High-Speed Intro
+      // Phase 1: High-Speed Intro & Boot Sequence
+      const progData = { val: 0 };
       timeline.to(".ck-sweep", { scaleY: 1, duration: 0.8, ease: "expo.inOut" })
         .to(".ck-hline", { scaleX: 1, duration: 1.0, ease: "power4.inOut" }, "<0.2")
-        .fromTo(".ck-grid", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" }, "<"); // Removed scale
+        .fromTo(".ck-grid", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power2.out" }, "<")
+        .to(".ck-progress-row", { opacity: 1, duration: 0.4 }, "<")
+        .to(progData, {
+          val: 100,
+          duration: 2.0,
+          ease: "power3.inOut",
+          onUpdate: () => {
+            const p = progData.val;
+            setProgressPct(Math.round(p));
+            if (barFillRef.current) {
+              barFillRef.current.style.transform = `scaleX(${p / 100})`;
+            }
+            if (barDotRef.current) gsap.set(barDotRef.current, { left: `${p}%` });
+          }
+        }, "<");
 
       // Phase 2: The Core Identity Reveal
-      timeline.to(".ck-chip", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, "-=0.4");
+      timeline.to(".ck-chip", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, "-=1.4");
       
       if (nameChars.length) {
         timeline.to(nameChars, {
@@ -109,28 +124,10 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
             from: "start"
           },
           ease: "expo.out"
-        }, "<");
+        }, "<0.2");
       }
 
-      timeline.to(".ck-progress-row", { opacity: 1, duration: 0.6 }, "-=0.8");
-
-      // Progress Bar
-      const progData = { val: 0 };
-      timeline.to(progData, {
-        val: 100,
-        duration: 1.8,
-        ease: "power3.inOut",
-        onUpdate: () => {
-          const p = progData.val;
-          setProgressPct(Math.round(p));
-          if (barFillRef.current) {
-            barFillRef.current.style.transform = `scaleX(${p / 100})`;
-          }
-          if (barDotRef.current) gsap.set(barDotRef.current, { left: `${p}%` });
-        }
-      }, "<");
-
-      timeline.to(".ck-name-rule", { scaleX: 1, duration: 1.8, ease: "power3.inOut" }, "<");
+      timeline.to(".ck-name-rule", { scaleX: 1, duration: 1.2, ease: "power3.inOut" }, "<");
 
       // Phase 3: Secondary Elements
       timeline.to(".ck-title", { 
