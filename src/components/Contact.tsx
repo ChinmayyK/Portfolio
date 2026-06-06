@@ -7,6 +7,7 @@ import { MagneticButton } from "./MagneticButton";
 import { triggerHaptic } from "@/lib/haptics";
 import { RESUME_URL } from "@/lib/resume";
 import { ScrollScramble } from "./TextScramble";
+import { EnvironmentWidget } from "./EnvironmentWidget";
 
 function TypedEmail() {
   const email = "chinmayy.kudalkar@gmail.com";
@@ -308,15 +309,13 @@ export function Contact() {
           ))}
         </motion.div>
 
-        {/* Location */}
+        {/* Location & Environment Widget */}
         <motion.div
-          className="mt-6 flex items-center justify-center gap-2 text-sm text-[var(--soft)]"
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.6 }}
         >
-          <MapPin className="h-4 w-4" />
-          <span>Navi Mumbai, India</span>
+          <EnvironmentWidget />
         </motion.div>
       </motion.div>
     </section>
