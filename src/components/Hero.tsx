@@ -3,7 +3,7 @@
 
 // lightweight: avoid importing framer-motion here to reduce initial bundle size
 import dynamic from "next/dynamic";
-import { ArrowRight, User, Code2, FileText } from "lucide-react";
+import { ArrowRight, User, Code2, FileText, Github } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ThemeToggle } from "./ThemeToggle";
@@ -324,6 +324,17 @@ export function Hero() {
                 className="flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-transparent text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-soft)] font-medium text-[13px] sm:text-sm transition-colors flex-1 sm:flex-none"
               >
                 Get in Touch
+              </MagneticButton>
+              <MagneticButton
+                as="a"
+                href="https://github.com/ChinmayyK"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => triggerHaptic("light")}
+                className="flex flex-none items-center justify-center w-11 h-11 rounded-full bg-transparent text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-soft)] transition-colors border border-[var(--line-strong)] hover:border-[var(--line)]"
+                aria-label="GitHub Profile"
+              >
+                <Github className="w-5 h-5" />
               </MagneticButton>
             </div>
 
