@@ -118,16 +118,23 @@ function ContactForm() {
     triggerHaptic("light");
     
     const formData = new FormData(e.currentTarget);
-    const res = await sendContactEmail(null, formData);
-    
-    if (res.success) {
-      setStatus("success");
-      triggerHaptic("success");
-      e.currentTarget.reset();
-    } else {
+    try {
+      const res = await sendContactEmail(null, formData);
+      
+      if (res.success) {
+        setStatus("success");
+        triggerHaptic("success");
+        e.currentTarget.reset();
+      } else {
+        setStatus("error");
+        setErrorMsg(res.error || "Failed to send message.");
+        triggerHaptic("error");
+      }
+    } catch (err: any) {
       setStatus("error");
-      setErrorMsg(res.error || "Failed to send message.");
+      setErrorMsg("Network error. Make sure Vercel environment variables are set.");
       triggerHaptic("error");
+      console.error(err);
     }
   };
 
