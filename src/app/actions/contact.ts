@@ -15,7 +15,7 @@ export async function sendContactEmail(prevState: any, formData: FormData) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>", // Replace with verified domain if available
+      from: "Portfolio Contact <hello@chinmaykudalkar.com>",
       to: ["chinmayy.kudalkar@gmail.com"],
       subject: `New Portfolio Inquiry from ${name}`,
       replyTo: email,
