@@ -10,14 +10,14 @@ import { triggerHaptic } from "@/lib/haptics";
 const DeskdropDiagram = dynamic(() => import('./system-diagram/DeskdropDiagram').then(m => m.DeskdropDiagram), { ssr: false });
 
 const screenshots = [
-  { url: "/projects/deskdrop-macos-dashboard.png", caption: "macOS Continuity Dashboard Dashboard" },
-  { url: "/projects/deskdrop-mobile-dashboard.jpg", caption: "Android Companion App Dashboard Dashboard" },
+  { url: "/projects/deskdrop-macos-dashboard.png", caption: "macOS Continuity Dashboard" },
+  { url: "/projects/deskdrop-mobile-dashboard.jpg", caption: "Android Companion App Dashboard" },
   { url: "/projects/deskdrop-camera-macos.png", caption: "Camera Continuity macOS Viewer" },
   { url: "/projects/deskdrop-camera-mobile.jpg", caption: "Camera Continuity Android Streamer" },
   { url: "/projects/deskdrop-phone-mobile.jpg", caption: "Phone Continuity Android Settings" },
-  { url: "/projects/deskdrop-call-banner.png", caption: "macOS Incoming Call Alert Banner Banner" },
-  { url: "/projects/deskdrop-activity-feed.jpg", caption: "Timeline-First Mobile Activity Feed Feed" },
-  { url: "/projects/deskdrop-mobile-pairing.jpg", caption: "mDNS Subnet Pairing Request Dialog Dialog" },
+  { url: "/projects/deskdrop-call-banner.png", caption: "macOS Incoming Call Alert Banner" },
+  { url: "/projects/deskdrop-activity-feed.jpg", caption: "Timeline-First Mobile Activity Feed" },
+  { url: "/projects/deskdrop-mobile-pairing.jpg", caption: "mDNS Subnet Pairing Request Dialog" },
 ];
 
 export function CurrentlyBuilding() {
