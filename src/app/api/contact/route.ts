@@ -27,14 +27,31 @@ export async function POST(request: Request) {
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
 
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    };
+
     if (error) {
       console.error("Resend Error:", error);
-      return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+      return NextResponse.json({ success: false, error: error.message }, { status: 400, headers });
     }
 
-    return NextResponse.json({ success: true, message: "Message sent successfully!" });
+    return NextResponse.json({ success: true, message: "Message sent successfully!" }, { headers });
   } catch (err: any) {
     console.error("API Route Error:", err);
-    return NextResponse.json({ success: false, error: "An unexpected error occurred." }, { status: 500 });
+    return NextResponse.json({ success: false, error: "An unexpected error occurred." }, { status: 500, headers: { "Access-Control-Allow-Origin": "*" } });
   }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
 }
