@@ -1,4 +1,9 @@
+# *
 User-agent: *
 Allow: /
 
-Sitemap: https://www.chinmaykudalkar.com/sitemap.xml
+# Host
+Host: https://chinmay.io
+
+# Sitemaps
+Sitemap: https://chinmay.io/sitemap.xml

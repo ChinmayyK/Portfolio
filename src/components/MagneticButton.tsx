@@ -13,6 +13,8 @@ interface MagneticButtonProps {
   rel?: string;
   onClick?: (e: React.MouseEvent) => void;
   "aria-label"?: string;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 export function MagneticButton({
@@ -25,6 +27,8 @@ export function MagneticButton({
   rel,
   onClick,
   "aria-label": ariaLabel,
+  disabled,
+  type,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -62,8 +66,10 @@ export function MagneticButton({
         href={href}
         target={target}
         rel={rel}
-        onClick={(e) => { onClick?.(e); }}
+        onClick={(e: React.MouseEvent) => { onClick?.(e); }}
         aria-label={ariaLabel}
+        disabled={disabled}
+        type={type}
       >
         {children}
       </Component>

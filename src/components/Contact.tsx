@@ -7,6 +7,7 @@ import { MagneticButton } from "./MagneticButton";
 import { triggerHaptic } from "@/lib/haptics";
 import { RESUME_URL } from "@/lib/resume";
 import { ScrollScramble } from "./TextScramble";
+import { sendContactEmail } from "@/app/actions/contact";
 
 function TypedEmail() {
   const email = "chinmayy.kudalkar@gmail.com";
@@ -107,6 +108,87 @@ function AmbientGradient() {
   );
 }
 
+function ContactForm() {
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("loading");
+    triggerHaptic("light");
+    
+    const formData = new FormData(e.currentTarget);
+    const res = await sendContactEmail(null, formData);
+    
+    if (res.success) {
+      setStatus("success");
+      triggerHaptic("success");
+      e.currentTarget.reset();
+    } else {
+      setStatus("error");
+      setErrorMsg(res.error || "Failed to send message.");
+      triggerHaptic("error");
+    }
+  };
+
+  return (
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className="mt-8 w-full max-w-sm mx-auto flex flex-col gap-3 text-left"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+    >
+      <input 
+        name="name" 
+        required 
+        placeholder="Your Name" 
+        className="w-full bg-[var(--surface-soft)] border border-[var(--line)] rounded-xl px-4 py-3 text-sm text-[var(--text)] placeholder:text-[var(--soft)] focus:outline-none focus:border-[var(--accent)] transition-colors backdrop-blur-md"
+      />
+      <input 
+        name="email" 
+        type="email" 
+        required 
+        placeholder="Your Email" 
+        className="w-full bg-[var(--surface-soft)] border border-[var(--line)] rounded-xl px-4 py-3 text-sm text-[var(--text)] placeholder:text-[var(--soft)] focus:outline-none focus:border-[var(--accent)] transition-colors backdrop-blur-md"
+      />
+      <textarea 
+        name="message" 
+        required 
+        placeholder="Your Message" 
+        rows={4}
+        className="w-full bg-[var(--surface-soft)] border border-[var(--line)] rounded-xl px-4 py-3 text-sm text-[var(--text)] placeholder:text-[var(--soft)] focus:outline-none focus:border-[var(--accent)] transition-colors resize-none backdrop-blur-md"
+      />
+      
+      {status === "error" && <p className="text-red-500 text-xs px-1">{errorMsg}</p>}
+      {status === "success" && <p className="text-[var(--success)] text-xs px-1">Message sent successfully! I'll get back to you soon.</p>}
+      
+      <div className="flex gap-3 mt-2">
+        <MagneticButton
+          as="button"
+          type="submit"
+          disabled={status === "loading" || status === "success"}
+          strength={0.2}
+          className="flex-1 relative ripple-container inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[var(--text)] text-[var(--bg)] px-6 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+        >
+          {status === "loading" ? "Sending..." : status === "success" ? "Sent!" : "Send Message"}
+        </MagneticButton>
+        <MagneticButton
+          as="a"
+          href={RESUME_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          strength={0.2}
+          className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-[var(--line-strong)] bg-[var(--surface-soft)] px-6 py-2.5 text-sm font-semibold text-[var(--text)] transition-all hover:bg-[var(--surface-muted)] hover:border-[var(--accent)]/30 backdrop-blur-md"
+        >
+          Resume
+        </MagneticButton>
+      </div>
+    </motion.form>
+  );
+}
+
 export function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-80px" });
@@ -185,43 +267,8 @@ export function Contact() {
           <TypedEmail />
         </motion.div>
 
-        {/* CTA buttons */}
-        <motion.div
-          className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          {/* Primary - with animated gradient border */}
-          <div className="relative group">
-            <div className="absolute -inset-[1px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-              style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.5), rgba(94,234,212,0.4), rgba(245,158,11,0.5))", backgroundSize: "200% 200%", animation: "holo-shimmer 3s ease infinite" }}
-            />
-            <MagneticButton
-              as="a"
-              href="mailto:chinmayy.kudalkar@gmail.com"
-              onClick={() => triggerHaptic("strong")}
-              strength={0.3}
-              className="relative ripple-container group/inner inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-[var(--text)] text-[var(--bg)] px-8 py-3 text-sm font-semibold sm:w-auto transition-transform hover:scale-[1.02] shadow-lg hover:shadow-[0_4px_24px_rgba(var(--text-rgb),0.35)]"
-            >
-              <Sparkles className="h-4 w-4" />
-              Get in touch
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/inner:translate-x-1" />
-            </MagneticButton>
-          </div>
-
-          <MagneticButton
-            as="a"
-            href={RESUME_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => triggerHaptic("light")}
-            strength={0.2}
-            className="inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--surface-soft)] px-8 py-3 text-sm font-semibold text-[var(--text)] sm:w-auto transition-all hover:bg-[var(--surface-muted)] hover:border-[var(--accent)]/30 hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
-          >
-            Resume
-          </MagneticButton>
-        </motion.div>
+        {/* Form & CTA */}
+        <ContactForm />
 
         {/* Social links */}
         <motion.div

@@ -9,16 +9,16 @@ import { useGSAP } from "@gsap/react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "../hooks/useTheme";
 import { MagneticButton } from "./MagneticButton";
-import { TiltCard } from "./TiltCard";
 import { triggerHaptic } from "@/lib/haptics";
 import { emitSystemStatus } from "@/lib/systemEvents";
 import { RESUME_URL } from "@/lib/resume";
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback } from "react";
 
-
 import { SystemStatusHeader } from "./SystemStatusHeader";
-import { HiddenPhotoWidget } from "./HiddenPhotoWidget";
+
+const HiddenPhotoWidget = dynamic(() => import("./HiddenPhotoWidget").then(m => m.HiddenPhotoWidget), { ssr: false });
+const TiltCard = dynamic(() => import("./TiltCard").then(m => m.TiltCard), { ssr: false });
 
 export function Hero() {
   const [isMounted, setIsMounted] = useState(false);
