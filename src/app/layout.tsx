@@ -73,12 +73,12 @@ const themeBootScript = `
       const theme =
         saved === "light" || saved === "dark"
           ? saved
-          : "dark";
+          : "light";
       document.documentElement.dataset.theme = theme;
       document.documentElement.style.colorScheme = theme;
     } catch (_error) {
-      document.documentElement.dataset.theme = "dark";
-      document.documentElement.style.colorScheme = "dark";
+      document.documentElement.dataset.theme = "light";
+      document.documentElement.style.colorScheme = "light";
     }
   })();
 `;
