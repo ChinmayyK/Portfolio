@@ -145,8 +145,6 @@ function triggerIOSHaptic(style: HapticStyle): void {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  // AudioContext may still be suspended on the very first gesture —
-  // resume() is async, so chain the buffer playback inside .then().
   if (ctx.state === "suspended") {
     ctx.resume().then(() => playIOSBuffer(ctx, style)).catch(() => {});
   } else {
@@ -154,43 +152,86 @@ function triggerIOSHaptic(style: HapticStyle): void {
   }
 }
 
+// ── Cross-platform subtle UI click sound ─────────────────────
+
+function playAudioTick(ctx: AudioContext, style: HapticStyle): void {
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    // Different pitches for different interactions
+    if (style === "success") {
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+    } else if (style === "error") {
+      osc.type = "square";
+      osc.frequency.setValueAtTime(150, ctx.currentTime);
+      gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    } else {
+      // Light / Medium / Strong get subtle high-frequency clicks
+      osc.frequency.setValueAtTime(style === "light" ? 600 : 400, ctx.currentTime);
+      gain.gain.setValueAtTime(style === "strong" ? 0.02 : 0.01, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+    }
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.1);
+    
+    osc.onended = () => {
+      try {
+        gain.disconnect();
+        osc.disconnect();
+      } catch {}
+    };
+  } catch (e) {
+    // Ignore audio errors
+  }
+}
+
+function triggerAudioClick(style: HapticStyle): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  if (ctx.state === "suspended") {
+    ctx.resume().then(() => playAudioTick(ctx, style)).catch(() => {});
+  } else {
+    playAudioTick(ctx, style);
+  }
+}
+
 // ── Public API ────────────────────────────────────────────────
 
 /**
- * Trigger haptic feedback. Falls back gracefully on unsupported platforms.
- *
- * Usage:
- *   triggerHaptic("light")   // subtle tap
- *   triggerHaptic("strong")  // prominent tap
- *   triggerHaptic("success") // double-pulse confirmation
+ * Trigger haptic feedback and/or UI sound effects.
  */
 export function triggerHaptic(style: HapticStyle = "light"): void {
   if (typeof window === "undefined") return;
 
-  // Throttle — 80ms is enough to prevent double-fires while still
-  // feeling responsive on fast taps. Lower than before (was 250ms)
-  // because 250ms was swallowing legitimate rapid interactions.
   const now = Date.now();
   if (now - lastHapticAt < 80) return;
   lastHapticAt = now;
 
-  // 1. Standard Web Vibration API (Android Chrome / some desktop)
-  //    DO NOT early-return based on vibrate()'s return value — many
-  //    Android devices/OEMs return true but the motor doesn't fire
-  //    (e.g. battery saver mode, OEM vibration policies). We fire
-  //    and forget; the OS decides if the motor runs.
+  // 1. Standard Web Vibration API (Android Chrome)
   if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
     try {
       navigator.vibrate(vibrationPatterns[style]);
     } catch {
-      // Silently swallow — may be blocked by Permissions Policy
+      // Silently swallow
     }
   }
 
-  // 2. iOS speaker-resonance via WebAudio (additive, not exclusive)
+  // 2. iOS speaker-resonance via WebAudio (simulates haptics on iOS)
   if (isIOS()) {
     triggerIOSHaptic(style);
-  }
+  } 
+  
+  // 3. Subtle UI audio tick for all platforms
+  triggerAudioClick(style);
 }
 
 /**

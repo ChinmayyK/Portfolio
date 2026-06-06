@@ -9,15 +9,15 @@
 
 :root {
   color-scheme: dark;
-  --bg: #0c1017;
-  --bg-elevated: rgba(15, 23, 42, 0.72);
-  --bg-strong: rgba(17, 25, 40, 0.92);
-  --text: #f3efe7;
-  --text-rgb: 243, 239, 231;
-  --muted: #b8bec8;
-  --soft: #8f98a8;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.14);
+  --bg: #0a0a0a;
+  --bg-elevated: rgba(15, 15, 15, 0.72);
+  --bg-strong: rgba(15, 15, 15, 0.92);
+  --text: #ededed;
+  --text-rgb: 237, 237, 237;
+  --muted: #a1a1aa;
+  --soft: #71717a;
+  --line: rgba(255, 255, 255, 0.06);
+  --line-strong: rgba(255, 255, 255, 0.12);
   --accent: #f59e0b;
   --accent-soft: #fcd34d;
   --teal: #5eead4;
@@ -227,7 +227,7 @@ body {
     radial-gradient(circle at top left, rgba(245, 158, 11, 0.16), transparent 28%),
     radial-gradient(circle at 85% 12%, rgba(94, 234, 212, 0.12), transparent 24%),
     radial-gradient(circle at 50% 100%, rgba(56, 189, 248, 0.08), transparent 30%),
-    linear-gradient(180deg, #0d1118 0%, #0c1017 45%, #0b0e14 100%);
+    linear-gradient(180deg, #0a0a0a 0%, #0a0a0a 45%, #050505 100%);
   color: var(--text);
 }
 
@@ -1456,5 +1456,41 @@ button:active,
   .eyebrow { animation: none; }
   .panel:hover { animation: none; transform: none; }
   [style*="opacity: 0"] { opacity: 1 !important; }
+}
+
+/* ── 15. Easter Eggs ────────────────────────────────────────────── */
+body.matrix-mode {
+  --bg: #000 !important;
+  --bg-elevated: rgba(0, 0, 0, 0.72) !important;
+  --bg-strong: rgba(0, 0, 0, 0.92) !important;
+  --text: #0f0 !important;
+  --muted: #0a0 !important;
+  --soft: #050 !important;
+  --line: rgba(0, 255, 0, 0.2) !important;
+  --line-strong: rgba(0, 255, 0, 0.4) !important;
+  --accent: #0f0 !important;
+  --accent-soft: #0a0 !important;
+  --teal: #0f0 !important;
+  --success: #0f0 !important;
+  --surface-soft: rgba(0, 255, 0, 0.05) !important;
+  --surface-muted: rgba(0, 255, 0, 0.08) !important;
+  --surface-accent: rgba(0, 255, 0, 0.15) !important;
+  
+  /* Reset background images to harsh black/green */
+  background: #000 !important;
+}
+
+body.matrix-mode * {
+  font-family: var(--font-plex-mono), monospace !important;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.6) !important;
+}
+
+body.matrix-mode img, 
+body.matrix-mode video {
+  filter: sepia(1) hue-rotate(80deg) saturate(300%) contrast(1.5) !important;
+}
+
+body.matrix-mode .panel::after {
+  background: conic-gradient(from var(--gradient-angle, 0deg), transparent 0%, rgba(0,255,0,0.5) 10%, transparent 20%) !important;
 }
 

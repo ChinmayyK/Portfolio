@@ -2,9 +2,8 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Github, Network, Image, ChevronLeft, ChevronRight } from "lucide-react";
+import { Github, Network, Image, ChevronLeft, ChevronRight, Apple, Smartphone } from "lucide-react";
 import dynamic from "next/dynamic";
-import NextImage from "next/image";
 import { SectionLabel } from "./SectionLabel";
 import { triggerHaptic } from "@/lib/haptics";
 
@@ -81,10 +80,36 @@ export function CurrentlyBuilding() {
                 
                 <div className="flex items-center gap-3 mt-5">
                   <a href="https://github.com/ChinmayyK/Deskdrop" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
-                    <Github className="h-4 w-4" /> GitHub
+                    <Github className="h-4 w-4" /> Source Code
                   </a>
                   <a href="https://deskdrop.chinmaykudalkar.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-soft)] border border-[var(--line)] text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-muted)] transition-all hover:scale-105 active:scale-95 shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Website
+                  </a>
+                </div>
+
+                {/* Big Vertical Download Buttons */}
+                <div className="flex flex-col gap-3 mt-8">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)] mb-1">Downloads / v1.1.1</span>
+                  <a href="https://github.com/ChinmayyK/Deskdrop/releases/download/v1.1.1/DeskDrop-v1.1.1-mac-arm64.dmg" className="group relative flex items-center gap-4 p-4 rounded-xl border border-[var(--line-strong)] bg-white/[0.02] hover:bg-white/[0.04] overflow-hidden transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--teal)]/0 via-[var(--teal)]/5 to-[var(--teal)]/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--surface-muted)] border border-[var(--line)] shadow-inner text-[var(--text)] group-hover:scale-110 transition-transform duration-300">
+                      <Apple className="w-5 h-5 fill-current" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-[var(--text)] tracking-tight">macOS Desktop App</span>
+                      <span className="font-mono text-[11px] sm:text-xs text-[var(--muted)] group-hover:text-[var(--teal)] transition-colors line-clamp-1">DeskDrop-v1.1.1-mac-arm64.dmg</span>
+                    </div>
+                  </a>
+
+                  <a href="https://github.com/ChinmayyK/Deskdrop/releases/download/v1.1.1/DeskDrop-v1.1.1-android-arm64.apk" className="group relative flex items-center gap-4 p-4 rounded-xl border border-[var(--line-strong)] bg-white/[0.02] hover:bg-white/[0.04] overflow-hidden transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--teal)]/0 via-[var(--teal)]/5 to-[var(--teal)]/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--surface-muted)] border border-[var(--line)] shadow-inner text-[var(--text)] group-hover:scale-110 transition-transform duration-300">
+                      <Smartphone className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-[var(--text)] tracking-tight">Android Companion App</span>
+                      <span className="font-mono text-[11px] sm:text-xs text-[var(--muted)] group-hover:text-[var(--teal)] transition-colors line-clamp-1">DeskDrop-v1.1.1-android-arm64.apk</span>
+                    </div>
                   </a>
                 </div>
               </div>
@@ -217,12 +242,10 @@ export function CurrentlyBuilding() {
                     >
                       {/* Image Viewer */}
                       <div className="relative w-full aspect-[16/10] sm:aspect-[16/9.5] rounded-xl overflow-hidden border border-[var(--line-strong)] bg-zinc-950/40 shadow-xl group">
-                        <NextImage
+                        <img
                           src={screenshots[screenshotIndex].url}
                           alt={screenshots[screenshotIndex].caption}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 800px"
-                          className="object-contain"
+                          className="absolute inset-0 w-full h-full object-contain"
                         />
                         
                         {/* Slide Navigation Overlay */}

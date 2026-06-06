@@ -1,24 +1,13 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { ScrollProgress } from "./ScrollProgress";
 import { FloatingNav } from "./FloatingNav";
-import { useDesktopEffects } from "@/hooks/useDesktopEffects";
 import { SystemBootInitializer } from "./SystemBootInitializer";
 import { triggerHaptic } from "@/lib/haptics";
 import { playClick } from "@/lib/sounds";
-import { GrainOverlay } from "./GrainOverlay";
-
-// ── Lazy-load non-critical layout decorations ────────────────────────────────
-const NoiseTexture     = dynamic(() => import("./NoiseTexture").then(m => m.NoiseTexture),     { ssr: false });
-const ScrollExperience = dynamic(() => import("./ScrollExperience").then(m => m.ScrollExperience), { ssr: false });
-const AmbientParticles = dynamic(() => import("./AmbientParticles").then(m => m.AmbientParticles), { ssr: false });
-const ThemeShockwave   = dynamic(() => import("./ThemeShockwave").then(m => m.ThemeShockwave),     { ssr: false });
 
 export function ClientLayoutEffects({ children }: { children: React.ReactNode }) {
-  const desktopEffects = useDesktopEffects();
-
   useEffect(() => {
     const pulseButton = (button: Element) => {
       button.setAttribute("data-haptic-press", "true");
@@ -65,14 +54,8 @@ export function ClientLayoutEffects({ children }: { children: React.ReactNode })
   return (
     <SystemBootInitializer>
       <div data-app-shell>
-        {/* Grain texture — subliminal film grain, makes the page feel physical */}
-        <GrainOverlay />
-        <ThemeShockwave />
-        {desktopEffects ? <ScrollExperience /> : null}
-        {desktopEffects ? <NoiseTexture /> : null}
         <ScrollProgress />
         <FloatingNav />
-        {desktopEffects ? <AmbientParticles /> : null}
         {children}
       </div>
     </SystemBootInitializer>

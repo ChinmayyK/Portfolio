@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, Github } from "lucide-react";
 import { triggerHaptic } from "@/lib/haptics";
 import { SectionLabel } from "./SectionLabel";
 import { BlueprintGrid } from "./GhostLayers";
+import { TiltCard } from "./TiltCard";
 
 const LineupDiagram = dynamic(() => import('./system-diagram/LineupDiagram').then(m => m.LineupDiagram), { ssr: false });
 const BlockvaultDiagram = dynamic(() => import('./system-diagram/BlockvaultDiagram').then(m => m.BlockvaultDiagram), { ssr: false });
@@ -168,7 +169,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
   return (
     <div className="relative rounded-xl overflow-hidden border border-[var(--line)] bg-[var(--surface-soft)] group"
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-      <div className={`relative w-full aspect-video overflow-hidden bg-[var(--surface-muted)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.02)_0%,transparent_50%,rgba(245,158,11,0.03)_100%)] transition-all duration-300 ${!isLoaded ? 'animate-pulse' : ''}`}>
+      <TiltCard tiltStrength={3} glareEnabled={true} className={`relative w-full aspect-video overflow-hidden rounded-xl bg-[var(--surface-muted)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.02)_0%,transparent_50%,rgba(245,158,11,0.03)_100%)] transition-all duration-300 ${!isLoaded ? 'animate-pulse' : ''}`}>
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div key={active} custom={dir}
             variants={{
@@ -179,12 +180,10 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
             initial="enter" animate="center" exit="exit"
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0">
-              <Image
+              <img
                 src={s.src}
                 alt={s.label}
-                fill
-                sizes="(max-width:768px) 92vw, 50vw"
-                className="object-contain"
+                className="absolute inset-0 w-full h-full object-contain"
               />
           </motion.div>
         </AnimatePresence>
@@ -213,7 +212,7 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
             aria-label="Next"><ChevronRight className="h-3.5 w-3.5" /></button>
         </>)}
         <div className="absolute inset-0 ring-1 ring-inset ring-white/[0.06] rounded-[inherit] pointer-events-none z-30" />
-      </div>
+      </TiltCard>
       {slides.length > 1 && (
         <div className="flex gap-2 p-2 overflow-x-auto bg-black/30 scrollbar-hide sm:gap-3 sm:p-3 backdrop-blur-md">
           {slides.map((sl, i) => (
@@ -224,12 +223,10 @@ function Gallery({ slides }: { slides: ScreenshotSlide[] }) {
                   : "opacity-50 hover:opacity-100 border-white/10 hover:border-white/20"
               }`}
               aria-label={`Go to ${sl.label}`}>
-              <Image 
+              <img 
                 src={sl.src} 
                 alt={sl.label} 
-                fill 
-                sizes="100px" 
-                className="object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 py-0.5 bg-black/60 backdrop-blur-sm flex justify-center items-center z-10">
                 <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-widest text-white/90 text-center line-clamp-1 px-1">{sl.label}</span>

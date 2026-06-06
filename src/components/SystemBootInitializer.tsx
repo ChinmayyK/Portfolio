@@ -88,7 +88,8 @@ export function SystemBootInitializer({ children }: { children: React.ReactNode 
       const isMobile = window.innerWidth < 768;
 
       timeline = gsap.timeline({ onComplete: skip });
-      timeline.timeScale(isMobile ? 1.4 : 1);
+      // Drastically increase timeScale to make the boot sequence much faster while keeping all visuals
+      timeline.timeScale(isMobile ? 2.5 : 2.0);
 
       // Phase 1: High-Speed Intro & Boot Sequence
       const progData = { val: 0 };
