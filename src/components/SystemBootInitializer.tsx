@@ -604,6 +604,18 @@ const STYLES = `
     100% { content: '...'; }
   }
 
+  /* ── Initial states for SSR (prevents FOUC) ── */
+  .ck-sweep { transform: scaleY(0); transform-origin: top left; }
+  .ck-chip { opacity: 0; transform: translateY(15px); }
+  .ck-progress-row { opacity: 0; }
+  .ck-link { opacity: 0; transform: translateY(8px); }
+  .ck-title { opacity: 0; transform: translateY(10px); }
+  .ck-name-rule { transform: scaleX(0); transform-origin: center; }
+  .ck-hline { transform: scaleX(0); transform-origin: center; }
+  .ck-bar-fill { transform: scaleX(0); transform-origin: left; }
+  .ck-name-char { opacity: 0; transform: translateY(40px) rotateX(45deg); }
+  .ck-grid { opacity: 0; }
+
   /* ── Mobile ── */
   @media (max-width: 640px) {
     .ck-name  { font-size: clamp(20px, 7vw, 34px); letter-spacing: 0.02em; white-space: nowrap; }
