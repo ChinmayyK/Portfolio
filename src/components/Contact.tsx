@@ -174,7 +174,7 @@ function ContactForm() {
       />
       
       {status === "error" && <p className="text-red-500 text-xs px-1">{errorMsg}</p>}
-      {status === "success" && <p className="text-[var(--success)] text-xs px-1">Message sent successfully! I'll get back to you soon.</p>}
+      {status === "success" && <p className="text-[var(--success)] text-xs px-1">Thanks for reaching out! I've received your message and will get back to you within 24 hours.</p>}
       
       <div className="flex gap-3 mt-2">
         <MagneticButton
