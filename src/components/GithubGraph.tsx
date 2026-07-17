@@ -1,11 +1,21 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "./SectionLabel";
 import { Github, ExternalLink, Activity } from "lucide-react";
 import { WaveformStability } from "./GhostLayers";
 
 export function GithubGraph() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to the end of the graph on mount (so latest activity is visible on mobile)
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+    }
+  }, []);
+
   return (
     <section className="relative w-full py-8 sm:py-16 group/section">
       <WaveformStability />
@@ -45,7 +55,10 @@ export function GithubGraph() {
               </div>
 
               {/* Responsive Container: allows horizontal scroll on mobile */}
-              <div className="relative z-10 w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-[var(--line-strong)] scrollbar-track-transparent">
+              <div 
+                ref={scrollRef}
+                className="relative z-10 w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-[var(--line-strong)] scrollbar-track-transparent"
+              >
                 <div className="min-w-[700px] flex justify-center py-2 relative">
                   <a 
                     href="https://github.com/ChinmayyK" 
