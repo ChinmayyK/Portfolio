@@ -69,7 +69,7 @@ export function GithubGraph() {
                     className="relative block w-full group/graph cursor-pointer"
                   >
                     <img 
-                      src={`https://ghchart.rshah.org/22C55E/ChinmayyK/${currentYear}`}
+                      src={`https://ghchart.rshah.org/22C55E/ChinmayyK`}
                       alt={`ChinmayyK's GitHub Activity Graph for ${currentYear}`} 
                       className="w-full h-auto drop-shadow-md opacity-80 group-hover/graph:opacity-100 transition-all duration-500"
                       style={{ filter: 'hue-rotate(0deg) contrast(1.1) brightness(1.2)' }}
