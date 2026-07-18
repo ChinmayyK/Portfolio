@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "./SectionLabel";
 import { Github, ExternalLink, Activity } from "lucide-react";
@@ -8,9 +8,10 @@ import { WaveformStability } from "./GhostLayers";
 
 export function GithubGraph() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number>(2026);
 
   useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
     // Scroll to the end of the graph on mount (so latest activity is visible on mobile)
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
