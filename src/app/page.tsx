@@ -8,7 +8,7 @@ import { CinematicSpotlight } from "@/components/CinematicSpotlight";
 const Statement  = dynamic(() => import("@/components/Statement").then(m => m.Statement));
 const Experience = dynamic(() => import("@/components/Experience").then(m => m.Experience));
 const Projects   = dynamic(() => import("@/components/Projects").then(m => m.Projects));
-const GithubGraph = dynamic(() => import("@/components/GithubGraph").then(m => m.GithubGraph));
+
 const CurrentlyBuilding = dynamic(() => import("@/components/CurrentlyBuilding").then(m => m.CurrentlyBuilding));
 const Principles = dynamic(() => import("@/components/Principles").then(m => m.Principles));
 const TechStack  = dynamic(() => import("@/components/TechStack").then(m => m.TechStack));
@@ -49,12 +49,6 @@ export default function Home() {
 
       <SectionTransition />
 
-      {/* ⑤ Github Graph */}
-      <div className={SECTION_WRAP}>
-        <GithubGraph />
-      </div>
-
-      <SectionTransition />
 
       {/* ⑤ Principles */}
       <ParallaxLayer speed={0.2}>

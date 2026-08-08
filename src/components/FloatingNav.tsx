@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { triggerHaptic } from "@/lib/haptics";
 import { Home, Briefcase, Code2, Layers, Mail } from "lucide-react";
+import { MagneticButton } from "./MagneticButton";
 
 const navItems = [
   { id: "top", label: "Home", icon: Home },
@@ -104,8 +105,9 @@ export function FloatingNav() {
                 const isActive = activeSection === item.id;
 
                 return (
-                  <button
+                  <MagneticButton
                     key={item.id}
+                    strength={0.2}
                     type="button"
                     onClick={() => { triggerHaptic("light"); scrollTo(item.id); }}
                     className={`relative rounded-full px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-200 ${
@@ -120,7 +122,7 @@ export function FloatingNav() {
                       />
                     ) : null}
                     <span className="relative z-10">{item.label}</span>
-                  </button>
+                  </MagneticButton>
                 );
               })}
             </div>

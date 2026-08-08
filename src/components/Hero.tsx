@@ -3,6 +3,7 @@
 
 // lightweight: avoid importing framer-motion here to reduce initial bundle size
 import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
 import { ArrowRight, User, Code2, FileText, Github } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -19,6 +20,8 @@ import { SystemStatusHeader } from "./SystemStatusHeader";
 
 const HiddenPhotoWidget = dynamic(() => import("./HiddenPhotoWidget").then(m => m.HiddenPhotoWidget), { ssr: false });
 const TiltCard = dynamic(() => import("./TiltCard").then(m => m.TiltCard), { ssr: false });
+const GithubGraph = dynamic(() => import("./GithubGraph").then(m => m.GithubGraph), { ssr: false });
+const GithubTicker = dynamic(() => import("./GithubTicker").then(m => m.GithubTicker), { ssr: false });
 
 export function Hero() {
   const [isMounted, setIsMounted] = useState(false);
@@ -26,6 +29,8 @@ export function Hero() {
   const [scrollY, setScrollY] = useState(0);
   const [mouseXPos, setMouseXPos] = useState<number | null>(null);
   const [mouseYPos, setMouseYPos] = useState<number | null>(null);
+  const [isGraphOpen, setIsGraphOpen] = useState(false);
+  const [isTouching, setIsTouching] = useState(false);
   // Ref to the guarded focus function exposed by HiddenPhotoWidget
   const terminalFocusRef = useRef<(() => void) | null>(null);
   
@@ -34,7 +39,7 @@ export function Hero() {
     return () => clearTimeout(t);
   }, []);
 
-  // Parallax and opacity fallbacks (map scrollY 0-1000 -> y:0-200, opacity 300-1000 -> 1-0)
+  // Parallax and opacity fallbacks
   useEffect(() => {
     let ticking = false;
     const onScroll = () => {
@@ -66,22 +71,51 @@ export function Hero() {
     setMouseYPos(Math.round(clientY - top));
   }, []);
 
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const { left, top } = e.currentTarget.getBoundingClientRect();
+    setMouseXPos(Math.round(touch.clientX - left));
+    setMouseYPos(Math.round(touch.clientY - top));
+    setIsTouching(true);
+  }, []);
+
   return (
     <section
       id="top"
       className="relative min-h-[100svh] w-full flex flex-col overflow-hidden group"
       onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={() => setIsTouching(false)}
+      onTouchCancel={() => setIsTouching(false)}
     >
       {/* Interactive Radial Glow (fallback) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 md:group-hover:opacity-100 z-0"
+        className={`pointer-events-none absolute -inset-px opacity-0 transition duration-300 md:group-hover:opacity-100 z-0 ${isTouching ? 'opacity-100' : ''}`}
         style={{
           background: mouseXPos != null && mouseYPos != null
             ? `radial-gradient(600px circle at ${mouseXPos}px ${mouseYPos}px, var(--surface-accent), transparent 80%)`
             : undefined
         }}
       />
+
+      {/* Hidden "Never Settle" Flashlight Easter Egg */}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 ${isTouching ? 'opacity-100' : ''}`}
+        style={{
+          WebkitMaskImage: mouseXPos != null && mouseYPos != null
+            ? `radial-gradient(${isMobile ? '200px' : '350px'} circle at ${mouseXPos}px ${mouseYPos}px, black 10%, transparent 80%)`
+            : 'none',
+          maskImage: mouseXPos != null && mouseYPos != null
+            ? `radial-gradient(${isMobile ? '200px' : '350px'} circle at ${mouseXPos}px ${mouseYPos}px, black 10%, transparent 80%)`
+            : 'none'
+        }}
+      >
+        <div className="text-[18vw] sm:text-[12vw] font-black uppercase tracking-[0.1em] leading-none text-transparent bg-clip-text bg-gradient-to-br from-red-500 to-red-600 drop-shadow-[0_0_40px_rgba(239,68,68,0.6)] select-none text-center transform -rotate-12 sm:-rotate-6 scale-110 sm:scale-125 opacity-80 sm:opacity-70">
+          NEVER<br/>SETTLE
+        </div>
+      </div>
 
 
 
@@ -207,10 +241,12 @@ export function Hero() {
             </h1>
 
             {/* Subheadline */}
-            <p className="hidden sm:block mt-6 lg:mt-8 text-sm sm:text-lg lg:text-xl text-[var(--muted)] max-w-2xl leading-relaxed">
-              Turning complex backend architectures into elegant, <br className="hidden lg:block" />
-              highly-interactive user experiences.
-            </p>
+            <div className="hidden sm:block mt-6 lg:mt-8 max-w-2xl">
+              <p className="text-sm sm:text-lg lg:text-xl text-[var(--muted)] leading-relaxed">
+                Turning complex backend architectures into elegant, <br className="hidden lg:block" />
+                highly-interactive user experiences.
+              </p>
+            </div>
 
             {/* Actions */}
             <div className="flex mt-5 sm:mt-8 flex-wrap items-center justify-start gap-3 sm:gap-4 w-full">
@@ -281,6 +317,17 @@ export function Hero() {
                 Get in Touch
               </MagneticButton>
               <MagneticButton
+                as="button"
+                onClick={() => {
+                  triggerHaptic("light");
+                  setIsGraphOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-transparent text-[var(--muted)] hover:text-[#22C55E] hover:bg-[#22C55E]/10 font-medium text-[13px] sm:text-sm transition-colors flex-1 sm:flex-none border border-transparent hover:border-[#22C55E]/20"
+              >
+                <div className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+                Activity
+              </MagneticButton>
+              <MagneticButton
                 as="a"
                 href="https://github.com/ChinmayyK"
                 target="_blank"
@@ -298,8 +345,15 @@ export function Hero() {
 
       </div>
 
-      {/* Decorative Bottom Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[var(--bg)] to-transparent z-10 pointer-events-none" />
+      <AnimatePresence>
+        {isGraphOpen && <GithubGraph onClose={() => setIsGraphOpen(false)} />}
+      </AnimatePresence>
+
+      {/* Decorative Bottom Fade (Pushed up slightly to avoid ticker) */}
+      <div className="absolute bottom-16 sm:bottom-20 left-0 w-full h-32 bg-gradient-to-t from-[var(--bg)] to-transparent z-10 pointer-events-none" />
+
+      {/* Live Data Ticker */}
+      <GithubTicker onClick={() => setIsGraphOpen(true)} />
     </section>
   );
 }

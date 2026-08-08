@@ -14,17 +14,32 @@ const LineupDiagram = dynamic(() => import('./system-diagram/LineupDiagram').the
 const BlockvaultDiagram = dynamic(() => import('./system-diagram/BlockvaultDiagram').then(m => m.BlockvaultDiagram), { ssr: false });
 const SketchToImageDiagram = dynamic(() => import('./system-diagram/SketchToImageDiagram').then(m => m.SketchToImageDiagram), { ssr: false });
 const DeployWatchDiagram = dynamic(() => import('./system-diagram/DeployWatchDiagram').then(m => m.DeployWatchDiagram), { ssr: false });
+const DeskdropDiagram = dynamic(() => import('./DeskdropArchitecture').then(m => m.DeskdropArchitecture), { ssr: false });
 
 interface ScreenshotSlide { src: string; label: string; }
 interface Decision { choice: string; reason: string; }
 interface Project {
   name: string; type: string; year?: string; tagline: string; description: string; status?: string;
   metric: string; archKey: string; stack: string[];
-  githubUrl?: string; websiteUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch";
+  githubUrl?: string; websiteUrl?: string; diagramKey?: "lineup" | "blockvault" | "deploywatch" | "sketch" | "deskdrop";
   previewImages: ScreenshotSlide[]; isFlagship?: boolean; decisions: Decision[];
 }
 
 const allProjects: Project[] = [
+  {
+    name: "DESKDROP", type: "P2P Ecosystem", year: "2026",
+    tagline: "Cross-platform ecosystem. Rust Core Engine. Zero-trust mTLS.",
+    description: "A secure, fully native peer-to-peer file sharing and clipboard synchronization ecosystem bridging macOS, Windows, and Android without cloud intermediaries.",
+    metric: "4MB/s Local QUIC", archKey: "peer-to-peer",
+    stack: ["Rust", "Swift", "WPF", "Jetpack Compose", "Tokio", "mTLS"],
+    githubUrl: "https://github.com/ChinmayyK/Deskdrop", diagramKey: "deskdrop", isFlagship: true,
+    previewImages: [],
+    decisions: [
+      { choice: "Native UIs over Electron", reason: "Deep OS integration (clipboard hooks) and low memory footprint." },
+      { choice: "Rust Core Daemon", reason: "Single unified networking and cryptography logic shared across all 4 platforms via IPC." },
+      { choice: "Custom mTLS / QUIC", reason: "Zero-trust encrypted peer-to-peer streams without relying on external cloud servers." },
+    ],
+  },
   {
     name: "LINEUP", type: "Flagship SaaS", year: "2025-26",
     tagline: "Async workflows. Scalable systems. Reliable integrations.",
@@ -355,6 +370,7 @@ function ActiveProjectDisplay({ p }: { p: Project }) {
                   {p.diagramKey === "blockvault" && <BlockvaultDiagram compact mode="normal" />}
                   {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
                   {p.diagramKey === "sketch" && <SketchToImageDiagram compact mode="normal" />}
+                  {p.diagramKey === "deskdrop" && <DeskdropDiagram />}
                 </div>
               )}
             </div>
@@ -395,8 +411,9 @@ function MobileProjectVisuals({ p }: { p: Project }) {
           <div className="relative w-full overflow-x-auto">
             {p.diagramKey === "lineup" && <LineupDiagram compact mode="normal" />}
             {p.diagramKey === "blockvault" && <BlockvaultDiagram compact mode="normal" />}
-            {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
             {p.diagramKey === "sketch" && <SketchToImageDiagram compact mode="normal" />}
+            {p.diagramKey === "deploywatch" && <DeployWatchDiagram compact mode="normal" />}
+            {p.diagramKey === "deskdrop" && <DeskdropDiagram />}
           </div>
         )}
       </div>
