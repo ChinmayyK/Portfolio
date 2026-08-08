@@ -91,28 +91,28 @@ export function Hero() {
       {/* Interactive Radial Glow (fallback) */}
       <div
         aria-hidden
-        className={`pointer-events-none absolute -inset-px opacity-0 transition duration-300 md:group-hover:opacity-100 z-0 ${isTouching ? 'opacity-100' : ''}`}
-        style={{
+        className={`pointer-events-none absolute -inset-px transition duration-300 z-0 ${isTouching ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}`}
+        style={isMounted ? {
           background: mouseXPos != null && mouseYPos != null
             ? `radial-gradient(600px circle at ${mouseXPos}px ${mouseYPos}px, var(--surface-accent), transparent 80%)`
             : undefined
-        }}
+        } : {}}
       />
 
       {/* Hidden "Never Settle" Flashlight Easter Egg */}
       <div
         aria-hidden
-        className={`pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 ${isTouching ? 'opacity-100' : ''}`}
-        style={{
+        className={`pointer-events-none absolute inset-0 z-0 flex items-center justify-center lg:pr-[38vw] overflow-hidden transition-opacity duration-300 ${isTouching ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}`}
+        style={isMounted ? {
           WebkitMaskImage: mouseXPos != null && mouseYPos != null
-            ? `radial-gradient(${isMobile ? '200px' : '350px'} circle at ${mouseXPos}px ${mouseYPos}px, black 10%, transparent 80%)`
+            ? `radial-gradient(${isMobile ? '250px' : '450px'} circle at ${mouseXPos}px ${mouseYPos}px, black 15%, transparent 70%)`
             : 'none',
           maskImage: mouseXPos != null && mouseYPos != null
-            ? `radial-gradient(${isMobile ? '200px' : '350px'} circle at ${mouseXPos}px ${mouseYPos}px, black 10%, transparent 80%)`
+            ? `radial-gradient(${isMobile ? '250px' : '450px'} circle at ${mouseXPos}px ${mouseYPos}px, black 15%, transparent 70%)`
             : 'none'
-        }}
+        } : { WebkitMaskImage: 'none', maskImage: 'none' }}
       >
-        <div className="text-[18vw] sm:text-[12vw] font-black uppercase tracking-[0.1em] leading-none text-transparent bg-clip-text bg-gradient-to-br from-red-500 to-red-600 drop-shadow-[0_0_40px_rgba(239,68,68,0.6)] select-none text-center transform -rotate-12 sm:-rotate-6 scale-110 sm:scale-125 opacity-80 sm:opacity-70">
+        <div className="text-[18vw] lg:text-[11.5vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent bg-clip-text bg-gradient-to-br from-red-500/80 to-red-600/40 drop-shadow-[0_0_30px_rgba(239,68,68,0.4)] select-none text-center transform -rotate-12 sm:-rotate-6 opacity-50 mix-blend-plus-lighter">
           NEVER<br/>SETTLE
         </div>
       </div>
