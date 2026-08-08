@@ -9,9 +9,11 @@ import { WaveformStability } from "./GhostLayers";
 export function GithubGraph() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentYear, setCurrentYear] = useState<number>(2026);
+  const [timestamp, setTimestamp] = useState<number | null>(null);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
+    setTimestamp(Date.now());
     // Scroll to the end of the graph on mount (so latest activity is visible on mobile)
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
@@ -69,7 +71,7 @@ export function GithubGraph() {
                     className="relative block w-full group/graph cursor-pointer"
                   >
                     <img 
-                      src={`https://ghchart.rshah.org/22C55E/ChinmayyK?v=${Date.now()}`}
+                      src={`https://ghchart.rshah.org/22C55E/ChinmayyK${timestamp ? `?v=${timestamp}` : ''}`}
                       alt={`ChinmayyK's GitHub Activity Graph for ${currentYear}`} 
                       className="w-full h-auto drop-shadow-md opacity-80 group-hover/graph:opacity-100 transition-all duration-500"
                       style={{ filter: 'hue-rotate(0deg) contrast(1.1) brightness(1.2)' }}
