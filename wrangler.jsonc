@@ -1,0 +1,9 @@
+// Deploys the static export (out/) as Workers static assets.
+// Having this file stops `wrangler deploy` from auto-configuring OpenNext,
+// which expects a server build and fails on `output: "export"`.
+{
+  "name": "portfolio",
+  "compatibility_date": "2026-10-01",
+  "build": { "command": "npm run build" },
+  "assets": { "directory": "./out", "not_found_handling": "404-page" }
+}
