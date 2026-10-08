@@ -53,7 +53,9 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 
 /* ---------- island nav ---------- */
 .nav { position: fixed; z-index: 60; top: 18px; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 99px; background: rgba(249, 249, 250, .7); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid rgba(255, 255, 255, .7); box-shadow: 0 10px 30px -14px rgba(25, 30, 40, .3), inset 0 1px 0 rgba(255, 255, 255, .9); }
-.nav .me { white-space: nowrap; padding: 8px 14px 8px 16px; font-weight: 600; letter-spacing: -.01em; }
+/* the name in the pill only appears once the hero's big name has scrolled away, so it's never shown twice */
+.nav .me { white-space: nowrap; font-weight: 600; letter-spacing: -.01em; overflow: hidden; max-width: 0; padding: 8px 0; margin-right: -6px; opacity: 0; transition: max-width .7s var(--ease), padding .7s var(--ease), margin .7s var(--ease), opacity .4s var(--ease); }
+.nav.brand .me { max-width: 220px; padding: 8px 14px 8px 16px; margin-right: 0; opacity: 1; }
 .nav .links { display: flex; gap: 2px; }
 .nav .links a { padding: 8px 14px; border-radius: 99px; color: var(--ink-2); font-size: 15px; transition: background .4s var(--ease), color .4s var(--ease); }
 .nav .links a:hover, .nav .links a[aria-current="true"] { background: var(--ink); color: var(--core); }
@@ -244,11 +246,13 @@ dialog[open] { animation: up .8s var(--ease); }
   .lead { font-size: 17px; margin-top: 12px; }
   .js [data-r] { filter: none; transform: translateY(24px); }   /* blur is costly on phones */
 
-  .nav { top: 10px; }
-  .nav .me { font-size: 15px; padding: 6px 10px 6px 14px; }
+  .nav { top: 12px; left: auto; right: 16px; translate: none; padding: 5px; }
+  .nav .me { font-size: 15px; }
+  .nav.brand .me { padding: 6px 10px 6px 14px; }
   .nav.hide { transform: translateY(-150%); }
 
-  .hero { min-height: 0; padding: 92px 0 32px; }
+  .hero { min-height: 0; padding: 24px 0 32px; }
+  .hero .chip { margin-right: 64px; }
   .hero .wrap { gap: 36px; }
   .hero h1 { margin-top: 18px; font-size: min(20vw, 96px); }
   .hero .sub { margin-top: 18px; font-size: 17px; }

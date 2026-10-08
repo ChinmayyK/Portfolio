@@ -10,6 +10,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
+  const [brand, setBrand] = useState(false);
 
   // highlight the section in view
   useEffect(() => {
@@ -20,7 +21,9 @@ export default function Nav() {
     }));
     // on phones the pill tucks away while scrolling down and comes back on the way up (CSS gates it by width)
     const dir = ScrollTrigger.create({ start: 0, end: "max", onUpdate: (s) => setHidden(s.direction === 1 && s.scroll() > innerHeight * 0.5) });
-    return () => { triggers.forEach((t) => t.kill()); dir.kill(); };
+    // show the name in the pill once the hero's name is out of view
+    const name = ScrollTrigger.create({ trigger: "#top h1", start: "bottom top+=40", onEnter: () => setBrand(true), onLeaveBack: () => setBrand(false) });
+    return () => { triggers.forEach((t) => t.kill()); dir.kill(); name.kill(); };
   }, []);
 
   useEffect(() => {
@@ -31,8 +34,8 @@ export default function Nav() {
 
   return (
     <>
-      <nav className={`nav${hidden && !open ? " hide" : ""}`} aria-label="Main">
-        <a className="me" href="#top">Chinmay Kudalkar</a>
+      <nav className={`nav${hidden && !open ? " hide" : ""}${brand || open ? " brand" : ""}`} aria-label="Main">
+        <a className="me" href="#top" inert={!(brand || open)}>Chinmay Kudalkar</a>
         <div className="links">
           {LINKS.map(([href, label]) => (
             <a key={href} href={href} aria-current={current === href ? "true" : undefined}>{label}</a>
