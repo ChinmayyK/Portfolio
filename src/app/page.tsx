@@ -134,7 +134,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer><div className="wrap"><span>Chinmay Kudalkar, 2026</span><span>Type <kbd>whoami</kbd> anywhere</span></div></footer>
+      <footer><div className="wrap"><span>Chinmay Kudalkar, 2026</span><span>Type <button type="button" className="kbd" data-whoami>whoami</button> anywhere</span></div></footer>
 
       <WhoAmI />
       <Reveal />

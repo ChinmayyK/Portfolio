@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react";
-import { PROJECTS, type Project } from "@/lib/content";
+import { PROJECTS, imgProps, type Project } from "@/lib/content";
 
 const N = PROJECTS.length;
 
@@ -111,8 +111,8 @@ export default function Deck() {
                   <div><span className="chip">{p.k}</span><h3 id={`ct-${i}`}>{p.t}</h3><p className="line">{p.line}</p></div>
                   <div><button className="pill dark" type="button" onClick={() => setOpen(p)}>Details <span className="isl"><ArrowUpRight weight="light" /></span></button></div>
                 </div>
-                <div className="pic" style={p.tone ? { background: p.tone } : undefined}>
-                  <img src={`/img/${p.img}`} alt={`${p.t} screenshot`} loading="lazy" style={p.pos ? { objectPosition: p.pos } : undefined} />
+                <div className="pic">
+                  <div className="fit"><img {...imgProps(p.img)} alt={`${p.t} screenshot`} loading="lazy" /></div>
                 </div>
               </div>
             </article>
@@ -134,7 +134,7 @@ export default function Deck() {
               <h3 id="s-title">{open.t}</h3>
               <p className="line">{open.lede}</p>
               {open.shots.length > 0 && (
-                <div className="shots">{open.shots.map((s) => <img key={s} src={`/img/${s}`} alt={`${open.t} screenshot`} loading="lazy" />)}</div>
+                <div className="shots">{open.shots.map((s) => <img key={s} {...imgProps(s)} alt={`${open.t} screenshot`} loading="lazy" />)}</div>
               )}
               <div className="facts">
                 <div><h4>How it works</h4><ul>{open.pts.map((x) => <li key={x}>{x}</li>)}</ul></div>

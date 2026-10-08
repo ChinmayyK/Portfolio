@@ -8,10 +8,6 @@ export type Project = {
   src: string;
   site?: string;
   img: string;
-  /** object-position for the card image, when the top-left crop misses the interesting part */
-  pos?: string;
-  /** background behind the card image, to match dark screenshots */
-  tone?: string;
   shots: string[];
 };
 
@@ -62,8 +58,6 @@ export const PROJECTS: Project[] = [
     stack: "Zero-knowledge proofs, IPFS",
     src: "https://github.com/ChinmayyK/BlockVault",
     img: "doc-redact-engine.png",
-    pos: "62% 0",
-    tone: "#0B0B0C",
     shots: ["doc-redact-engine.png", "bv2.png", "bv1.png"],
   },
 ];
@@ -76,3 +70,17 @@ export const TOOLS: [name: string, devicon: string][] = [
 ];
 
 export const EMAIL = "chinmayy.kudalkar@gmail.com";
+
+/** Natural pixel sizes, so images reserve their space and never need cropping. */
+export const IMG_SIZE: Record<string, [number, number]> = {
+  "bv1.png": [1909, 997], "bv2.png": [1906, 996], "doc-redact-engine.png": [1907, 997],
+  "lineup-candidates.png": [1919, 999], "lineup-dashboard.png": [1920, 999], "lineup-reports.png": [1919, 1000],
+  "linkall-android-home.png": [1240, 2772], "linkall-mac-clipboard.png": [2400, 1584], "linkall-mac-command-palette.png": [1200, 1244],
+  "linkall-mac-devices.png": [2400, 1584], "linkall-mac-transfers-active.png": [2400, 1584], "linkall-win-clipboard.png": [1572, 921],
+  "chinmay-photo.png": [750, 1000],
+};
+
+export const imgProps = (file: string) => {
+  const [width, height] = IMG_SIZE[file] ?? [];
+  return { src: `/img/${file}`, width, height };
+};

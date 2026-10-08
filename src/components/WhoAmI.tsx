@@ -14,8 +14,11 @@ export default function WhoAmI() {
       typed = (typed + e.key.toLowerCase()).slice(-6);
       if (typed === "whoami" && dlg.current && !dlg.current.open) { typed = ""; dlg.current.showModal(); }
     };
+    // no keyboard on phones: the footer's whoami chip opens it with a tap
+    const onTap = (e: MouseEvent) => { if ((e.target as HTMLElement).closest?.("[data-whoami]")) dlg.current?.showModal(); };
     addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
+    addEventListener("click", onTap);
+    return () => { removeEventListener("keydown", onKey); removeEventListener("click", onTap); };
   }, []);
 
   return (

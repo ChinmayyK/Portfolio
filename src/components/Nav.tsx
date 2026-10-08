@@ -9,6 +9,7 @@ const LINKS = [["#now", "Now"], ["#work", "Work"], ["#background", "Background"]
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState<string | null>(null);
+  const [hidden, setHidden] = useState(false);
 
   // highlight the section in view
   useEffect(() => {
@@ -17,7 +18,9 @@ export default function Nav() {
       trigger: href, start: "top 40%", end: "bottom 40%",
       onToggle: (s) => setCurrent((c) => (s.isActive ? href : c === href ? null : c)),
     }));
-    return () => triggers.forEach((t) => t.kill());
+    // on phones the pill tucks away while scrolling down and comes back on the way up (CSS gates it by width)
+    const dir = ScrollTrigger.create({ start: 0, end: "max", onUpdate: (s) => setHidden(s.direction === 1 && s.scroll() > innerHeight * 0.5) });
+    return () => { triggers.forEach((t) => t.kill()); dir.kill(); };
   }, []);
 
   useEffect(() => {
@@ -28,7 +31,7 @@ export default function Nav() {
 
   return (
     <>
-      <nav className="nav" aria-label="Main">
+      <nav className={`nav${hidden && !open ? " hide" : ""}`} aria-label="Main">
         <a className="me" href="#top">Chinmay Kudalkar</a>
         <div className="links">
           {LINKS.map(([href, label]) => (
