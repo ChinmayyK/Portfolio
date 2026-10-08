@@ -99,7 +99,8 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .cascade .main .cap { padding: 13px 16px 13px 18px; font-size: 15px; }
 .cascade .main .cap b { font-weight: 600; }
 .cascade .main .cap .chip { white-space: nowrap; padding: 4px 10px; font-size: 10px; margin-left: 10px; }
-.cascade .phone { width: 23%; right: -2%; top: 34%; rotate: 5deg; z-index: 3; --r: 34px; --pad: 6px; }
+.cascade .phone { width: 23%; right: -2%; top: 34%; rotate: 5deg; z-index: 3; --r: 30px; --pad: 5px; background: #16171A; border-color: #16171A; }
+.cascade .phone .core { box-shadow: none; }
 .js .cascade .bezel { opacity: 0; transform: translateY(120px) scale(.94); }
 .hero.go .cascade .bezel { opacity: 1; transform: translate3d(var(--px, 0px), calc(var(--py, 0px) + var(--hy, 0px)), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
 .hero.go.settled .cascade .bezel { transition: transform .9s var(--ease), box-shadow .6s var(--ease); transition-delay: 0ms; }
@@ -254,7 +255,8 @@ dialog[open] { animation: up .8s var(--ease); }
   .hero .cta { margin-top: 26px; flex-wrap: nowrap; gap: 10px; }
   .hero .cta .pill { flex: 1; justify-content: space-between; font-size: 15px; padding-left: 18px; }
 
-  .now .bezel, .contact .bezel, .card, .bento > .bezel { --r: 26px; --pad: 5px; }
+  .bezel, .now .bezel, .contact .bezel, .card, .bento > .bezel, .cascade .main { --r: 24px; --pad: 3px; }
+  .cascade .phone { --r: 22px; --pad: 4px; }
   .now .say { padding: 26px 22px; gap: 22px; }
   .now .say h2 { font-size: 36px; }
   .now .say p { font-size: 16.5px; }
@@ -268,9 +270,9 @@ dialog[open] { animation: up .8s var(--ease); }
   .card .txt { padding: 24px 22px 20px; gap: 20px; }
   .card h3 { margin-top: 12px; font-size: 40px; }
   .card .line { font-size: 16.5px; }
-  .card .pic { aspect-ratio: auto; margin: 0 5px 5px; border-radius: 21px; }
-  .card .pic .fit { position: static; padding: 12px; }
-  .card .pic img { width: 100%; border-radius: 10px; }
+  .card .pic { aspect-ratio: auto; margin: 0; border-radius: 0; background: none; }
+  .card .pic .fit { position: static; padding: 0 16px 16px; }
+  .card .pic img { width: 100%; border-radius: 12px; box-shadow: 0 0 0 1px var(--tray-line), 0 14px 28px -20px rgba(25, 30, 40, .45); }
 
   .bento { margin-top: 28px; gap: 12px; }
   .bento .core { padding: 24px 22px; gap: 22px; }
