@@ -87,7 +87,7 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 /* hero scene: Link All up front (Mac + phone), the other projects tucked behind */
 .cascade { position: relative; height: min(620px, 70vh); }
 .cascade::before { content: ""; position: absolute; left: 8%; right: 8%; bottom: 2%; height: 12%; border-radius: 50%; background: radial-gradient(closest-side, rgba(25, 30, 40, .16), transparent); filter: blur(8px); }
-.cascade .bezel { position: absolute; display: block; --r: 26px; --pad: 6px; color: inherit; transition: transform 1.4s var(--ease), opacity 1s var(--ease), box-shadow .6s var(--ease); }
+.cascade .bezel { position: absolute; display: block; --r: 8px; --pad: 2px; color: inherit; transition: transform 1.4s var(--ease), opacity 1s var(--ease), box-shadow .6s var(--ease); }
 .cascade .core { position: relative; }
 .cascade .core img { width: 100%; height: auto; }
 .cascade .cap { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; }
@@ -97,11 +97,11 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .cascade .back:hover .core::after { opacity: 0; }
 .cascade .c-lineup { left: 0; rotate: -6deg; }
 .cascade .c-vault { right: 0; top: 5%; rotate: 5deg; }
-.cascade .main { width: 84%; left: 2%; top: 25%; rotate: -1.5deg; z-index: 2; --r: 30px; --pad: 7px; }
+.cascade .main { width: 84%; left: 2%; top: 25%; rotate: -1.5deg; z-index: 2; --r: 10px; --pad: 2px; }
 .cascade .main .cap { padding: 13px 16px 13px 18px; font-size: 15px; }
 .cascade .main .cap b { font-weight: 600; }
 .cascade .main .cap .chip { white-space: nowrap; padding: 4px 10px; font-size: 10px; margin-left: 10px; }
-.cascade .phone { width: 23%; right: -2%; top: 34%; rotate: 5deg; z-index: 3; --r: 26px; --pad: 2px; background: #16171A; border: 0; }
+.cascade .phone { width: 23%; right: -2%; top: 34%; rotate: 5deg; z-index: 3; --r: 16px; --pad: 2px; background: #16171A; border: 0; }
 .cascade .phone .core { box-shadow: none; }
 .js .cascade .bezel { opacity: 0; transform: translateY(120px) scale(.94); }
 .hero.go .cascade .bezel { opacity: 1; transform: translate3d(var(--px, 0px), calc(var(--py, 0px) + var(--hy, 0px)), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
@@ -143,10 +143,10 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 .card .txt { padding: clamp(28px, 3.6vw, 48px); display: grid; align-content: space-between; gap: 28px; }
 .card h3 { margin-top: 16px; font-size: clamp(40px, 4.2vw, 58px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
 .card .line { margin-top: 14px; font-size: 18px; color: var(--ink-2); max-width: 32ch; }
-.card .pic { margin: 8px 8px 8px 0; border-radius: 22px; overflow: hidden; background: linear-gradient(160deg, #E4E6EA, #D9DCE1); position: relative; }
+.card .pic { position: relative; }
 /* whole screenshot, never cropped: it sits on the tray at its own aspect ratio */
 .card .pic .fit { position: absolute; inset: clamp(18px, 2.4vw, 32px); display: grid; place-items: center; }
-.card .pic img { max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 12px; box-shadow: 0 1px 2px rgba(25, 30, 40, .08), 0 24px 40px -24px rgba(25, 30, 40, .45); transition: transform 1.4s var(--ease); }
+.card .pic img { max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 5px; box-shadow: 0 0 0 1px rgba(20, 24, 32, .1), 0 18px 34px -22px rgba(25, 30, 40, .45); transition: transform 1.4s var(--ease); }
 .card:hover .pic img { transform: scale(1.02); }
 .card .pic.none { display: grid; place-items: center; color: var(--ink-2); }
 .card .pic.none p { font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
@@ -160,7 +160,7 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
   .stage { position: static; height: auto; perspective: none; display: grid; gap: 20px; overflow: visible; }
   .card { position: relative; width: min(1120px, 100% - 32px); margin: 0 auto; transform: none !important; opacity: 1 !important; }
   .card .core { grid-template-columns: 1fr; min-height: 0; }
-  .card .pic { margin: 0 8px 8px; aspect-ratio: 16 / 11; }
+  .card .pic { aspect-ratio: 16 / 11; }
   .card .pic .fit { inset: 14px; }
   .tabs { display: none; }
 }
@@ -218,7 +218,7 @@ dialog[open] { animation: up .8s var(--ease); }
 .sheet h3 { margin-top: 16px; font-size: clamp(40px, 5vw, 64px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
 .sheet .line { margin-top: 14px; font-size: 19px; color: var(--ink-2); max-width: 46ch; }
 .shots { margin-top: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.shots img { width: 100%; height: auto; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--tray-line), 0 14px 30px -22px rgba(25, 30, 40, .5); }
+.shots img { width: 100%; height: auto; border-radius: 5px; box-shadow: 0 0 0 1px rgba(20, 24, 32, .1), 0 18px 34px -22px rgba(25, 30, 40, .45); }
 .shots img:first-child { grid-column: 1 / -1; }
 .facts { margin-top: 32px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
 .facts h4 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
@@ -259,8 +259,9 @@ dialog[open] { animation: up .8s var(--ease); }
   .hero .cta { margin-top: 26px; flex-wrap: nowrap; gap: 10px; }
   .hero .cta .pill { flex: 1; justify-content: space-between; font-size: 15px; padding-left: 18px; }
 
-  .bezel, .now .bezel, .contact .bezel, .card, .bento > .bezel, .cascade .main { --r: 24px; --pad: 3px; }
-  .cascade .phone { --r: 20px; --pad: 2px; }
+  .bezel, .now .bezel, .contact .bezel, .card, .bento > .bezel { --r: 24px; --pad: 3px; }
+  .cascade .main { --r: 8px; --pad: 2px; }
+  .cascade .phone { --r: 14px; --pad: 2px; }
   .now .say { padding: 26px 22px; gap: 22px; }
   .now .say h2 { font-size: 36px; }
   .now .say p { font-size: 16.5px; }
@@ -276,7 +277,7 @@ dialog[open] { animation: up .8s var(--ease); }
   .card .line { font-size: 16.5px; }
   .card .pic { aspect-ratio: auto; margin: 0; border-radius: 0; background: none; }
   .card .pic .fit { position: static; padding: 0 16px 16px; }
-  .card .pic img { width: 100%; border-radius: 12px; box-shadow: 0 0 0 1px var(--tray-line), 0 14px 28px -20px rgba(25, 30, 40, .45); }
+  .card .pic img { width: 100%; border-radius: 5px; box-shadow: 0 0 0 1px rgba(20, 24, 32, .1), 0 18px 34px -22px rgba(25, 30, 40, .45); }
 
   .bento { margin-top: 28px; gap: 12px; }
   .bento .core { padding: 24px 22px; gap: 22px; }
