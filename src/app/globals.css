@@ -74,28 +74,45 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
 .hero h1 { margin-top: 22px; font-size: clamp(54px, 7.4vw, 116px); font-weight: 700; letter-spacing: -.055em; line-height: .92; }
 .hero h1 .ln { display: block; overflow: hidden; padding-bottom: .04em; }
-.hero h1 .ln span { display: block; }
-.js .hero h1 .ln span { transform: translateY(110%); }
-.hero.go h1 .ln span { transform: none; transition: transform 1.2s var(--ease); transition-delay: calc(var(--i) * 110ms + 100ms); }
+.hero h1 .ln > span { display: block; }
+.js .hero h1 .ln > span { transform: translateY(110%); }
+.hero.go h1 .ln > span { transform: none; transition: transform 1.2s var(--ease); transition-delay: calc(var(--i) * 110ms + 100ms); }
 .hero .sub { margin-top: 26px; font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; color: var(--ink-2); max-width: 34ch; }
 .hero .cta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
 
-.cascade { position: relative; height: min(640px, 72vh); perspective: 1600px; }
-.cascade .bezel { position: absolute; width: 74%; --r: 26px; --pad: 6px; transition: transform 1.4s var(--ease), opacity 1s var(--ease); }
+.hero h1 .dot { color: var(--accent); }
+
+/* hero scene: Link All up front (Mac + phone), the other projects tucked behind */
+.cascade { position: relative; height: min(620px, 70vh); }
+.cascade::before { content: ""; position: absolute; left: 8%; right: 8%; bottom: 2%; height: 12%; border-radius: 50%; background: radial-gradient(closest-side, rgba(25, 30, 40, .16), transparent); filter: blur(8px); }
+.cascade .bezel { position: absolute; display: block; --r: 26px; --pad: 6px; color: inherit; transition: transform 1.4s var(--ease), opacity 1s var(--ease), box-shadow .6s var(--ease); }
+.cascade .core { position: relative; }
 .cascade .core img { aspect-ratio: 16 / 10; width: 100%; object-fit: cover; object-position: top left; }
-.cascade .cap { display: flex; justify-content: space-between; padding: 12px 16px; font-size: 14px; }
+.cascade .cap { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; }
 .cascade .cap span:last-child { color: var(--ink-2); }
-.cascade .c0 { left: 0; top: 2%; rotate: -4deg; z-index: 1; }
-.cascade .c1 { right: 0; top: 24%; rotate: 3deg; z-index: 2; }
-.cascade .c2 { left: 10%; top: 50%; rotate: -1.2deg; z-index: 3; }
+.cascade .back { width: 56%; top: 0; z-index: 1; }
+.cascade .back .core::after { content: ""; position: absolute; inset: 0; background: var(--bg); opacity: .32; transition: opacity .6s var(--ease); pointer-events: none; }
+.cascade .back:hover .core::after { opacity: 0; }
+.cascade .c-lineup { left: 0; rotate: -6deg; }
+.cascade .c-vault { right: 0; top: 5%; rotate: 5deg; }
+.cascade .c-vault img { object-position: 62% 0; }
+.cascade .main { width: 84%; left: 2%; top: 25%; rotate: -1.5deg; z-index: 2; --r: 30px; --pad: 7px; }
+.cascade .main .cap { padding: 13px 16px 13px 18px; font-size: 15px; }
+.cascade .main .cap b { font-weight: 600; }
+.cascade .main .cap .chip { white-space: nowrap; padding: 4px 10px; font-size: 10px; margin-left: 10px; }
+.cascade .phone { width: 23%; right: -2%; top: 34%; rotate: 5deg; z-index: 3; --r: 34px; --pad: 6px; }
+.cascade .phone .core img { aspect-ratio: 9 / 18.5; }
 .js .cascade .bezel { opacity: 0; transform: translateY(120px) scale(.94); }
-.hero.go .cascade .bezel { opacity: 1; transform: translate3d(var(--px, 0px), var(--py, 0px), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
-.hero.go.settled .cascade .bezel { transition: transform .9s var(--ease); transition-delay: 0ms; }
+.hero.go .cascade .bezel { opacity: 1; transform: translate3d(var(--px, 0px), calc(var(--py, 0px) + var(--hy, 0px)), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
+.hero.go.settled .cascade .bezel { transition: transform .9s var(--ease), box-shadow .6s var(--ease); transition-delay: 0ms; }
+.hero.go.settled .cascade .bezel:hover { --hy: -10px; }
 @media (max-width: 900px) {
   .hero .wrap { grid-template-columns: 1fr; }
-  .cascade { height: auto; display: grid; gap: 16px; perspective: none; }
-  .cascade .bezel { position: relative; inset: auto; width: 100%; rotate: none; }
-  .cascade .c1, .cascade .c2 { display: none; }
+  .cascade { height: auto; padding: 0 0 36px; }
+  .cascade::before, .cascade .back { display: none; }
+  .cascade .main { position: relative; inset: auto; width: 88%; rotate: -1deg; }
+  .cascade .phone { top: auto; bottom: 0; right: 0; width: 28%; }
+  .cascade .main .cap > span:last-child { display: none; }
 }
 
 /* ---------- sections ---------- */

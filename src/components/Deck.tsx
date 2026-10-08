@@ -80,12 +80,25 @@ export default function Deck() {
     if (open && sheet.current && !sheet.current.open) sheet.current.showModal();
   }, [open]);
 
+  // Scrolls so card i is in front. In list mode (narrow or reduced motion) it scrolls to the card itself.
   function goTo(i: number) {
     const el = deck.current!;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const behavior = reduce ? "auto" : "smooth";
+    if (reduce || !matchMedia("(min-width: 901px)").matches) {
+      cards.current[i]?.scrollIntoView({ behavior, block: "center" });
+      return;
+    }
     const span = el.offsetHeight - innerHeight;
-    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    scrollTo({ top: el.offsetTop + (span * i) / (N - 1) + 2, behavior: smooth ? "smooth" : "auto" });
+    scrollTo({ top: el.offsetTop + (span * i) / (N - 1) + 2, behavior });
   }
+
+  // the hero's project cards ask for a specific card
+  useEffect(() => {
+    const onGo = (e: Event) => goTo((e as CustomEvent<number>).detail);
+    addEventListener("deck:go", onGo);
+    return () => removeEventListener("deck:go", onGo);
+  }, []);
 
   return (
     <>
