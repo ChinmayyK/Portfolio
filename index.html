@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chinmay Kudalkar</title>
+<meta name="description" content="Chinmay Kudalkar, web and mobile developer. Projects, experience and contact.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
+<style>
+  /* Soft structuralism: silver ground, machined trays holding lighter plates, one orange. */
+  :root {
+    --bg: #ECEDEF;
+    --tray: rgba(20, 24, 32, .045);
+    --tray-line: rgba(20, 24, 32, .07);
+    --core: #F9F9FA;
+    --ink: #0E0F12;
+    --ink-2: #565B64;
+    --accent: #F0561D;
+    --r: 30px;
+    --pad: 7px;
+    --sans: "Geist", system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, monospace;
+    --ease: cubic-bezier(.32, .72, 0, 1);
+    --spring: cubic-bezier(.34, 1.56, .64, 1);
+    --lift: 0 1px 2px rgba(25, 30, 40, .05), 0 24px 50px -28px rgba(25, 30, 40, .28), 0 60px 90px -60px rgba(25, 30, 40, .2);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+  ::selection { background: var(--ink); color: var(--core); }
+  body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-events: none; opacity: .35; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .52 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .wrap { width: min(1320px, 100% - 48px); margin: 0 auto; }
+  .mono { font-family: var(--mono); font-size: 13px; letter-spacing: .02em; }
+
+  /* ---------- double bezel: a tray holding a plate ---------- */
+  .bezel { background: var(--tray); border: 1px solid var(--tray-line); border-radius: var(--r); padding: var(--pad); }
+  .core { background: var(--core); border-radius: calc(var(--r) - var(--pad)); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .9), 0 1px 2px rgba(25, 30, 40, .05); overflow: hidden; }
+  .lifted { box-shadow: var(--lift); }
+
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 99px; background: var(--tray); border: 1px solid var(--tray-line); font: 500 11px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+
+  /* ---------- buttons: pill with a nested icon island ---------- */
+  .pill { display: inline-flex; align-items: center; gap: 14px; padding: 7px 7px 7px 22px; border-radius: 99px; font-weight: 500; font-size: 16px; white-space: nowrap; transition: transform .5s var(--ease), background .4s var(--ease); }
+  .pill .isl { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; transition: transform .6s var(--spring); }
+  .pill:hover .isl { transform: translate(3px, -2px) scale(1.06); }
+  .pill:active { transform: scale(.98); }
+  .pill.dark { background: var(--ink); color: var(--core); }
+  .pill.dark .isl { background: var(--accent); color: var(--ink); }
+  .pill.light { background: var(--core); box-shadow: inset 0 0 0 1px var(--tray-line), 0 1px 2px rgba(25, 30, 40, .06); }
+  .pill.light .isl { background: var(--tray); }
+  .pill.light:hover { background: #fff; }
+
+  /* ---------- reveal on enter ---------- */
+  .js [data-r] { opacity: 0; transform: translateY(48px); filter: blur(10px); }
+  .js [data-r].in { opacity: 1; transform: none; filter: none; transition: opacity 1s var(--ease), transform 1.1s var(--ease), filter 1s var(--ease); transition-delay: var(--d, 0ms); }
+
+  /* ---------- island nav ---------- */
+  .nav { position: fixed; z-index: 60; top: 18px; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 99px; background: rgba(249, 249, 250, .7); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid rgba(255, 255, 255, .7); box-shadow: 0 10px 30px -14px rgba(25, 30, 40, .3), inset 0 1px 0 rgba(255, 255, 255, .9); }
+  .nav .me { white-space: nowrap; padding: 8px 14px 8px 16px; font-weight: 600; letter-spacing: -.01em; }
+  .nav .links { display: flex; gap: 2px; }
+  .nav .links a { padding: 8px 14px; border-radius: 99px; color: var(--ink-2); font-size: 15px; transition: background .4s var(--ease), color .4s var(--ease); }
+  .nav .links a:hover, .nav .links a[aria-current="true"] { background: var(--ink); color: var(--core); }
+  .burger { display: none; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); position: relative; }
+  .burger i { position: absolute; left: 12px; right: 12px; height: 1.5px; background: var(--core); transition: transform .6s var(--ease), top .6s var(--ease); }
+  .burger i:first-child { top: 16px; } .burger i:last-child { top: 23px; }
+  .burger[aria-expanded="true"] i:first-child { top: 19.5px; transform: rotate(45deg); }
+  .burger[aria-expanded="true"] i:last-child { top: 19.5px; transform: rotate(-45deg); }
+  .menu { position: fixed; inset: 0; z-index: 55; background: rgba(236, 237, 239, .86); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); display: grid; align-content: center; padding: 0 28px; opacity: 0; pointer-events: none; transition: opacity .6s var(--ease); }
+  .menu.open { opacity: 1; pointer-events: auto; }
+  .menu a { display: block; overflow: hidden; font-size: clamp(44px, 12vw, 72px); font-weight: 600; letter-spacing: -.045em; line-height: 1.12; }
+  .menu a span { display: block; transform: translateY(105%); transition: transform .8s var(--ease); }
+  .menu.open a span { transform: none; transition-delay: calc(var(--i) * 60ms + 120ms); }
+  @media (max-width: 760px) { .nav .links { display: none; } .burger { display: block; } }
+
+  /* ---------- hero ---------- */
+  .hero { min-height: 100dvh; display: grid; align-items: center; padding: 120px 0 64px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 { margin-top: 22px; font-size: clamp(54px, 7.4vw, 116px); font-weight: 700; letter-spacing: -.055em; line-height: .92; }
+  .hero h1 .ln { display: block; overflow: hidden; padding-bottom: .04em; }
+  .hero h1 .ln span { display: block; }
+  .js .hero h1 .ln span { transform: translateY(110%); }
+  .hero.go h1 .ln span { transform: none; transition: transform 1.2s var(--ease); transition-delay: calc(var(--i) * 110ms + 100ms); }
+  .hero .sub { margin-top: 26px; font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; color: var(--ink-2); max-width: 34ch; }
+  .hero .cta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .cascade { position: relative; height: min(640px, 72vh); perspective: 1600px; }
+  .cascade .bezel { position: absolute; width: 74%; --r: 26px; --pad: 6px; transition: transform 1.4s var(--ease), opacity 1s var(--ease); }
+  .cascade .core img { aspect-ratio: 16 / 10; width: 100%; object-fit: cover; object-position: top left; }
+  .cascade .cap { display: flex; justify-content: space-between; padding: 12px 16px; font-size: 14px; }
+  .cascade .cap span:last-child { color: var(--ink-2); }
+  .cascade .c0 { left: 0; top: 2%; rotate: -4deg; z-index: 1; }
+  .cascade .c1 { right: 0; top: 24%; rotate: 3deg; z-index: 2; }
+  .cascade .c2 { left: 10%; top: 50%; rotate: -1.2deg; z-index: 3; }
+  .js .cascade .bezel { opacity: 0; transform: translateY(120px) scale(.94); }
+  .hero.go .cascade .bezel { opacity: 1; transform: translate3d(var(--px, 0px), var(--py, 0px), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
+  .hero.go.settled .cascade .bezel { transition: transform .9s var(--ease); transition-delay: 0ms; }
+  @media (max-width: 900px) {
+    .hero .wrap { grid-template-columns: 1fr; }
+    .cascade { height: auto; display: grid; gap: 16px; perspective: none; }
+    .cascade .bezel { position: relative; inset: auto; width: 100%; rotate: none; }
+    .cascade .c1, .cascade .c2 { display: none; }
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: clamp(96px, 14vh, 160px) 0; }
+  h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
+  .lead { margin-top: 18px; font-size: clamp(18px, 1.4vw, 21px); color: var(--ink-2); max-width: 46ch; }
+
+  /* now */
+  .now .bezel { --r: 36px; --pad: 8px; }
+  .now .core { display: grid; grid-template-columns: 1.1fr 1fr; }
+  .now .say { padding: clamp(32px, 5vw, 64px); display: grid; align-content: space-between; gap: 40px; }
+  .now .say h2 { font-size: clamp(38px, 4.6vw, 68px); }
+  .now .say h2 em { font-style: normal; color: var(--accent); }
+  .now .say p { font-size: 18px; color: var(--ink-2); max-width: 40ch; }
+  .now ol { list-style: none; padding: clamp(24px, 4vw, 48px); display: grid; gap: 10px; align-content: center; background: linear-gradient(180deg, #F1F2F4, #E9EBEE); }
+  .now li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: center; padding: 14px 18px 14px 14px; border-radius: 20px; background: var(--core); box-shadow: inset 0 1px 1px #fff, 0 1px 2px rgba(25, 30, 40, .06), 0 14px 30px -24px rgba(25, 30, 40, .4); font-size: 16.5px; line-height: 1.35; }
+  .now li i { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--tray); font-size: 22px; }
+  @media (max-width: 900px) { .now .core { grid-template-columns: 1fr; } }
+
+  /* ---------- work: a deck you scroll through in depth ---------- */
+  .work { padding-bottom: 0; }
+  .deck { position: relative; height: calc(var(--n) * 80vh + 100vh); margin-top: 40px; }
+  .stage { position: sticky; top: 0; height: 100dvh; perspective: 1500px; perspective-origin: 50% 30%; display: grid; place-items: center; overflow: hidden; }
+  .card { position: absolute; width: min(1120px, 100% - 48px); --r: 34px; --pad: 8px; background: #E2E4E8; transform-origin: 50% 100%; will-change: transform, opacity; }
+  .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--bg); opacity: var(--dim, 0); pointer-events: none; }
+  .card .core { display: grid; grid-template-columns: 5fr 7fr; min-height: min(560px, 66vh); }
+  .card .txt { padding: clamp(28px, 3.6vw, 48px); display: grid; align-content: space-between; gap: 28px; }
+  .card h3 { margin-top: 16px; font-size: clamp(40px, 4.6vw, 68px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
+  .card .line { margin-top: 14px; font-size: 18px; color: var(--ink-2); max-width: 32ch; }
+  .card .pic { margin: 8px 8px 8px 0; border-radius: 22px; overflow: hidden; background: linear-gradient(160deg, #E4E6EA, #D9DCE1); position: relative; }
+  .card .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; transition: transform 1.4s var(--ease); }
+  .card:hover .pic img { transform: scale(1.03); }
+  .card .pic.none { display: grid; place-items: center; color: var(--ink-2); }
+  .card .pic.none p { font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
+  .tabs { position: absolute; left: 50%; bottom: 26px; translate: -50% 0; z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 99px; background: rgba(249, 249, 250, .7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, .7); box-shadow: 0 10px 30px -14px rgba(25, 30, 40, .3); }
+  .tabs { transition: opacity .5s var(--ease), translate .6s var(--ease); }
+  .tabs.off { opacity: 0; translate: -50% 20px; pointer-events: none; }
+  .tabs button { padding: 7px 14px; border-radius: 99px; font-size: 14px; color: var(--ink-2); transition: background .5s var(--ease), color .5s var(--ease); white-space: nowrap; }
+  .tabs button[aria-current="true"] { background: var(--ink); color: var(--core); }
+  @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+    .deck { height: auto; }
+    .stage { position: static; height: auto; perspective: none; display: grid; gap: 20px; overflow: visible; }
+    .card { position: relative; width: min(1120px, 100% - 32px); margin: 0 auto; transform: none !important; opacity: 1 !important; }
+    .card .core { grid-template-columns: 1fr; min-height: 0; }
+    .card .pic { margin: 0 8px 8px; aspect-ratio: 16 / 10; }
+    .tabs { display: none; }
+  }
+
+  /* ---------- background bento ---------- */
+  .bento { margin-top: 56px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+  .bento > .bezel { --r: 30px; display: grid; }
+  .bento .core { padding: clamp(24px, 3vw, 40px); display: grid; align-content: space-between; gap: 28px; }
+  .b-a { grid-column: span 7; }
+  .b-b, .b-c { grid-column: span 5; }
+  .b-d { grid-column: span 7; }
+  .b-a .core { background: var(--ink); color: #E8E9EC; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12); }
+  .b-a .chip { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .1); color: #A9ADB6; }
+  .b-a ul { list-style: none; display: grid; gap: 12px; font-size: 16.5px; line-height: 1.45; color: #C5C8CF; }
+  .b-a li { display: grid; grid-template-columns: 22px 1fr; }
+  .b-a li i { color: var(--accent); margin-top: 3px; }
+  .role { font-size: clamp(28px, 2.8vw, 40px); font-weight: 600; letter-spacing: -.04em; line-height: 1.02; margin-top: 18px; }
+  .org { margin-top: 10px; color: var(--ink-2); }
+  .b-a .org { color: #A9ADB6; }
+  .b-b ul { padding-left: 1.1em; display: grid; gap: 8px; color: var(--ink-2); font-size: 16px; }
+  .b-c dd { color: var(--ink-2); font-size: 16px; }
+  .b-c dl { display: grid; gap: 16px; }
+  .b-c dt { font-weight: 600; margin-bottom: 2px; }
+  .logos { display: flex; flex-wrap: wrap; gap: 8px; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; border-radius: 99px; background: #F0F1F3; box-shadow: inset 0 0 0 1px var(--tray-line); font-size: 15px; transition: transform .5s var(--spring), background .4s var(--ease); }
+  .logo span { width: 32px; height: 32px; border-radius: 50%; background: var(--core); display: grid; place-items: center; box-shadow: 0 1px 2px rgba(25, 30, 40, .08); }
+  .logo img { width: 18px; height: 18px; object-fit: contain; }
+  .logo:hover { transform: translateY(-3px); background: #fff; }
+  @media (max-width: 900px) { .b-a, .b-b, .b-c, .b-d { grid-column: 1 / -1; grid-row: auto; } }
+
+  /* ---------- contact ---------- */
+  .contact .bezel { --r: 40px; --pad: 9px; }
+  .contact .core { padding: clamp(36px, 6vw, 88px); display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: end; }
+  .contact h2 { font-size: clamp(44px, 6.4vw, 96px); }
+  .contact .mail { display: inline-block; margin-top: 30px; font-size: clamp(22px, 2.6vw, 38px); font-weight: 500; letter-spacing: -.03em; background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 2px no-repeat; transition: background-size .8s var(--ease); }
+  .contact .mail:hover { background-size: 100% 2px; }
+  .contact .side { display: grid; gap: 10px; justify-items: start; }
+  .contact .side .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .copied { min-height: 1.5em; color: var(--ink-2); }
+  @media (max-width: 900px) { .contact .core { grid-template-columns: 1fr; } }
+  footer { padding: 32px 0 48px; color: var(--ink-2); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  kbd { font: 500 12px var(--mono); padding: 2px 8px; border-radius: 6px; background: var(--core); box-shadow: inset 0 0 0 1px var(--tray-line), 0 1px 0 var(--tray-line); }
+
+  /* ---------- sheets ---------- */
+  dialog { border: 0; padding: 0; margin: auto; background: transparent; color: var(--ink); max-height: calc(100dvh - 32px); overflow: visible; }
+  dialog::backdrop { background: rgba(200, 203, 209, .5); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+  dialog:focus-visible { outline: none; }
+  dialog[open] { animation: up .8s var(--ease); }
+  @keyframes up { from { opacity: 0; transform: translateY(60px) scale(.97); } }
+  .sheet { width: min(980px, calc(100vw - 24px)); --r: 36px; --pad: 8px; }
+  .sheet .core { max-height: calc(100dvh - 48px); overflow: auto; padding: clamp(28px, 5vw, 60px); position: relative; }
+  .x { position: sticky; top: 0; float: right; width: 44px; height: 44px; border-radius: 50%; background: var(--tray); display: grid; place-items: center; font-size: 20px; transition: transform .6s var(--spring), background .4s; z-index: 2; }
+  .x:hover { transform: rotate(90deg); background: #E3E5E8; }
+  .sheet h3 { margin-top: 16px; font-size: clamp(40px, 5vw, 64px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
+  .sheet .line { margin-top: 14px; font-size: 19px; color: var(--ink-2); max-width: 46ch; }
+  .shots { margin-top: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .shots img { width: 100%; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--tray-line), 0 14px 30px -22px rgba(25, 30, 40, .5); }
+  .shots img:first-child { grid-column: 1 / -1; }
+  .facts { margin-top: 32px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
+  .facts h4 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+  .facts ul { padding-left: 1.1em; display: grid; gap: 8px; color: var(--ink-2); }
+  .facts p { color: var(--ink-2); }
+  .facts .pill { margin-top: 20px; }
+  @media (max-width: 700px) { .shots, .facts { grid-template-columns: 1fr; } }
+
+  .who { width: min(420px, calc(100vw - 32px)); --r: 34px; --pad: 8px; }
+  .who img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; }
+  .who figcaption { padding: 18px 22px 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .who strong { font-size: 22px; letter-spacing: -.03em; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; transition-delay: 0ms !important; }
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add("js")</script>
+
+<nav class="nav" aria-label="Main">
+  <a class="me" href="#top">Chinmay Kudalkar</a>
+  <div class="links">
+    <a href="#now">Now</a>
+    <a href="#work">Work</a>
+    <a href="#background">Background</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+</nav>
+<div class="menu" id="menu" aria-hidden="true">
+  <a href="#now" style="--i:0"><span>Now</span></a>
+  <a href="#work" style="--i:1"><span>Work</span></a>
+  <a href="#background" style="--i:2"><span>Background</span></a>
+  <a href="#contact" style="--i:3"><span>Contact</span></a>
+</div>
+
+<main>
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div>
+        <span class="chip" data-r>Web and mobile developer</span>
+        <h1 aria-label="Chinmay Kudalkar"><span class="ln" aria-hidden="true"><span style="--i:0">Chinmay</span></span><span class="ln" aria-hidden="true"><span style="--i:1">Kudalkar</span></span></h1>
+        <p class="sub" data-r style="--d:300ms">I build web and mobile apps, and the backend services behind them. Final-year B.Tech student, graduating in 2027.</p>
+        <div class="cta" data-r style="--d:420ms">
+          <a class="pill dark" href="#work">See my work <span class="isl"><i class="ph-light ph-arrow-down"></i></span></a>
+          <a class="pill light" href="Chinmay_Kudalkar_Resume.pdf" download>Résumé <span class="isl"><i class="ph-light ph-download-simple"></i></span></a>
+        </div>
+      </div>
+      <div class="cascade" id="cascade" aria-hidden="true">
+        <div class="bezel lifted c0" style="--i:0" data-depth="14"><div class="core"><img src="img/lineup-dashboard.png" alt=""><div class="cap"><span>Lineup</span><span>Interview platform</span></div></div></div>
+        <div class="bezel lifted c1" style="--i:1" data-depth="26"><div class="core"><img src="img/linkall-mac-devices.png" alt=""><div class="cap"><span>Link All</span><span>Clipboard and files</span></div></div></div>
+        <div class="bezel lifted c2" style="--i:2" data-depth="40"><div class="core"><img src="img/doc-redact-engine.png" alt="" style="object-position:center top"><div class="cap"><span>BlockVault</span><span>Encrypted vault</span></div></div></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="now" id="now" aria-labelledby="now-h">
+    <div class="wrap">
+      <div class="bezel lifted" data-r>
+        <div class="core">
+          <div class="say">
+            <span class="chip" style="justify-self:start">Since August 2026</span>
+            <div>
+              <h2 id="now-h">Interning at <em>ideaForge</em>.</h2>
+              <p style="margin-top:16px">I work on iF FleetDesk, the internal app staff use to book vehicles for people and material, on web and mobile.</p>
+            </div>
+          </div>
+          <ol>
+            <li data-r style="--d:100ms"><i class="ph-light ph-path"></i>A four-step booking flow, including multi-stop and outstation trips.</li>
+            <li data-r style="--d:180ms"><i class="ph-light ph-steering-wheel"></i>Driver assignment, dispatch and reassignment.</li>
+            <li data-r style="--d:260ms"><i class="ph-light ph-warning-circle"></i>Checks for conflicting vehicle and driver bookings.</li>
+            <li data-r style="--d:340ms"><i class="ph-light ph-calendar-check"></i>Scheduled rides with seat reservations and no-shows.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <h2 id="work-h" data-r>Things I've built.</h2>
+      <p class="lead" data-r style="--d:120ms">Side projects and college work. Open any of them for screenshots and details.</p>
+    </div>
+    <div class="deck" id="deck">
+      <div class="stage" id="stage">
+        <div class="tabs off" id="tabs" aria-label="Projects"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="background" aria-labelledby="bg-h">
+    <div class="wrap">
+      <h2 id="bg-h" data-r>Background.</h2>
+      <div class="bento">
+        <article class="bezel lifted b-a" data-r>
+          <div class="core">
+            <div>
+              <span class="chip">Aug 2026 to now</span>
+              <h3 class="role">Web &amp; Mobile App Developer Intern</h3>
+              <p class="org">ideaForge Technology, Navi Mumbai</p>
+            </div>
+            <ul>
+              <li><i class="ph-light ph-arrow-right"></i>iF FleetDesk, the fleet and employee transport platform, on web and mobile for five kinds of user.</li>
+              <li><i class="ph-light ph-arrow-right"></i>Booking for passengers, material or both, for yourself or someone else.</li>
+              <li><i class="ph-light ph-arrow-right"></i>Vehicle availability, capacity matching, driver assignment and dispatch.</li>
+              <li><i class="ph-light ph-arrow-right"></i>Scheduled rides with set routes and timings, seat reservations, cancellations and no-shows.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="bezel lifted b-b" data-r style="--d:100ms">
+          <div class="core">
+            <div>
+              <span class="chip">Dec 2025 to Apr 2026</span>
+              <h3 class="role">Software Engineering Intern</h3>
+              <p class="org">Mintskill HR Solutions</p>
+            </div>
+            <ul>
+              <li>Node.js services and REST integrations connecting hiring tools (ATS) to CRMs.</li>
+              <li>Redis-backed background job queues.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="bezel lifted b-d" data-r style="--d:120ms">
+          <div class="core">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+              <h3 class="role" style="margin:0">What I use</h3>
+              <p class="org" style="margin:0">Plus AWS, LLM integration and RAG.</p>
+            </div>
+            <div class="logos" id="logos"></div>
+          </div>
+        </article>
+        <article class="bezel lifted b-c" data-r style="--d:180ms">
+          <div class="core">
+            <span class="chip" style="justify-self:start">Education</span>
+            <dl>
+              <div><dt>B.Tech, Computer Technology</dt><dd>RT-MSSU, 2023 to 2027. CGPA 7.3.</dd></div>
+              <div><dt>Certificates</dt><dd>AWS Certified Cloud Practitioner (2026). Deep Learning, Skillsoft (2025). AI, Databases, HTML &amp; CSS from Certiport.</dd></div>
+            </dl>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="c-h">
+    <div class="wrap">
+      <div class="bezel lifted" data-r>
+        <div class="core">
+          <div>
+            <span class="chip">Open to full-time roles from 2027</span>
+            <h2 id="c-h" style="margin-top:22px">Say hello.</h2>
+            <a class="mail" href="mailto:chinmayy.kudalkar@gmail.com">chinmayy.kudalkar@gmail.com</a>
+          </div>
+          <div class="side">
+            <a class="pill dark" href="mailto:chinmayy.kudalkar@gmail.com">Email me <span class="isl"><i class="ph-light ph-arrow-up-right"></i></span></a>
+            <div class="row">
+              <button class="pill light" id="copy" type="button">Copy address <span class="isl"><i class="ph-light ph-copy"></i></span></button>
+            </div>
+            <div class="row">
+              <a class="pill light" href="https://linkedin.com/in/chinmayyk">LinkedIn <span class="isl"><i class="ph-light ph-linkedin-logo"></i></span></a>
+              <a class="pill light" href="https://github.com/chinmayyk">GitHub <span class="isl"><i class="ph-light ph-github-logo"></i></span></a>
+            </div>
+            <a class="pill light" href="tel:+918766983907">+91 87669 83907 <span class="isl"><i class="ph-light ph-phone"></i></span></a>
+            <output class="copied mono" id="copied" aria-live="polite"></output>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>Chinmay Kudalkar, 2026</span><span>Type <kbd>whoami</kbd> anywhere</span></div></footer>
+
+<dialog id="sheet" aria-labelledby="s-title"><div class="sheet bezel"><div class="core" id="sheet-body"></div></div></dialog>
+<dialog id="who" aria-label="Photo of Chinmay"><figure class="who bezel"><div class="core"><img src="img/chinmay-photo.png" alt="Photo of Chinmay Kudalkar"><figcaption><strong>That's me.</strong><form method="dialog"><button class="pill light" style="padding-left:16px">Close <span class="isl"><i class="ph-light ph-x"></i></span></button></form></figcaption></div></figure></dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const P = [
+  { k: "Rust, Swift, Kotlin, WinUI 3", t: "Link All", line: "Copy on one device, paste on another. Clipboard and files across macOS, Windows, Android and Linux, with no cloud.",
+    lede: "A local-first app with one Rust core and a native app on each platform. Everything stays on your own network, end-to-end encrypted, with no account. macOS, Android and Linux are stable; Windows is in alpha.",
+    pts: ["File transfers that resume after a dropped connection, using chunk-level acknowledgements.", "A shared clipboard history, with a filter that keeps OTPs, passwords and card numbers from syncing.", "X25519 key exchange and ChaCha20-Poly1305 encryption. Pairing is confirmed with a matching code or a QR code.", "Notification mirroring, remote file browsing and a wireless camera, on the same encrypted connection.", "Its website, built with Next.js and deployed on Cloudflare."],
+    stack: "Rust, Swift and SwiftUI, Kotlin and Jetpack Compose, WinUI 3, GTK, Next.js", src: "https://github.com/ChinmayyK/Link-All", site: "https://linkall.chinmaykudalkar.com",
+    img: "linkall-mac-devices.png", shots: ["linkall-mac-devices.png", "linkall-mac-clipboard.png", "linkall-mac-transfers-active.png", "linkall-mac-command-palette.png", "linkall-win-clipboard.png"] },
+  { k: "Next.js, NestJS, PostgreSQL", t: "Lineup", line: "A multi-tenant interview platform.",
+    lede: "Companies schedule interviews and track candidates, with each tenant's data kept separate.",
+    pts: ["Multi-tenant backend with row-level isolation and JWT authentication.", "Reporting and caching with Redis.", "An OCR ingestion pipeline that processes 1,000+ candidate records per upload."],
+    stack: "Next.js, NestJS, PostgreSQL, Redis, JWT", src: "https://github.com/ChinmayyK/TalentSync",
+    img: "lineup-candidates.png", shots: ["lineup-dashboard.png", "lineup-candidates.png", "lineup-reports.png"] },
+  { k: "Encryption, IPFS", t: "BlockVault", line: "An encrypted document vault.",
+    lede: "Documents are encrypted on the client, and sharing rules are checked with zero-knowledge proofs. Files are stored on IPFS.",
+    pts: ["Client-side encryption before upload.", "Zero-knowledge proofs for server-side rule checks.", "A redaction tool for removing sensitive parts of a document."],
+    stack: "Zero-knowledge proofs, IPFS", src: "https://github.com/ChinmayyK/BlockVault",
+    img: "doc-redact-engine.png", pos: "62% 0", tone: "#0B0B0C", shots: ["doc-redact-engine.png", "bv2.png", "bv1.png"] }
+];
+const TOOLS = [["TypeScript","typescript"],["JavaScript","javascript"],["Python","python"],["Rust","rust"],["Kotlin","kotlin"],["React","react"],["Next.js","nextjs"],["Node.js","nodejs"],
+  ["NestJS","nestjs"],["PostgreSQL","postgresql"],["MySQL","mysql"],["Redis","redis"],["Prisma","prisma"],["Docker","docker"],["Linux","linux"],["Git","git"]];
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+/* ---------- reveal on enter ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .15, rootMargin: "0px 0px -6% 0px" });
+function watch(root = document) { $$("[data-r]", root).forEach(el => io.observe(el)); }
+
+/* ---------- hero ---------- */
+const hero = $(".hero");
+requestAnimationFrame(() => { hero.classList.add("go"); setTimeout(() => hero.classList.add("settled"), 2000); });
+// cards drift by depth with the pointer, like plates at different heights
+const cas = $("#cascade");
+if (!reduce && matchMedia("(hover: hover) and (min-width: 901px)").matches) {
+  let raf = 0, tx = 0, ty = 0;
+  hero.addEventListener("pointermove", e => {
+    tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5;
+    if (!raf) raf = requestAnimationFrame(() => {
+      raf = 0;
+      $$(".bezel", cas).forEach(b => { const d = +b.dataset.depth; b.style.setProperty("--px", (-tx * d).toFixed(1) + "px"); b.style.setProperty("--py", (-ty * d).toFixed(1) + "px"); });
+    });
+  });
+}
+
+/* ---------- menu ---------- */
+const burger = $("#burger"), menu = $("#menu");
+function setMenu(open) {
+  burger.setAttribute("aria-expanded", open); burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  menu.classList.toggle("open", open); menu.setAttribute("aria-hidden", !open);
+}
+burger.addEventListener("click", () => setMenu(burger.getAttribute("aria-expanded") !== "true"));
+$$("a", menu).forEach(a => a.addEventListener("click", () => setMenu(false)));
+addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+
+/* ---------- deck ---------- */
+const deck = $("#deck"), stage = $("#stage"), tabs = $("#tabs");
+deck.style.setProperty("--n", P.length);
+stage.insertAdjacentHTML("afterbegin", P.map((p, i) => `
+  <article class="card bezel lifted" data-i="${i}" aria-labelledby="ct-${i}">
+    <div class="core">
+      <div class="txt">
+        <div><span class="chip">${esc(p.k)}</span><h3 id="ct-${i}">${esc(p.t)}</h3><p class="line">${esc(p.line)}</p></div>
+        <div><button class="pill dark" type="button" data-open="${i}">Details <span class="isl"><i class="ph-light ph-arrow-up-right"></i></span></button></div>
+      </div>
+      ${p.img ? `<div class="pic"${p.tone ? ` style="background:${p.tone}"` : ""}><img src="img/${p.img}"${p.pos ? ` style="object-position:${p.pos}"` : ""} alt="${esc(p.t)} screenshot" loading="lazy"></div>` : `<div class="pic none"><p>No screenshots yet.</p></div>`}
+    </div>
+  </article>`).join(""));
+tabs.innerHTML = P.map((p, i) => `<button type="button" data-go="${i}" aria-current="${i === 0}">${esc(p.t)}</button>`).join("");
+const cards = $$(".card", stage);
+const deckOn = () => !reduce && matchMedia("(min-width: 901px)").matches;
+
+let target = 0, cur = 0, ticking = false, active = -1;
+function paint(p) {
+  cards.forEach((c, i) => {
+    const d = i - p;
+    let tf, op, dim;
+    if (d < 0) {                          // passed: lifts toward you and fades
+      const t = Math.min(1, -d);
+      tf = `translate3d(0, ${-t * innerHeight * .95}px, ${t * 120}px) rotateX(${t * 12}deg) scale(${1 - t * .04})`;
+      op = t < .6 ? 1 : 1 - (t - .6) / .4;
+      dim = 0;
+    } else {                              // waiting: tucked behind, higher and further back
+      const s = i % 2 ? 1 : -1;
+      tf = `translate3d(0, ${-d * 46}px, ${-d * 150}px) rotate(${s * Math.min(d, 3) * .9}deg)`;
+      op = d > 3 ? Math.max(0, 4 - d) : 1;   // solid, so nothing shows through the front card
+      dim = Math.min(d, 3) * .22;
+    }
+    c.style.transform = tf;
+    c.style.opacity = Math.max(0, op).toFixed(3);
+    c.style.setProperty("--dim", dim.toFixed(3));
+    c.style.zIndex = 100 - i;
+    c.style.pointerEvents = Math.abs(d) < .5 ? "auto" : "none";
+    c.inert = Math.abs(d) >= .5;
+  });
+  const a = Math.round(p);
+  if (a !== active) { active = a; $$("button", tabs).forEach((b, i) => b.setAttribute("aria-current", i === a)); }
+}
+function loop() {
+  cur += (target - cur) * .12;
+  if (Math.abs(target - cur) < .0005) { cur = target; ticking = false; } else requestAnimationFrame(loop);
+  paint(cur);
+}
+function deckProgress() {
+  const r = deck.getBoundingClientRect(), span = deck.offsetHeight - innerHeight;
+  return Math.min(1, Math.max(0, -r.top / span)) * (P.length - 1);
+}
+tabs.addEventListener("click", e => {
+  const b = e.target.closest("[data-go]"); if (!b) return;
+  const span = deck.offsetHeight - innerHeight;
+  scrollTo({ top: deck.offsetTop + span * (+b.dataset.go) / (P.length - 1) + 2, behavior: reduce ? "auto" : "smooth" });
+});
+
+/* ---------- sheet ---------- */
+const sheet = $("#sheet"), body = $("#sheet-body");
+stage.addEventListener("click", e => {
+  const b = e.target.closest("[data-open]"); if (!b) return;
+  const p = P[+b.dataset.open];
+  body.innerHTML = `
+    <form method="dialog"><button class="x" aria-label="Close"><i class="ph-light ph-x"></i></button></form>
+    <span class="chip">${esc(p.k)}</span>
+    <h3 id="s-title">${esc(p.t)}</h3>
+    <p class="line">${esc(p.lede)}</p>
+    ${p.shots.length ? `<div class="shots">${p.shots.map(s => `<img src="img/${s}" alt="${esc(p.t)} screenshot" loading="lazy">`).join("")}</div>` : ""}
+    <div class="facts">
+      <div><h4>How it works</h4><ul>${p.pts.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h4>Built with</h4><p>${esc(p.stack)}</p><div style="display:flex;flex-wrap:wrap;gap:8px">${p.site ? `<a class="pill dark" href="${p.site}">Visit the site <span class="isl"><i class="ph-light ph-arrow-up-right"></i></span></a>` : ""}<a class="pill ${p.site ? "light" : "dark"}" href="${p.src}">View on GitHub <span class="isl"><i class="ph-light ph-github-logo"></i></span></a></div></div>
+    </div>`;
+  sheet.showModal();
+  body.scrollTop = 0;
+});
+sheet.addEventListener("click", e => { if (e.target === sheet) sheet.close(); });
+
+/* ---------- tools ---------- */
+$("#logos").innerHTML = TOOLS.map(([n, s]) => `<span class="logo"><span><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/${s}/${s}-original.svg" alt="" loading="lazy" onerror="this.style.visibility='hidden'"></span>${n}</span>`).join("");
+
+/* ---------- contact ---------- */
+$("#copy").addEventListener("click", async () => {
+  const out = $("#copied");
+  try { await navigator.clipboard.writeText("chinmayy.kudalkar@gmail.com"); out.textContent = "Copied to clipboard."; }
+  catch { out.textContent = "Couldn't copy. Select the address instead."; }
+  clearTimeout(out._t); out._t = setTimeout(() => out.textContent = "", 2600);
+});
+
+/* ---------- whoami ---------- */
+const who = $("#who"); let typed = "";
+addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea")) return;
+  typed = (typed + e.key.toLowerCase()).slice(-6);
+  if (typed === "whoami" && !who.open) { typed = ""; who.showModal(); }
+});
+who.addEventListener("click", e => { if (e.target === who) who.close(); });
+
+/* ---------- scroll wiring ---------- */
+watch();
+const g = window.gsap, ST = window.ScrollTrigger;
+if (g && ST) {
+  g.registerPlugin(ST);
+  ST.create({ trigger: deck, start: "top top", end: "bottom bottom", onToggle: s => tabs.classList.toggle("off", !s.isActive), onUpdate: () => { if (!deckOn()) return; target = deckProgress(); if (!ticking) { ticking = true; requestAnimationFrame(loop); } } });
+  $$(".nav .links a").forEach(a => {
+    ST.create({ trigger: a.getAttribute("href"), start: "top 40%", end: "bottom 40%", onToggle: s => a.setAttribute("aria-current", s.isActive) });
+  });
+}
+if (deckOn()) { cur = target = deckProgress(); paint(cur); }
+matchMedia("(min-width: 901px)").addEventListener("change", () => {
+  if (deckOn()) { cur = target = deckProgress(); paint(cur); }
+  else cards.forEach(c => { c.style.cssText = ""; c.inert = false; });
+});
+</script>
+</body>
+</html>
