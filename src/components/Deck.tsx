@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { flushSync } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react";
-import { PROJECTS, imgProps, type Project } from "@/lib/content";
+import { PROJECTS, type Project } from "@/lib/content";
+import Shot from "@/components/Shot";
 
 const N = PROJECTS.length;
+
+type VTDoc = Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
+
+/** A short tick on phones that support it (Android); silently does nothing elsewhere. */
+export function buzz() {
+  if (matchMedia("(pointer: coarse)").matches) navigator.vibrate?.(8);
+}
 
 /**
  * Projects as a deck you scroll through in depth. The stage is sticky; scroll progress
@@ -20,6 +29,46 @@ export default function Deck() {
   const [active, setActive] = useState(0);
   const [inDeck, setInDeck] = useState(false);
   const [open, setOpen] = useState<Project | null>(null);
+  const [screen, setScreen] = useState<number[]>(() => PROJECTS.map(() => 0));
+  const sheetCore = useRef<HTMLDivElement>(null);
+  const from = useRef<HTMLElement | null>(null);
+
+  function showScreen(card: number, s: number) {
+    setScreen((cur) => cur.map((v, i) => (i === card ? s : v)));
+    buzz();
+  }
+
+  // The card grows into the sheet (and shrinks back) where View Transitions exist; otherwise the sheet just rises.
+  const canMorph = () => !!(document as VTDoc).startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function openSheet(p: Project, card: HTMLElement) {
+    buzz();
+    from.current = card;
+    const dlg = sheet.current!;
+    if (!canMorph()) { setOpen(p); return; }
+    card.style.viewTransitionName = "project";
+    const vt = (document as VTDoc).startViewTransition!(() => {
+      card.style.viewTransitionName = "";
+      flushSync(() => setOpen(p));
+      dlg.dataset.vt = "";
+      if (!dlg.open) dlg.showModal();
+      if (sheetCore.current) sheetCore.current.style.viewTransitionName = "project";
+    });
+    vt.finished.finally(() => { if (sheetCore.current) sheetCore.current.style.viewTransitionName = ""; });
+  }
+
+  function closeSheet() {
+    const dlg = sheet.current!;
+    const card = from.current;
+    if (!canMorph() || !card || !sheetCore.current) { dlg.close(); return; }
+    sheetCore.current.style.viewTransitionName = "project";
+    const vt = (document as VTDoc).startViewTransition!(() => {
+      if (sheetCore.current) sheetCore.current.style.viewTransitionName = "";
+      dlg.close();
+      card.style.viewTransitionName = "project";
+    });
+    vt.finished.finally(() => { card.style.viewTransitionName = ""; delete dlg.dataset.vt; });
+  }
 
   useEffect(() => {
     const wide = matchMedia("(min-width: 901px)");
@@ -91,6 +140,7 @@ export default function Deck() {
     }
     const span = el.offsetHeight - innerHeight;
     scrollTo({ top: el.offsetTop + (span * i) / (N - 1) + 2, behavior });
+    buzz();
   }
 
   // the hero's project cards ask for a specific card
@@ -109,10 +159,21 @@ export default function Deck() {
               <div className="core">
                 <div className="txt">
                   <div><span className="chip">{p.k}</span><h3 id={`ct-${i}`}>{p.t}</h3><p className="line">{p.line}</p></div>
-                  <div><button className="pill dark" type="button" onClick={() => setOpen(p)}>Details <span className="isl"><ArrowUpRight weight="light" /></span></button></div>
+                  <div><button className="pill dark" type="button" onClick={(e) => openSheet(p, e.currentTarget.closest(".core") as HTMLElement)}>Details <span className="isl"><ArrowUpRight weight="light" /></span></button></div>
                 </div>
                 <div className="pic">
-                  <div className="fit"><img {...imgProps(p.img)} alt={`${p.t} screenshot`} loading="lazy" /></div>
+                  {/* tap the screenshot to step through the app's screens */}
+                  <button type="button" className="fit" onClick={() => showScreen(i, (screen[i] + 1) % p.shots.length)}
+                    aria-label={`${p.t}: screen ${screen[i] + 1} of ${p.shots.length}. Show the next screen.`}>
+                    <Shot key={p.shots[screen[i]]} className="swap" file={p.shots[screen[i]]} alt="" loading="lazy" />
+                  </button>
+                  {p.shots.length > 1 && (
+                    <div className="screens">
+                      {p.shots.map((s, j) => (
+                        <button key={s} type="button" aria-label={`Screen ${j + 1} of ${p.shots.length}`} aria-current={j === screen[i]} onClick={() => showScreen(i, j)} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </article>
@@ -125,16 +186,18 @@ export default function Deck() {
         </div>
       </div>
 
-      <dialog ref={sheet} aria-labelledby="s-title" onClose={() => setOpen(null)} onClick={(e) => { if (e.target === sheet.current) sheet.current?.close(); }}>
+      <dialog ref={sheet} aria-labelledby="s-title" onClose={() => setOpen(null)}
+        onCancel={(e) => { e.preventDefault(); closeSheet(); }}
+        onClick={(e) => { if (e.target === sheet.current) closeSheet(); }}>
         {open && (
           <div className="sheet bezel">
-            <div className="core">
-              <form method="dialog"><button className="x" aria-label="Close"><X weight="light" /></button></form>
+            <div className="core" ref={sheetCore}>
+              <button className="x" type="button" aria-label="Close" onClick={closeSheet}><X weight="light" /></button>
               <span className="chip">{open.k}</span>
               <h3 id="s-title">{open.t}</h3>
               <p className="line">{open.lede}</p>
               {open.shots.length > 0 && (
-                <div className="shots">{open.shots.map((s) => <img key={s} {...imgProps(s)} alt={`${open.t} screenshot`} loading="lazy" />)}</div>
+                <div className="shots">{open.shots.map((s) => <Shot key={s} file={s} alt={`${open.t} screenshot`} loading="lazy" />)}</div>
               )}
               <div className="facts">
                 <div><h4>How it works</h4><ul>{open.pts.map((x) => <li key={x}>{x}</li>)}</ul></div>

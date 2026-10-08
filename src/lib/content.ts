@@ -7,7 +7,7 @@ export type Project = {
   stack: string;
   src: string;
   site?: string;
-  img: string;
+  /** screens in the order the deck card steps through them; the first is shown by default */
   shots: string[];
 };
 
@@ -27,7 +27,6 @@ export const PROJECTS: Project[] = [
     stack: "Rust, Swift and SwiftUI, Kotlin and Jetpack Compose, WinUI 3, GTK, Next.js",
     src: "https://github.com/ChinmayyK/Link-All",
     site: "https://linkall.chinmaykudalkar.com",
-    img: "linkall-mac-devices.png",
     shots: ["linkall-mac-devices.png", "linkall-mac-clipboard.png", "linkall-mac-transfers-active.png", "linkall-mac-command-palette.png", "linkall-win-clipboard.png"],
   },
   {
@@ -42,7 +41,6 @@ export const PROJECTS: Project[] = [
     ],
     stack: "Next.js, NestJS, PostgreSQL, Redis, JWT",
     src: "https://github.com/ChinmayyK/TalentSync",
-    img: "lineup-candidates.png",
     shots: ["lineup-dashboard.png", "lineup-candidates.png", "lineup-reports.png"],
   },
   {
@@ -57,7 +55,6 @@ export const PROJECTS: Project[] = [
     ],
     stack: "Zero-knowledge proofs, IPFS",
     src: "https://github.com/ChinmayyK/BlockVault",
-    img: "doc-redact-engine.png",
     shots: ["doc-redact-engine.png", "bv2.png", "bv1.png"],
   },
 ];
@@ -79,6 +76,12 @@ export const IMG_SIZE: Record<string, [number, number]> = {
   "linkall-mac-devices.png": [2400, 1584], "linkall-mac-transfers-active.png": [2400, 1584], "linkall-win-clipboard.png": [1572, 921],
   "chinmay-photo.png": [750, 1000],
 };
+// Link All ships light and dark captures; the -dark files share their light twin's size.
+for (const f of ["linkall-android-home.png", "linkall-mac-clipboard.png", "linkall-mac-command-palette.png", "linkall-mac-devices.png", "linkall-mac-transfers-active.png", "linkall-win-clipboard.png"]) {
+  IMG_SIZE[f.replace(/.png$/, "-dark.png")] = IMG_SIZE[f];
+}
+
+export const hasDark = (file: string) => !file.endsWith("-dark.png") && file.replace(/.png$/, "-dark.png") in IMG_SIZE;
 
 export const imgProps = (file: string) => {
   const [width, height] = IMG_SIZE[file] ?? [];

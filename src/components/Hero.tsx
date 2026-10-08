@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { ArrowDown, DownloadSimple } from "@phosphor-icons/react";
-import { PROJECTS, imgProps } from "@/lib/content";
+import { PROJECTS } from "@/lib/content";
+import Shot from "@/components/Shot";
 
 const at = (t: string) => PROJECTS.findIndex((p) => p.t === t);
 
@@ -75,7 +76,7 @@ export default function Hero() {
             <a key={c.project} href="#work" className={`bezel lifted ${c.cls}`} data-depth={c.depth} style={{ "--i": c.i } as CSSProperties}
               onClick={(e) => openInDeck(e, at(c.project))} aria-label={`${c.project}: ${c.what}. See the project.`}>
               <div className="core">
-                <img {...imgProps(c.img)} alt="" />
+                <Shot file={c.img} alt="" />
                 <div className="cap"><span>{c.project}</span><span>{c.what}</span></div>
               </div>
             </a>
@@ -83,7 +84,7 @@ export default function Hero() {
           <a href="#work" className="bezel lifted main" data-depth={30} style={{ "--i": 2 } as CSSProperties}
             onClick={(e) => openInDeck(e, linkAll)} aria-label="Link All, my latest project. See the project.">
             <div className="core">
-              <img {...imgProps("linkall-mac-devices.png")} alt="" />
+              <Shot file="linkall-mac-devices.png" alt="" />
               <div className="cap">
                 <span><b>Link All</b><span className="chip">Latest project</span></span>
                 <span>Clipboard and files across devices</span>
@@ -92,7 +93,7 @@ export default function Hero() {
           </a>
           <a href="#work" className="bezel lifted phone" data-depth={46} style={{ "--i": 3 } as CSSProperties}
             onClick={(e) => openInDeck(e, linkAll)} tabIndex={-1} aria-hidden="true">
-            <div className="core"><img {...imgProps("linkall-android-home.png")} alt="" /></div>
+            <div className="core"><Shot file="linkall-android-home.png" alt="" /></div>
           </a>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Moon, Sun } from "@phosphor-icons/react";
 
 const LINKS = [["#now", "Now"], ["#work", "Work"], ["#background", "Background"], ["#contact", "Contact"]] as const;
 
@@ -11,6 +12,19 @@ export default function Nav() {
   const [current, setCurrent] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
   const [brand, setBrand] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => { setDark(document.documentElement.dataset.theme === "dark"); }, []);
+
+  function toggleTheme() {
+    const next = dark ? "light" : "dark";
+    const apply = () => { document.documentElement.dataset.theme = next; setDark(!dark); };
+    try { localStorage.setItem("theme", next); } catch {}
+    // cross-fade the whole page where View Transitions exist
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    if (doc.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) doc.startViewTransition(apply);
+    else apply();
+  }
 
   // highlight the section in view
   useEffect(() => {
@@ -41,6 +55,9 @@ export default function Nav() {
             <a key={href} href={href} aria-current={current === href ? "true" : undefined}>{label}</a>
           ))}
         </div>
+        <button className="theme" type="button" onClick={toggleTheme} aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}>
+          {dark ? <Sun weight="light" /> : <Moon weight="light" />}
+        </button>
         <button className="burger" type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="menu" onClick={() => setOpen(!open)}>
           <i /><i />
         </button>
