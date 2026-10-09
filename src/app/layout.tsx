@@ -8,10 +8,10 @@ const geistMono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], varia
 export const metadata: Metadata = {
   metadataBase: new URL("https://chinmaykudalkar.com"),
   title: "Chinmay Kudalkar",
-  description: "Chinmay Kudalkar, web and mobile developer. Projects, experience and contact.",
+  description: "Chinmay Kudalkar, full-stack developer. Projects, experience and contact.",
   openGraph: {
     title: "Chinmay Kudalkar",
-    description: "Web and mobile developer. Projects, experience and contact.",
+    description: "Full-stack developer. Projects, experience and contact.",
     url: "https://chinmaykudalkar.com",
     type: "website",
   },

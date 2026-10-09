@@ -120,13 +120,23 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 /* ---------- hero ---------- */
 .hero { min-height: 100dvh; display: grid; align-items: center; padding: 120px 0 64px; }
 .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
-.hero h1 { margin-top: 22px; font-size: clamp(54px, 7.4vw, 116px); font-weight: 700; letter-spacing: -.055em; line-height: .92; }
-.hero h1 .ln { display: block; overflow: hidden; padding-bottom: .04em; }
-.hero h1 .ln > span { display: block; }
-.js .hero h1 .ln > span { transform: translateY(110%); }
-.hero.go h1 .ln > span { transform: none; transition: transform 1.2s var(--ease); transition-delay: calc(var(--i) * 110ms + 100ms); }
-.hero .claim { margin-top: 26px; font-size: clamp(22px, 1.9vw, 28px); font-weight: 500; letter-spacing: -.02em; line-height: 1.25; max-width: 24ch; }
-.hero .sub { margin-top: 14px; font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; color: var(--ink-2); max-width: 34ch; }
+.hero h1 { margin-top: 22px; font-size: clamp(54px, 7.4vw, 116px); font-weight: 700; letter-spacing: -.055em; line-height: .92; cursor: default; user-select: none; }
+.hero h1 .ln { display: block; overflow: hidden; padding: .06em 0 .04em; margin-top: -.06em; white-space: nowrap; }
+.hero.go.settled h1 .ln { overflow: visible; }   /* masked for the entrance only, so lifted letters never clip */
+/* each letter rises in on its own, then the dot drops in last with a little bounce */
+.hero h1 .ch { display: inline-block; }
+.js .hero h1 .ch { transform: translateY(115%); }
+.hero.go h1 .ch { transform: none; transition: transform 1s var(--ease); transition-delay: calc(var(--n) * 38ms + 120ms); }
+.js .hero h1 .ch.dot { transform: translateY(-160%); opacity: 0; }
+.hero.go h1 .ch.dot { transform: none; opacity: 1; transition: transform .8s var(--spring), opacity .2s; transition-delay: 1050ms; }
+.hero > .wrap, .hero .wrap > * { min-width: 0; }
+/* three facts instead of a paragraph */
+.hero .proof { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.hero .proof li { display: flex; }
+.hero .proof li > a, .hero .proof li:not(:has(a)) { display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 14px; border-radius: 99px; background: var(--tray); border: 1px solid var(--tray-line); font-size: 14.5px; color: var(--ink-2); transition: background .4s var(--ease), color .4s var(--ease); }
+.hero .proof li > a:hover { background: var(--core); color: var(--ink); }
+.hero .proof b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hero .proof li.wait b { opacity: .4; }
 .hero .cta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
 
 .hero h1 .dot { color: var(--accent); }
@@ -157,6 +167,21 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .hero.go .cascade .bezel { opacity: 1; transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc((var(--py, 0px) + var(--hy, 0px)) * var(--k, 1)), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
 .hero.go.settled .cascade .bezel { transition: transform .9s var(--ease), box-shadow .6s var(--ease); transition-delay: 0ms; }
 .hero.go.settled .cascade .bezel:hover { --hy: -10px; }
+
+/* the clip that hops between the two cards, and the notes it leaves */
+.relay { position: absolute; left: 0; top: 0; z-index: 5; display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px 7px 9px; border-radius: 99px; background: var(--core); box-shadow: inset 0 0 0 1px var(--tray-line), 0 14px 30px -14px rgba(var(--shade), .6); font: 400 12px/1 var(--mono); color: var(--ink); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; pointer-events: none; }
+.relay svg { font-size: 15px; color: var(--accent); }
+.cascade .note { position: absolute; z-index: 2; top: 10px; right: 10px; display: flex; align-items: center; gap: 8px; padding: 8px 12px 8px 9px; border-radius: 12px; background: var(--glass); backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px var(--glass-line), 0 12px 26px -14px rgba(var(--shade), .55); font: 400 12px/1.25 var(--mono); color: var(--ink); white-space: nowrap; opacity: 0; transform: translateY(-10px) scale(.96); transition: opacity .35s var(--ease), transform .6s var(--spring); pointer-events: none; }
+.cascade .note.on { opacity: 1; transform: none; }
+.cascade .note svg { flex: none; font-size: 17px; color: var(--accent); }
+.cascade .note small { display: block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 2px; }
+.cascade .note.copy { border-radius: 99px; padding: 6px 11px 6px 8px; font-size: 11.5px; }
+.cascade .note.copy svg { font-size: 14px; color: var(--ink-2); }
+/* the phone's screen is narrow: its notes sit centred and smaller */
+.cascade .phone .note { top: 12%; left: 50%; right: auto; translate: -50% 0; font-size: 10px; padding: 6px 9px 6px 7px; max-width: 92%; }
+.cascade .phone .note span { overflow: hidden; text-overflow: ellipsis; }
+.cascade .phone .note small { font-size: 8px; }
+.cascade .phone .note svg { font-size: 14px; }
 @media (max-width: 900px) {
   .hero .wrap { grid-template-columns: 1fr; }
   .cascade { height: auto; padding: 0 0 36px; }
@@ -422,11 +447,12 @@ dialog[open] { animation: up .8s var(--ease); }
   .nav.hide { transform: translateY(-150%); }
 
   .hero { min-height: 0; padding: 24px 0 32px; }
-  .hero .chip { margin-right: 104px; }
   .hero .wrap { gap: 36px; }
+  .hero .chip { margin-right: 104px; }
   .hero h1 { margin-top: 18px; font-size: min(20vw, 96px); }
-  .hero .claim { margin-top: 18px; font-size: 21px; }
-  .hero .sub { margin-top: 10px; font-size: 16.5px; }
+  .hero .proof { margin-top: 22px; gap: 6px; }
+  .hero .proof li > a, .hero .proof li:not(:has(a)) { padding: 7px 12px; font-size: 13px; }
+  .cascade .note { top: 8px; right: 8px; font-size: 11px; }
   .hero .status { margin-top: 20px; font-size: 11px; letter-spacing: 0; }
   .hero .status .loc { display: none; }   /* keeps the line to one row on phones */
   .hero .cta { margin-top: 26px; flex-wrap: nowrap; gap: 10px; }

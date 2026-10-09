@@ -7,7 +7,7 @@ const font = (file: string) => readFileSync(join(process.cwd(), "src/assets/font
 
 // Rendered once at build time (static export) into the share card LinkedIn, WhatsApp and X show.
 export const dynamic = "force-static";
-export const alt = "Chinmay Kudalkar, web and mobile developer";
+export const alt = "Chinmay Kudalkar, full-stack developer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
