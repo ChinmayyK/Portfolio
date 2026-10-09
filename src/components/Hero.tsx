@@ -193,64 +193,52 @@ const letters = (word: string, from: number) =>
     ? <span className="ch" key={i} style={{ "--n": from + i } as CSSProperties}>{"ı"}<span className="tittle" /></span>
     : <span className="ch" key={i} style={{ "--n": from + i } as CSSProperties}>{c}</span>);
 
-// The name is alive: letters near the pointer lift like keys under a finger and spring back, and every
-// so often a small wave runs through it on its own (a tap on the name sends one too, for phones).
+// Under the pointer the name thins out: Geist is a variable font, so each letter's weight eases from
+// bold down towards light by how close the pointer is, and springs back as it moves away.
 function useLively(hero: RefObject<HTMLElement | null>, name: RefObject<HTMLHeadingElement | null>) {
   useEffect(() => {
     const el = name.current, box = hero.current;
-    if (!el || !box || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || !box || matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(hover: hover)").matches) return;
+    const REST = 700, THIN = 260;
     const chars = [...el.querySelectorAll<HTMLElement>(".ch")];
-    const y = chars.map(() => 0), v = chars.map(() => 0);
+    const w = chars.map(() => REST), v = chars.map(() => 0);
     let centres: { x: number; y: number }[] = [];
-    let px = -1e5, py = -1e5, em = 100, raf = 0, wave = -1, lastMove = 0, seen = true;
+    let px = -1e5, py = -1e5, em = 100, raf = 0;
 
-    // letter centres in page coordinates, minus whatever lift they currently have
+    // letter centres in page coordinates, taken while the name is at rest
     const measure = () => {
+      if (w.some((x) => Math.abs(x - REST) > 1)) return;
       em = parseFloat(getComputedStyle(el).fontSize);
-      centres = chars.map((c, i) => {
+      centres = chars.map((c) => {
         const r = c.getBoundingClientRect();
-        return { x: r.left + scrollX + r.width / 2, y: r.top + scrollY + r.height / 2 - y[i] };
+        return { x: r.left + scrollX + r.width / 2, y: r.top + scrollY + r.height / 2 };
       });
     };
-    const tick = (now: number) => {
+    const tick = () => {
       raf = 0;
       let busy = false;
-      const t = wave < 0 ? -1 : (now - wave) / 1000;
-      if (t > 2.2) wave = -1;
       chars.forEach((c, i) => {
-        const dx = (centres[i].x - px) / (em * 0.55), dy = (centres[i].y - py) / (em * 0.9);
-        let target = -0.13 * em * Math.exp(-(dx * dx + dy * dy));
-        if (t >= 0) { const k = t * 11 - i; target += -0.09 * em * Math.exp(-k * k / 2.5); }
-        v[i] = (v[i] + (target - y[i]) * 0.16) * 0.74; // spring, a little under-damped
-        y[i] += v[i];
-        if (Math.abs(v[i]) > 0.02 || Math.abs(target - y[i]) > 0.05) busy = true;
-        c.style.translate = `0 ${y[i].toFixed(2)}px`;
+        const dx = (centres[i].x - px) / (em * 0.7), dy = (centres[i].y - py) / (em * 0.9);
+        const target = REST - (REST - THIN) * Math.exp(-(dx * dx + dy * dy));
+        v[i] = (v[i] + (target - w[i]) * 0.14) * 0.72;
+        w[i] += v[i];
+        if (Math.abs(v[i]) > 0.3 || Math.abs(target - w[i]) > 0.5) busy = true;
+        c.style.fontWeight = w[i].toFixed(0);
       });
-      if (busy || wave >= 0) raf = requestAnimationFrame(tick);
+      if (busy) raf = requestAnimationFrame(tick);
+      else if (px < -1e4) chars.forEach((c, i) => { w[i] = REST; c.style.fontWeight = ""; }); // fully at rest again
     };
-    const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    const sendWave = () => { measure(); wave = performance.now(); kick(); };
-
-    const fine = matchMedia("(hover: hover)").matches;
-    const move = (e: PointerEvent) => {
-      if (!centres.length) measure();
-      px = e.pageX; py = e.pageY; lastMove = Date.now(); kick();
-    };
+    const kick = () => { if (!raf && centres.length) raf = requestAnimationFrame(tick); };
+    const move = (e: PointerEvent) => { if (!centres.length) measure(); px = e.pageX; py = e.pageY; kick(); };
     const leave = () => { px = py = -1e5; kick(); };
-    if (fine) { box.addEventListener("pointerenter", measure); box.addEventListener("pointermove", move); box.addEventListener("pointerleave", leave); }
-    el.addEventListener("click", sendWave);
+    box.addEventListener("pointerenter", measure);
+    box.addEventListener("pointermove", move);
+    box.addEventListener("pointerleave", leave);
     addEventListener("resize", measure);
-    const io = new IntersectionObserver(([e]) => { seen = e.isIntersecting; });
-    io.observe(el);
-
-    // the idle wave: first once the entrance has settled, then every seven seconds while nobody is playing with it
-    const first = window.setTimeout(() => { if (seen) sendWave(); }, 6000); // after the i's dot has landed
-    const every = window.setInterval(() => { if (seen && !document.hidden && Date.now() - lastMove > 4000) sendWave(); }, 7000);
-
     return () => {
-      cancelAnimationFrame(raf); clearTimeout(first); clearInterval(every); io.disconnect();
+      cancelAnimationFrame(raf);
       box.removeEventListener("pointerenter", measure); box.removeEventListener("pointermove", move); box.removeEventListener("pointerleave", leave);
-      el.removeEventListener("click", sendWave); removeEventListener("resize", measure);
+      removeEventListener("resize", measure);
     };
   }, [hero, name]);
 }

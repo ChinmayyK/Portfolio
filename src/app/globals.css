@@ -130,9 +130,11 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .js .hero h1 .ch.dot { transform: translateY(-160%); opacity: 0; }
 .hero.go h1 .ch.dot { transform: none; opacity: 1; transition: transform .8s var(--spring), opacity .2s; transition-delay: 1050ms; }
 .hero > .wrap, .hero .wrap > * { min-width: 0; }
-/* the i's dot, a ball centred where Geist Bold puts its own dot (.14em into the glyph, .6625em above the
-   baseline); the margins undo the dotless i's advance and the letter-spacing around it */
-.hero h1 .tittle { display: inline-block; vertical-align: baseline; width: .16em; height: .16em; border-radius: 50%; margin: 0 .006em .5825em -.166em; background: var(--accent); transform-origin: 50% 100%; }   /* squashes against the i, not around its middle */
+/* the i's dot: a ball over the middle of the dotless i's stem (half its advance, which the letter-spacing
+   trims off the box), .686em up from the letter box's bottom, where Geist puts its own dot. Measured from
+   the box rather than the glyph, so it stays centred while the letter's weight changes under the pointer. */
+.hero h1 .ch { position: relative; }
+.hero h1 .tittle { position: absolute; left: calc(50% + .0275em); bottom: .686em; translate: -50% 0; width: .16em; height: .16em; border-radius: 50%; background: var(--accent); transform-origin: 50% 100%; }   /* squashes against the i, not around its middle */
 .js .hero h1 .tittle { opacity: 0; }   /* shown by the script when it starts bouncing in */
 /* the dot in flight, loose over the whole page */
 .ball { position: fixed; left: 0; top: 0; z-index: 70; border-radius: 50%; background: var(--accent); pointer-events: none; will-change: transform; }
