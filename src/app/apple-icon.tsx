@@ -16,7 +16,9 @@ export default function AppleIcon() {
       <div style={{ width: "100%", height: "100%", display: "flex", fontFamily: "Geist", alignItems: "center", justifyContent: "center", background: "#0E0F12", color: "#F9F9FA", fontWeight: 700 }}>
         {/* a ghosted 11 behind the monogram */}
         <div style={{ position: "absolute", display: "flex", fontSize: 194, letterSpacing: -16, lineHeight: 1, opacity: 0.035 }}>11</div>
-        <div style={{ display: "flex", fontSize: 84, letterSpacing: -5 }}>CK<span style={{ color: "#F0561D" }}>.</span></div>
+        <div style={{ display: "flex", fontSize: 84, letterSpacing: -5 }}>CK<span style={{ color: "transparent" }}>.</span></div>
+        {/* the period as a round dot, where the font's square one would sit */}
+        <div style={{ position: "absolute", left: 140, top: 106, width: 14, height: 14, borderRadius: 7, background: "#F0561D" }} />
       </div>
     ),
     { ...size, fonts: [{ name: "Geist", data: font("Geist-Regular.ttf"), weight: 400 }, { name: "Geist", data: font("Geist-Bold.ttf"), weight: 700 }] },

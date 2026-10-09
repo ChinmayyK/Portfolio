@@ -19,14 +19,16 @@ export default function OpengraphImage() {
       <div style={{ width: "100%", height: "100%", display: "flex", fontFamily: "Geist", background: "#ECEDEF", padding: 64, position: "relative", overflow: "hidden" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: 560 }}>
           <div style={{ display: "flex", padding: "8px 16px", borderRadius: 99, border: "1px solid rgba(20,24,32,.1)", background: "rgba(20,24,32,.045)", color: "#565B64", fontSize: 20, letterSpacing: 3, alignSelf: "flex-start" }}>
-            WEB AND MOBILE DEVELOPER
+            FULL-STACK DEVELOPER
           </div>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 112, fontWeight: 700, letterSpacing: -6, lineHeight: 0.95, color: "#0E0F12" }}>
             <span>Chinmay</span>
-            <span style={{ display: "flex" }}>Kudalkar<span style={{ color: "#F0561D", marginLeft: -6 }}>.</span></span>
+            <span style={{ display: "flex" }}>Kudalkar<span style={{ color: "transparent", marginLeft: -6 }}>.</span></span>
           </div>
           <div style={{ display: "flex", fontSize: 28, color: "#565B64" }}>chinmaykudalkar.com</div>
         </div>
+        {/* the period as a round dot, where the font's square one would sit */}
+        <div style={{ position: "absolute", left: 507, top: 393, width: 19, height: 19, borderRadius: 10, background: "#F0561D" }} />
         <div style={{ position: "absolute", left: 640, top: 120, width: 720, display: "flex", padding: 3, borderRadius: 14, background: "rgba(20,24,32,.08)", transform: "rotate(-3deg)" }}>
           <img src={shot("linkall-mac-devices.png")} width={714} height={471} style={{ borderRadius: 11 }} />
         </div>

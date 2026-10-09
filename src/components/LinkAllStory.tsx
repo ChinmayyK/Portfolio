@@ -23,7 +23,6 @@ function handoff(story: HTMLElement) {
   }));
   const stage = story.querySelector<HTMLElement>(".story-stage");
   if (!cas || !stage || pairs.some((p) => !p.from || !p.to)) return () => {};
-  const cap = cas.querySelector<HTMLElement>(".main .cap");
   for (const p of pairs) p.r = parseFloat(getComputedStyle(p.from!).rotate) || 0;
 
   // page-space boxes, from layout sizes so the cards' own transforms don't skew them.
@@ -41,7 +40,6 @@ function handoff(story: HTMLElement) {
   };
   const set = (k: number) => {
     cas.style.setProperty("--k", String(1 - k)); // pointer drift fades out on the way
-    if (cap) cap.style.opacity = String(Math.max(0, 1 - k * 2.5));
     for (const p of pairs) {
       const f = p.from!;
       f.style.translate = `${p.x * k}px ${p.y * k}px`;
@@ -64,7 +62,6 @@ function handoff(story: HTMLElement) {
   return () => {
     st.kill(); ro.disconnect();
     cas.style.removeProperty("--k");
-    if (cap) cap.style.opacity = "";
     for (const p of pairs) {
       for (const k of ["translate", "scale", "rotate", "visibility"] as const) p.from!.style[k] = "";
       p.to!.style.opacity = "";

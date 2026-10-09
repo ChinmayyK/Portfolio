@@ -31,7 +31,7 @@ export default function Home() {
                 <div className="say">
                   <span className="chip" style={{ justifySelf: "start" }}>Since August 2026</span>
                   <div>
-                    <h2 id="now-h">Interning at <em>ideaForge</em>.</h2>
+                    <h2 id="now-h">Interning at <em>ideaForge</em><span className="dot ink">.</span></h2>
                     <p style={{ marginTop: 16 }}>I work on iF FleetDesk, the internal app staff use to book, dispatch and track vehicles for people and material, on web and mobile.</p>
                   </div>
                 </div>
@@ -48,7 +48,7 @@ export default function Home() {
 
         <section id="background" aria-labelledby="bg-h">
           <div className="wrap">
-            <h2 id="bg-h" data-r>Background.</h2>
+            <h2 id="bg-h" data-r>Background<span className="dot ink">.</span></h2>
             <div className="bento">
               <article className="bezel lifted b-a" data-r>
                 <div className="core">
@@ -125,7 +125,7 @@ export default function Home() {
               <div className="core">
                 <div>
                   <span className="chip">Open to full-time roles from 2027</span>
-                  <h2 id="c-h" style={{ marginTop: 22 }}>Say hello.</h2>
+                  <h2 id="c-h" style={{ marginTop: 22 }}>Say hello<span className="dot ink">.</span></h2>
                   <a className="mail" href={`mailto:${EMAIL}`}>{EMAIL}</a>
                 </div>
                 <div className="side">
