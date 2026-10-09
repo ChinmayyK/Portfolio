@@ -11,17 +11,39 @@ import { buzz } from "@/lib/buzz";
 const P = PROJECTS.find((p) => p.star)!;
 const DROP_AT = 48; // percent where the demo connection drops
 
+/** The visitor's own device, when Link All runs on it. iOS has no app yet, so it gets the default scene. */
+type Visitor = { side: "mac" | "phone"; name: string; os: string; win?: boolean };
+function detect(): Visitor | null {
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return null;
+  if (/Android/.test(ua)) return { side: "phone", name: /Mobile/.test(ua) ? "your Android phone" : "your Android tablet", os: "Android" };
+  if (/Windows/.test(ua)) return { side: "mac", name: "your Windows PC", os: "Windows", win: true };
+  if (/Macintosh/.test(ua)) return { side: "mac", name: "your Mac", os: "macOS" };
+  if (/Linux/.test(ua) && !/CrOS/.test(ua)) return { side: "mac", name: "your Linux machine", os: "Linux" };
+  return null;
+}
+
 /**
  * Link All's own chapter. On desktop the stage pins while scrolling plays a transfer from the
  * Mac to the phone: it drops at 48%, reconnects and resumes from there, the thing the app is built
  * around. On phones the same sequence plays once when it comes into view. The text box is live:
  * whatever you type on the "Mac" shows up on the phone as a clipboard notification.
+ * The scene casts the visitor's own device when Link All supports it, and while the chapter is
+ * on screen the rest of the page goes dark (the "house lights", see globals.css).
  */
 export default function LinkAllStory() {
   const root = useRef<HTMLElement>(null);
   const [typed, setTyped] = useState("");
   const [synced, setSynced] = useState("");
   const [sending, setSending] = useState(false);
+  const [you, setYou] = useState<Visitor | null>(null);
+  const sendText = useRef("Sending to OnePlus Nord 4");
+
+  useEffect(() => {
+    const v = detect();
+    setYou(v);
+    if (v) sendText.current = v.side === "phone" ? `Sending to ${v.name}` : `Sending from ${v.name}`;
+  }, []);
 
   // debounce typing into a "sync", like copying on one device and seeing it land on the other
   useEffect(() => {
@@ -49,7 +71,7 @@ export default function LinkAllStory() {
       pct.textContent = `${Math.round(p)}%`;
       status.textContent = {
         ready: "Ready to send",
-        sending: t > 6.6 ? `Resumed from ${DROP_AT}%` : "Sending to OnePlus Nord 4",
+        sending: t > 6.6 ? `Resumed from ${DROP_AT}%` : sendText.current,
         dropped: `Connection dropped at ${DROP_AT}%`,
         resuming: "Reconnected. Picking up where it stopped",
         done: "Received. Nothing was sent twice.",
@@ -75,6 +97,12 @@ export default function LinkAllStory() {
       return tl;
     };
 
+    // house lights: down while the chapter holds the screen, back up once it leaves
+    const lights = ScrollTrigger.create({
+      trigger: el, start: "top 45%", end: "bottom 55%",
+      onToggle: (self) => document.documentElement.classList.toggle("lights", self.isActive),
+    });
+
     const mm = gsap.matchMedia();
     mm.add({
       wide: "(min-width: 901px)",
@@ -90,11 +118,12 @@ export default function LinkAllStory() {
         ScrollTrigger.create({ trigger: q(".scene")[0], start: "top 70%", once: true, onEnter: () => { tl.timeScale(1.3).play(); } });
       }
     }, el);
-    return () => mm.revert();
+    return () => { mm.revert(); lights.kill(); document.documentElement.classList.remove("lights"); };
   }, []);
 
   return (
     <section className="story" id="link-all" ref={root} aria-labelledby="la-h">
+      <div className="house" aria-hidden="true" />
       <div className="story-stage">
         <div className="wrap story-grid">
           <div className="story-copy">
@@ -110,13 +139,13 @@ export default function LinkAllStory() {
 
           <div className="scene" data-phase="ready" aria-hidden="true">
             <div className="mac bezel lifted">
-              <div className="core"><Shot file="linkall-mac-devices.png" alt="" /></div>
+              <div className="core"><Shot file={you?.win ? "linkall-win-clipboard.png" : "linkall-mac-devices.png"} alt="" /></div>
             </div>
             <div className="phone bezel lifted">
               <div className="core">
                 <Shot file="linkall-android-home.png" alt="" />
                 <div className={`notif${synced ? " show" : ""}`}>
-                  <small>From Chinmay&apos;s MacBook Air</small>
+                  <small>From {you?.side === "mac" ? you.name : "Chinmay’s MacBook Air"}</small>
                   <p>{synced || " "}</p>
                   <span><Check weight="bold" /> Copied to clipboard</span>
                 </div>
@@ -125,6 +154,7 @@ export default function LinkAllStory() {
             </div>
             <svg className="link" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M44 46 C 58 22, 74 24, 86 48" /></svg>
             <div className="file"><FileZip weight="light" /><span><b>Trip-photos-2026.zip</b><small>1.2 GB</small></span></div>
+            {you && <span className={`you on-${you.side}`}>You, on {you.os}</span>}
             <div className="xfer">
               <div className="xfer-top"><span className="xfer-status">Ready to send</span><span className="xfer-pct">0%</span></div>
               <div className="xfer-bar"><i /></div>
@@ -133,7 +163,10 @@ export default function LinkAllStory() {
           </div>
 
           <div className="story-try">
-            <label htmlFor="la-try">Try it. Type on the Mac, watch the phone:</label>
+            <label htmlFor="la-try">{
+              you?.side === "phone" ? "Try it. Type here and watch it land on your phone:"
+                : you ? `Try it. Type on ${you.name}, watch the phone:`
+                : "Try it. Type on the Mac, watch the phone:"}</label>
             <div className={`try-field${sending ? " busy" : synced ? " ok" : ""}`}>
               <input id="la-try" type="text" maxLength={80} autoComplete="off" placeholder="Copy something…" value={typed} onChange={(e) => setTyped(e.target.value)} />
               <span className="try-state" aria-live="polite">{sending ? "Sending…" : synced ? "On the phone" : ""}</span>

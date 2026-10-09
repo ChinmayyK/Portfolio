@@ -269,6 +269,36 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 .story-more svg { transition: transform .4s var(--spring); }
 .story-more:hover svg { transform: translate(2px, -2px); }
 
+/* House lights: while the chapter is on screen the rest of the page goes dark and the chapter
+   becomes a lit stage. The tokens are registered so the chapter's colours fade with the room. */
+@property --ink { syntax: "<color>"; inherits: true; initial-value: #0E0F12; }
+@property --ink-2 { syntax: "<color>"; inherits: true; initial-value: #565B64; }
+@property --core { syntax: "<color>"; inherits: true; initial-value: #F9F9FA; }
+@property --tray { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --tray-line { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --glass { syntax: "<color>"; inherits: true; initial-value: transparent; }
+.house { position: fixed; inset: 0; z-index: -1; background: #08090B; opacity: 0; pointer-events: none; transition: opacity 1s var(--ease); }
+.story { z-index: 41; color: var(--ink); transition: --ink 1s var(--ease), --ink-2 1s var(--ease), --core 1s var(--ease), --tray 1s var(--ease), --tray-line 1s var(--ease), --glass 1s var(--ease); }
+.scene::before { content: ""; position: absolute; inset: -18% -12%; z-index: -1; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 238, 226, .13), rgba(255, 238, 226, .04) 60%, transparent); opacity: 0; transition: opacity 1.4s var(--ease); }
+.lights .house { opacity: 1; }
+.lights .story {
+  --core: #1B1C20; --ink: #ECEDEF; --ink-2: #A2A6AF;
+  --tray: rgba(255, 255, 255, .05); --tray-line: rgba(255, 255, 255, .09); --glass: rgba(29, 30, 34, .78); --shade: 0, 0, 0;
+}
+.lights .scene::before { opacity: 1; }
+.lights .scene .phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), var(--lift); }
+.scene .you { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: var(--accent); color: #fff; font: 500 11px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; box-shadow: 0 8px 20px -8px rgba(240, 86, 29, .7); }
+.scene .you::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: pulse 1.6s var(--ease) infinite; }
+.scene .you.on-mac { right: 24%; top: 4%; translate: 0 -50%; }
+.scene .you.on-phone { right: 0; top: 18%; translate: 0 -140%; }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) {
+  .house, .story, .scene::before { transition-duration: .2s; }
+  .scene .you::before { animation: none; }
+}
+@media (max-width: 760px) { .scene .you { font-size: 9.5px; padding: 3px 8px; } }
+
 /* ---------- background bento ---------- */
 .bento { margin-top: 56px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
 .bento > .bezel { --r: 30px; display: grid; }
