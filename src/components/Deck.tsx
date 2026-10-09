@@ -28,6 +28,11 @@ export default function Deck() {
   const sheet = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState(0);
   const [inDeck, setInDeck] = useState(false);
+  // the starred project hangs under a lamp: lit while it's the card in front and on screen; the cord turns it off and on
+  const star = PROJECTS.findIndex((p) => p.star);
+  const [starSeen, setStarSeen] = useState(false);
+  const [lampOn, setLampOn] = useState(true);
+  const lit = lampOn && starSeen && active === star;
   const [open, setOpen] = useState<Project | null>(null);
   const [screen, setScreen] = useState<number[]>(() => PROJECTS.map(() => 0));
   const sheetCore = useRef<HTMLDivElement>(null);
@@ -143,6 +148,14 @@ export default function Deck() {
     buzz();
   }
 
+  useEffect(() => {
+    const el = cards.current[star];
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setStarSeen(e.isIntersecting), { threshold: 0.55 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [star]);
+
   // the hero's project cards ask for a specific card
   useEffect(() => {
     const onGo = (e: Event) => goTo((e as CustomEvent<number>).detail);
@@ -153,9 +166,19 @@ export default function Deck() {
   return (
     <>
       <div className="deck" ref={deck} style={{ "--n": N } as CSSProperties}>
-        <div className="stage">
+        <div className={`stage${lit ? " lit" : ""}`}>
           {PROJECTS.map((p, i) => (
-            <article key={p.t} className="card bezel lifted" ref={(el) => { if (el) cards.current[i] = el; }} aria-labelledby={`ct-${i}`}>
+            <article key={p.t} className={`card bezel lifted${i === star ? " starred" : ""}${i === star && lit ? " on" : ""}`} ref={(el) => { if (el) cards.current[i] = el; }} aria-labelledby={`ct-${i}`}>
+              {i === star && (
+                <div className="lamp">
+                  <span className="cord" aria-hidden="true" />
+                  <button type="button" className="shade" onClick={() => { setLampOn(!lampOn); buzz(); }} aria-pressed={lampOn}
+                    aria-label={lampOn ? "Switch the lamp off" : "Switch the lamp on"}>
+                    <span className="bulb" />
+                  </button>
+                  <span className="beam" aria-hidden="true" />
+                </div>
+              )}
               <div className="core">
                 <div className="txt">
                   <div><span className="chip">{p.k}</span><h3 id={`ct-${i}`}>{p.t}</h3><p className="line">{p.line}</p></div>
@@ -178,6 +201,7 @@ export default function Deck() {
               </div>
             </article>
           ))}
+          <div className="dimmer" aria-hidden="true" />
           <div className={`tabs${inDeck ? "" : " off"}`} aria-label="Projects">
             {PROJECTS.map((p, i) => (
               <button key={p.t} type="button" aria-current={i === active} onClick={() => goTo(i)}>{p.t}</button>

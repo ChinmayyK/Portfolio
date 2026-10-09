@@ -207,7 +207,7 @@ dialog[open][data-vt] { animation: none; }
 ::view-transition-old(project), ::view-transition-new(project) { height: 100%; object-fit: cover; object-position: top; }
 .card .pic.none { display: grid; place-items: center; color: var(--ink-2); }
 .card .pic.none p { font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
-.tabs { position: absolute; left: 50%; bottom: 26px; translate: -50% 0; z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 99px; background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-line); box-shadow: 0 10px 30px -14px rgba(var(--shade), .3); }
+.tabs { position: absolute; left: 50%; bottom: 26px; translate: -50% 0; z-index: 120; display: flex; gap: 4px; padding: 5px; border-radius: 99px; background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-line); box-shadow: 0 10px 30px -14px rgba(var(--shade), .3); }
 .tabs { transition: opacity .5s var(--ease), translate .6s var(--ease); }
 .tabs.off { opacity: 0; translate: -50% 20px; pointer-events: none; }
 .tabs button { padding: 7px 14px; border-radius: 99px; font-size: 14px; color: var(--ink-2); transition: background .5s var(--ease), color .5s var(--ease); white-space: nowrap; }
@@ -220,6 +220,36 @@ dialog[open][data-vt] { animation: none; }
   .card .pic { aspect-ratio: 16 / 11; }
   .card .pic .fit { inset: 14px 14px 38px; }
   .tabs { display: none; }
+}
+
+/* ---------- the lamp over the starred project ---------- */
+.lamp { position: absolute; left: 50%; top: -96px; width: 0; z-index: 3; pointer-events: none; }
+.lamp .cord { position: absolute; left: -1px; bottom: 100%; width: 2px; height: 100vh; background: var(--ink); opacity: .85; }
+.lamp .shade { pointer-events: auto; position: absolute; left: -40px; top: 0; width: 80px; height: 40px; border-radius: 80px 80px 6px 6px; background: var(--ink);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .18), 0 10px 20px -10px rgba(var(--shade), .5); cursor: pointer; transform-origin: 50% -100vh; }
+.lamp .shade::before { content: ""; position: absolute; left: 50%; top: -7px; width: 14px; height: 9px; margin-left: -7px; border-radius: 3px 3px 0 0; background: var(--ink); }
+.lamp .bulb { position: absolute; left: 50%; bottom: -9px; width: 22px; height: 18px; margin-left: -11px; border-radius: 0 0 11px 11px; background: #C9CCD2; transition: background .3s, box-shadow .3s; }
+.lamp .beam { position: absolute; left: -380px; top: 40px; width: 760px; height: 560px; clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  background: radial-gradient(ellipse 50% 85% at 50% 0, rgba(255, 226, 170, .5), rgba(255, 226, 170, .16) 55%, transparent 80%); mix-blend-mode: soft-light; opacity: 0; transition: opacity .5s var(--ease); }
+:root[data-theme="dark"] .lamp .beam { mix-blend-mode: screen; background: radial-gradient(ellipse 50% 85% at 50% 0, rgba(255, 220, 160, .32), rgba(255, 220, 160, .08) 55%, transparent 80%); }
+.card.on .lamp .bulb { background: #FFE7B0; box-shadow: 0 0 0 4px rgba(255, 220, 150, .25), 0 6px 26px 6px rgba(255, 210, 130, .55); animation: flick .9s steps(1) both; }
+.card.on .lamp .beam { opacity: 1; animation: flick .9s steps(1) both; }
+.card.on .lamp .shade { animation: sway 2.6s var(--ease) both; }
+.card.starred .core { transition: box-shadow .8s var(--ease); }
+.card.on .core { box-shadow: inset 0 1px 1px var(--hi), 0 -30px 80px -40px rgba(255, 210, 130, .55); }
+@keyframes flick { 0% { opacity: 0; } 12% { opacity: 1; } 20% { opacity: .2; } 30% { opacity: 1; } 38% { opacity: .5; } 46%, 100% { opacity: 1; } }
+@keyframes sway { 0% { rotate: 2.2deg; } 35% { rotate: -1.4deg; } 65% { rotate: .6deg; } 100% { rotate: 0deg; } }
+.stage .dimmer { position: absolute; inset: 0; z-index: 99; pointer-events: none; background: rgba(var(--shade), .28); opacity: 0; transition: opacity .8s var(--ease); }
+:root[data-theme="dark"] .stage .dimmer { background: rgba(0, 0, 0, .5); }
+.stage.lit .dimmer { opacity: 1; }
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .stage .dimmer { display: none; }
+  .card.starred { margin-top: 84px; }
+  .lamp { top: -78px; }
+  .lamp .cord { height: 60px; }
+  .lamp .shade { left: -30px; width: 60px; height: 30px; border-radius: 60px 60px 5px 5px; }
+  .lamp .bulb { width: 18px; height: 14px; margin-left: -9px; bottom: -7px; }
+  .lamp .beam { left: -220px; top: 30px; width: 440px; height: 420px; }
 }
 
 /* ---------- background bento ---------- */
