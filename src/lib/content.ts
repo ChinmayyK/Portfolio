@@ -7,8 +7,9 @@ export type Project = {
   stack: string;
   src: string;
   site?: string;
-  /** the one project that gets the hanging lamp */
+  /** the one project shown as a museum exhibit */
   star?: boolean;
+  year?: string;
   /** screens in the order the deck card steps through them; the first is shown by default */
   shots: string[];
 };
@@ -18,6 +19,7 @@ export const PROJECTS: Project[] = [
     k: "Rust, Swift, Kotlin, WinUI 3",
     t: "Link All",
     star: true,
+    year: "2026",
     line: "Copy on one device, paste on another. Clipboard and files across macOS, Windows, Android and Linux, with no cloud.",
     lede: "A local-first app with one Rust core and a native app on each platform. Everything stays on your own network, end-to-end encrypted, with no account. macOS, Android and Linux are stable; Windows is in alpha.",
     pts: [

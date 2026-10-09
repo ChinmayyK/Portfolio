@@ -187,7 +187,8 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 .stage { position: sticky; top: 0; height: 100dvh; perspective: 1500px; perspective-origin: 50% 30%; display: grid; place-items: center; overflow: hidden; }
 .card { position: absolute; width: min(1120px, 100% - 48px); --r: 34px; --pad: 8px; background: var(--card-tray); transform-origin: 50% 100%; will-change: transform, opacity; }
 .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--bg); opacity: var(--dim, 0); pointer-events: none; }
-.card .core { display: grid; grid-template-columns: 4.4fr 7.6fr; min-height: min(500px, 62vh); }
+.card .core { display: grid; grid-template-columns: 4.4fr 7.6fr; min-height: min(480px, 56vh); }
+.card { translate: 0 -64px; }   /* sit high enough for the plinth and rope to clear the tabs */
 .card .txt { padding: clamp(28px, 3.6vw, 48px); display: grid; align-content: space-between; gap: 28px; }
 .card h3 { margin-top: 16px; font-size: clamp(40px, 4.2vw, 58px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
 .card .line { margin-top: 14px; font-size: 18px; color: var(--ink-2); max-width: 32ch; }
@@ -222,63 +223,73 @@ dialog[open][data-vt] { animation: none; }
   .tabs { display: none; }
 }
 
-/* ---------- the lamp over the starred project ----------
-   Choreography when Link All comes to the front: the stage goes dark (0s), the bulb stutters on (.35s),
-   then the cone, the dust in it and the pool of light under the card fade up (.6s). */
-.lamp { position: absolute; left: 50%; top: -84px; width: 0; z-index: 3; pointer-events: none; }
-.lamp .cord { position: absolute; left: -1px; bottom: 100%; width: 2px; height: 70vh; background: linear-gradient(to top, var(--ink), transparent); }
-.lamp .swing { position: absolute; left: 0; top: 0; transform-origin: 0 -8px; rotate: var(--tilt, 0deg); transition: rotate 1.2s cubic-bezier(.25, 1.6, .4, 1); }
-.lamp .shade { pointer-events: auto; position: absolute; left: -38px; top: 0; width: 76px; height: 38px; border-radius: 76px 76px 4px 4px; cursor: pointer;
-  background: linear-gradient(160deg, #2A2C31, #0E0F12 60%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 12px 22px -12px rgba(0, 0, 0, .6); }
-.lamp .shade::before { content: ""; position: absolute; left: 50%; top: -8px; width: 12px; height: 10px; margin-left: -6px; border-radius: 3px 3px 0 0; background: #1A1B1F; }
-.lamp .shade:focus-visible { outline-offset: 6px; border-radius: 76px 76px 4px 4px; }
-.lamp .bulb { position: absolute; left: 50%; bottom: -8px; width: 22px; height: 16px; margin-left: -11px; border-radius: 0 0 11px 11px; background: #8E9299; transition: background .2s, box-shadow .2s; }
-.lamp .beam { position: absolute; left: -420px; top: 34px; width: 840px; height: 640px; opacity: 0; transition: opacity .6s var(--ease);
-  clip-path: polygon(46.5% 0, 53.5% 0, 100% 100%, 0 100%); filter: blur(10px);
-  background: radial-gradient(ellipse 46% 100% at 50% 0, rgba(255, 228, 176, .55), rgba(255, 228, 176, .18) 48%, transparent 78%); mix-blend-mode: screen; }
-.lamp .dust { position: absolute; left: -200px; top: 60px; width: 400px; height: 420px; opacity: 0; transition: opacity 1s var(--ease);
-  clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); }
-.lamp .dust i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 236, 200, .9); box-shadow: 0 0 6px rgba(255, 220, 160, .9);
-  left: var(--x); top: var(--y); animation: drift var(--t) ease-in-out infinite alternate; animation-delay: var(--d); }
-@keyframes drift { from { transform: translate(0, 0); opacity: .15; } 50% { opacity: .9; } to { transform: translate(var(--dx), 34px); opacity: .25; } }
-.card .pool { position: absolute; left: 12%; right: 12%; bottom: -46px; height: 90px; border-radius: 50%; pointer-events: none; z-index: -1; opacity: 0;
-  background: radial-gradient(closest-side, rgba(255, 214, 150, .55), rgba(255, 214, 150, .14) 60%, transparent); filter: blur(6px); transition: opacity .8s var(--ease); }
+/* ---------- Link All as a museum exhibit ----------
+   When it comes to the front the gallery lights go down, a glass case settles over the card with a
+   sheen passing across it, and the plinth, brass plaque and velvet rope rise into place underneath. */
+:root {
+  --plinth-top: #F7F7F8; --plinth-face: #DFE1E5; --plinth-side: #CFD2D8;
+  --brass: linear-gradient(135deg, #8A6A2F, #E3C77E 30%, #B8924A 55%, #F1DD9E 75%, #9C7A38);
+  --velvet: #8E1B2A;
+}
+:root[data-theme="dark"] { --plinth-top: #2A2B30; --plinth-face: #1E1F23; --plinth-side: #17181B; }
 
-.card.on .lamp .bulb { background: #FFF1CF; box-shadow: 0 0 0 5px rgba(255, 224, 160, .22), 0 8px 34px 10px rgba(255, 210, 130, .6); animation: stutter .7s steps(1) .35s both; }
-.card.on .lamp .beam { opacity: 1; transition-delay: .6s; }
-.card.on .lamp .dust { opacity: 1; transition-delay: 1s; }
-.card.on .pool { opacity: 1; transition-delay: .7s; }
-.card.on .lamp .swing { animation: sway 3s var(--ease) .35s both; }
-.card.starred .core { position: relative; transition: box-shadow .9s var(--ease) .6s; }
-.card.starred .core::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity .9s var(--ease) .6s;
-  background: radial-gradient(ellipse 60% 70% at 50% -10%, rgba(255, 224, 170, .16), transparent 70%); box-shadow: inset 0 1px 0 rgba(255, 226, 170, .7); }
-.card.on .core::before { opacity: 1; }
-.card.on .core { box-shadow: inset 0 1px 1px var(--hi), 0 -40px 90px -50px rgba(255, 210, 130, .7); }
-@keyframes stutter { 0% { opacity: 0; } 14% { opacity: 1; } 22% { opacity: .1; } 34% { opacity: 1; } 42% { opacity: .35; } 52%, 100% { opacity: 1; } }
-@keyframes sway { 0% { rotate: calc(var(--tilt, 0deg) + 3deg); } 30% { rotate: calc(var(--tilt, 0deg) - 2deg); } 60% { rotate: calc(var(--tilt, 0deg) + .8deg); } 100% { rotate: var(--tilt, 0deg); } }
+.exhibit { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.exhibit > * { opacity: 0; transition: opacity .7s var(--ease), transform .9s var(--ease); }
 
-/* lights down: the room darkens around the card, with spill fading out from it */
-.stage .dimmer { position: absolute; inset: 0; z-index: 99; pointer-events: none; opacity: 0; transition: opacity .7s var(--ease);
-  background: radial-gradient(ellipse 58% 62% at 50% 56%, rgba(10, 11, 14, .38), rgba(10, 11, 14, .72) 75%, rgba(10, 11, 14, .82)); }
-:root[data-theme="dark"] .stage .dimmer { background: radial-gradient(ellipse 58% 62% at 50% 56%, rgba(0, 0, 0, .45), rgba(0, 0, 0, .8) 75%, rgba(0, 0, 0, .88)); }
+/* the glass case: thin bright edges, a faint top highlight, and a sheen that sweeps across */
+.glass { position: absolute; inset: -16px -16px -10px; border-radius: calc(var(--r) + 10px); overflow: hidden; transform: translateY(-26px);
+  border: 1px solid rgba(255, 255, 255, .95); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .4), inset 0 40px 50px -36px rgba(255, 255, 255, .8), 0 0 0 1px rgba(var(--shade), .16), 0 30px 60px -40px rgba(var(--shade), .35);
+  background: linear-gradient(115deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, .04) 35%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, .12)); }
+:root[data-theme="dark"] .glass { border-color: rgba(255, 255, 255, .22); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), inset 0 30px 40px -30px rgba(255, 255, 255, .14), 0 0 0 1px rgba(0, 0, 0, .4); background: linear-gradient(180deg, rgba(255, 255, 255, .06), transparent 30%); }
+.glass .sheen { position: absolute; top: -20%; bottom: -20%; left: -40%; width: 26%; transform: skewX(-18deg) translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .42) 45%, rgba(255, 255, 255, .1) 60%, transparent); }
+:root[data-theme="dark"] .glass .sheen { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .14) 45%, rgba(255, 255, 255, .04) 60%, transparent); }
+
+/* plinth: top slab and front face, with the brass plaque on the face */
+.plinth { position: absolute; left: -36px; right: -36px; top: calc(100% + 6px); height: 56px; transform: translateY(18px); }
+.plinth::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 12px; border-radius: 4px 4px 0 0; background: var(--plinth-top); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6); }
+.plinth::after { content: ""; position: absolute; left: 10px; right: 10px; top: 12px; bottom: 0;
+  background: linear-gradient(90deg, var(--plinth-side), var(--plinth-face) 8%, var(--plinth-face) 92%, var(--plinth-side)); box-shadow: 0 30px 40px -24px rgba(var(--shade), .45); }
+.plaque { position: absolute; z-index: 1; left: 50%; top: 19px; translate: -50% 0; padding: 5px 16px 6px; border-radius: 3px; background: var(--brass); text-align: center; white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(0, 0, 0, .25), 0 2px 4px rgba(0, 0, 0, .25); color: #3B2A0C; text-shadow: 0 1px 0 rgba(255, 240, 200, .5); }
+.plaque b { display: block; font: 600 12px/1.2 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.plaque small { display: block; font: 500 10px/1.3 var(--mono); letter-spacing: .06em; opacity: .85; }
+
+/* velvet rope between two brass posts, hanging in front of the plinth */
+.rope { position: absolute; left: -64px; right: -64px; top: calc(100% + 14px); height: 86px; transform: translateY(24px); }
+.rope .post { position: absolute; top: 0; width: 8px; height: 86px; border-radius: 4px 4px 2px 2px; background: var(--brass); box-shadow: 0 6px 10px -4px rgba(0, 0, 0, .4); }
+.rope .post::before { content: ""; position: absolute; left: -4px; top: -10px; width: 16px; height: 16px; border-radius: 50%; background: var(--brass); box-shadow: inset 0 -2px 3px rgba(0, 0, 0, .25); }
+.rope .post::after { content: ""; position: absolute; left: -9px; bottom: -4px; width: 26px; height: 7px; border-radius: 50%; background: var(--brass); }
+.rope .post.l { left: 0; } .rope .post.r { right: 0; }
+.rope svg { position: absolute; left: 6px; right: 6px; top: 30px; width: calc(100% - 12px); height: 40px; overflow: visible; }
+.rope path { fill: none; stroke: var(--velvet); stroke-width: 7; stroke-linecap: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 4px 3px rgba(0, 0, 0, .35)); }
+
+.card.on .exhibit > * { opacity: 1; transform: none; }
+.card.on .glass { transition-delay: .25s; }
+.card.on .plinth { transition-delay: .1s; }
+.card.on .rope { transition-delay: .45s; }
+.card.on .glass .sheen { animation: sheen 1.6s var(--ease) .9s, sheen 1.6s var(--ease) 7s infinite; }
+@keyframes sheen { from { transform: skewX(-18deg) translateX(-100%); } to { transform: skewX(-18deg) translateX(620%); } }
+
+/* gallery lights: the room dims around the exhibit with a soft pool from above */
+.stage .dimmer { position: absolute; inset: 0; z-index: 99; pointer-events: none; opacity: 0; transition: opacity .8s var(--ease);
+  background: radial-gradient(ellipse 50% 55% at 50% 40%, rgba(var(--shade), .06), rgba(var(--shade), .4) 80%, rgba(var(--shade), .5)); }
+:root[data-theme="dark"] .stage .dimmer { background: radial-gradient(ellipse 50% 55% at 50% 40%, rgba(0, 0, 0, .1), rgba(0, 0, 0, .65) 80%, rgba(0, 0, 0, .75)); }
 .stage.lit .dimmer { opacity: 1; }
-.stage .hint { position: absolute; left: 50%; bottom: 90px; translate: -50% 0; z-index: 101; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 236, 205, .8);
-  opacity: 0; transition: opacity .6s var(--ease); pointer-events: none; }
-.stage.lit .hint { opacity: 1; transition-delay: 2.2s; }
-.stage.lit ~ .tabs, .stage.lit .tabs { background: rgba(28, 29, 33, .7); border-color: rgba(255, 255, 255, .1); }
-.stage.lit .tabs button { color: #A2A6AF; }
-.stage.lit .tabs button[aria-current="true"] { background: #ECEDEF; color: #16171A; }
+.card.on .core { box-shadow: inset 0 1px 1px var(--hi), 0 -50px 100px -60px rgba(255, 244, 220, .9); }
+.stage .tabs { bottom: 18px; }
+
 
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .stage .dimmer, .stage .hint { display: none; }
-  .card.starred { margin-top: 84px; }
-  .lamp { top: -74px; }
-  .lamp .cord { height: 64px; }
-  .lamp .shade { left: -30px; width: 60px; height: 30px; border-radius: 60px 60px 4px 4px; }
-  .lamp .bulb { width: 18px; height: 13px; margin-left: -9px; bottom: -6px; }
-  .lamp .beam { left: -240px; top: 26px; width: 480px; height: 460px; }
-  .lamp .dust { left: -120px; width: 240px; height: 300px; }
+  .stage .dimmer { display: none; }
+  .card { translate: none; }
+  .card.starred { margin-bottom: 120px; }
+  .plinth { left: -10px; right: -10px; height: 52px; }
+  .rope { left: -14px; right: -14px; }
+  .rope svg { top: 44px; }
+  .glass { inset: -10px -8px -6px; }
 }
+@media (prefers-reduced-motion: reduce) { .card.starred .exhibit > * { opacity: 1; transform: none; } }
 
 /* ---------- background bento ---------- */
 .bento { margin-top: 56px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
