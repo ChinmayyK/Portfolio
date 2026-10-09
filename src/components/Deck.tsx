@@ -8,7 +8,9 @@ import { ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react";
 import { PROJECTS, type Project } from "@/lib/content";
 import Shot from "@/components/Shot";
 
-const N = PROJECTS.length;
+// The starred project (Link All) has its own chapter; the deck holds the rest.
+const ITEMS = PROJECTS.filter((p) => !p.star);
+const N = ITEMS.length;
 
 type VTDoc = Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
 
@@ -28,13 +30,8 @@ export default function Deck() {
   const sheet = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState(0);
   const [inDeck, setInDeck] = useState(false);
-  // the starred project is shown as a museum exhibit while it's the card in front and on screen
-  const star = PROJECTS.findIndex((p) => p.star);
-  const [starSeen, setStarSeen] = useState(false);
-  const lit = starSeen && active === star;
-
   const [open, setOpen] = useState<Project | null>(null);
-  const [screen, setScreen] = useState<number[]>(() => PROJECTS.map(() => 0));
+  const [screen, setScreen] = useState<number[]>(() => ITEMS.map(() => 0));
   const sheetCore = useRef<HTMLDivElement>(null);
   const from = useRef<HTMLElement | null>(null);
 
@@ -148,27 +145,24 @@ export default function Deck() {
     buzz();
   }
 
+  // other parts of the page ask for a project by name: bring its card forward, or open its sheet
   useEffect(() => {
-    const el = cards.current[star];
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => setStarSeen(e.isIntersecting), { threshold: 0.55 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [star]);
-
-  // the hero's project cards ask for a specific card
-  useEffect(() => {
-    const onGo = (e: Event) => goTo((e as CustomEvent<number>).detail);
+    const onGo = (e: Event) => { const i = ITEMS.findIndex((p) => p.t === (e as CustomEvent<string>).detail); if (i >= 0) goTo(i); };
+    const onOpen = (e: Event) => {
+      const p = PROJECTS.find((x) => x.t === (e as CustomEvent<string>).detail);
+      if (p) { buzz(); from.current = null; setOpen(p); }
+    };
     addEventListener("deck:go", onGo);
-    return () => removeEventListener("deck:go", onGo);
+    addEventListener("sheet:open", onOpen);
+    return () => { removeEventListener("deck:go", onGo); removeEventListener("sheet:open", onOpen); };
   }, []);
 
   return (
     <>
       <div className="deck" ref={deck} style={{ "--n": N } as CSSProperties}>
-        <div className={`stage${lit ? " lit" : ""}`}>
-          {PROJECTS.map((p, i) => (
-            <article key={p.t} className={`card bezel lifted${i === star ? " starred" : ""}${i === star && lit ? " on" : ""}`} ref={(el) => { if (el) cards.current[i] = el; }} aria-labelledby={`ct-${i}`}>
+        <div className="stage">
+          {ITEMS.map((p, i) => (
+            <article key={p.t} className="card bezel lifted" ref={(el) => { if (el) cards.current[i] = el; }} aria-labelledby={`ct-${i}`}>
               <div className="core">
                 <div className="txt">
                   <div><span className="chip">{p.k}</span><h3 id={`ct-${i}`}>{p.t}</h3><p className="line">{p.line}</p></div>
@@ -189,24 +183,10 @@ export default function Deck() {
                   )}
                 </div>
               </div>
-              {i === star && (
-                // glass case over the card, plinth with a brass plaque under it, velvet rope in front
-                <div className="exhibit" aria-hidden="true">
-                  <span className="glass"><i className="sheen" /></span>
-                  <span className="plinth">
-                    <span className="plaque"><b>{p.t}, {p.year}</b><small>{p.k}</small></span>
-                  </span>
-                  <span className="rope">
-                    <i className="post l" /><i className="post r" />
-                    <svg viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M1 2 C 30 19, 70 19, 99 2" /></svg>
-                  </span>
-                </div>
-              )}
             </article>
           ))}
-          <div className="dimmer" aria-hidden="true" />
           <div className={`tabs${inDeck ? "" : " off"}`} aria-label="Projects">
-            {PROJECTS.map((p, i) => (
+            {ITEMS.map((p, i) => (
               <button key={p.t} type="button" aria-current={i === active} onClick={() => goTo(i)}>{p.t}</button>
             ))}
           </div>

@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { ArrowDown, DownloadSimple } from "@phosphor-icons/react";
-import { PROJECTS } from "@/lib/content";
 import Shot from "@/components/Shot";
-
-const at = (t: string) => PROJECTS.findIndex((p) => p.t === t);
 
 // Entrance order (--i) runs back to front; depth sets how far each drifts with the pointer.
 const SCENE = [
@@ -13,10 +10,10 @@ const SCENE = [
   { cls: "back c-vault", i: 1, depth: 18, img: "doc-redact-engine.png", project: "BlockVault", what: "Encrypted vault" },
 ];
 
-/** Asks the project deck to bring card `i` to the front. */
-function openInDeck(e: MouseEvent, i: number) {
+/** Asks the project deck to bring a project's card to the front. */
+function openInDeck(e: MouseEvent, project: string) {
   e.preventDefault();
-  dispatchEvent(new CustomEvent("deck:go", { detail: i }));
+  dispatchEvent(new CustomEvent("deck:go", { detail: project }));
 }
 
 export default function Hero() {
@@ -51,8 +48,6 @@ export default function Hero() {
     return () => { el.removeEventListener("pointermove", move); cancelAnimationFrame(raf); };
   }, []);
 
-  const linkAll = at("Link All");
-
   return (
     <header className={`hero ${stage}`} id="top" ref={hero}>
       <div className="wrap">
@@ -66,7 +61,7 @@ export default function Hero() {
             I build web and mobile apps, and the backend services behind them. Final-year B.Tech student, graduating in 2027.
           </p>
           <div className="cta" data-r style={{ "--d": "420ms" } as CSSProperties}>
-            <a className="pill dark" href="#work">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
+            <a className="pill dark" href="#link-all">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
             <a className="pill light" href="/Chinmay_Kudalkar_Resume.pdf" download>Résumé <span className="isl"><DownloadSimple weight="light" /></span></a>
           </div>
         </div>
@@ -74,15 +69,15 @@ export default function Hero() {
         <div className="cascade" ref={cas}>
           {SCENE.map((c) => (
             <a key={c.project} href="#work" className={`bezel lifted ${c.cls}`} data-depth={c.depth} style={{ "--i": c.i } as CSSProperties}
-              onClick={(e) => openInDeck(e, at(c.project))} aria-label={`${c.project}: ${c.what}. See the project.`}>
+              onClick={(e) => openInDeck(e, c.project)} aria-label={`${c.project}: ${c.what}. See the project.`}>
               <div className="core">
                 <Shot file={c.img} alt="" />
                 <div className="cap"><span>{c.project}</span><span>{c.what}</span></div>
               </div>
             </a>
           ))}
-          <a href="#work" className="bezel lifted main" data-depth={30} style={{ "--i": 2 } as CSSProperties}
-            onClick={(e) => openInDeck(e, linkAll)} aria-label="Link All, my latest project. See the project.">
+          <a href="#link-all" className="bezel lifted main" data-depth={30} style={{ "--i": 2 } as CSSProperties}
+            aria-label="Link All, my latest project. See the project.">
             <div className="core">
               <Shot file="linkall-mac-devices.png" alt="" />
               <div className="cap">
@@ -91,8 +86,8 @@ export default function Hero() {
               </div>
             </div>
           </a>
-          <a href="#work" className="bezel lifted phone" data-depth={46} style={{ "--i": 3 } as CSSProperties}
-            onClick={(e) => openInDeck(e, linkAll)} tabIndex={-1} aria-hidden="true">
+          <a href="#link-all" className="bezel lifted phone" data-depth={46} style={{ "--i": 3 } as CSSProperties}
+            tabIndex={-1} aria-hidden="true">
             <div className="core"><Shot file="linkall-android-home.png" alt="" /></div>
           </a>
         </div>

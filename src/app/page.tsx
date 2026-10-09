@@ -11,6 +11,7 @@ import WhoAmI from "@/components/WhoAmI";
 import Reveal from "@/components/Reveal";
 import Commits from "@/components/Commits";
 import Quote from "@/components/Quote";
+import LinkAllStory from "@/components/LinkAllStory";
 
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
@@ -43,9 +44,11 @@ export default function Home() {
           </div>
         </section>
 
+        <LinkAllStory />
+
         <section className="work" id="work" aria-labelledby="work-h">
           <div className="wrap">
-            <h2 id="work-h" data-r>Things I&apos;ve built.</h2>
+            <h2 id="work-h" data-r>More things I&apos;ve built.</h2>
             <p className="lead" data-r style={d(120)}>Side projects and college work. Open any of them for screenshots and details.</p>
           </div>
           <Deck />
