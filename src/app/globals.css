@@ -178,7 +178,7 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 /* ---------- Link All chapter ----------
    Desktop: a tall section with a sticky stage; scroll scrubs the transfer timeline.
    Phones: a normal section; the timeline plays once when the scene comes into view. */
-.story { padding: 0; position: relative; }
+.story { padding: 0; position: relative; overflow-x: clip; }
 .story-stage { padding: clamp(80px, 12vh, 140px) 0; }
 .story-grid { display: grid; grid-template-columns: 4.2fr 7.8fr; grid-template-rows: auto 1fr; column-gap: clamp(32px, 4vw, 64px); row-gap: 28px; align-items: start; }
 .story-copy { grid-column: 1; grid-row: 1; }
@@ -287,6 +287,7 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
   --tray: rgba(255, 255, 255, .05); --tray-line: rgba(255, 255, 255, .09); --glass: rgba(29, 30, 34, .78); --shade: 0, 0, 0;
 }
 .lights .scene::before { opacity: 1; }
+.lights .nav:not(:hover):not(:focus-within) { opacity: .3; }
 .lights .scene .phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), var(--lift); }
 .scene .you { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: var(--accent); color: #fff; font: 500 11px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; box-shadow: 0 8px 20px -8px rgba(240, 86, 29, .7); }
 .scene .you::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: pulse 1.6s var(--ease) infinite; }
@@ -398,7 +399,7 @@ dialog[open] { animation: up .8s var(--ease); }
 }
 
 /* ---------- phones: tighter rhythm, bigger type where it counts, nothing clipped ---------- */
-.nav { transition: transform .5s var(--ease); }
+.nav { transition: transform .5s var(--ease), opacity .8s var(--ease); }
 @media (max-width: 760px) {
   body::after { display: none; }                         /* skip the full-screen grain blend on phones */
   .wrap { width: calc(100% - 32px); }
