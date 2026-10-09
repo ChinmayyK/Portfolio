@@ -202,7 +202,7 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 
 .scene { position: relative; aspect-ratio: 16 / 11.5; }
 .scene .mac { position: absolute; left: 0; top: 4%; width: 80%; --r: 10px; --pad: 2px; }
-.scene .phone { position: absolute; right: 0; top: 18%; width: 22%; --r: 16px; --pad: 2px; background: #16171A; border: 0; }
+.scene .phone { position: absolute; right: 0; top: 18%; width: 22%; z-index: 3; --r: 16px; --pad: 2px; background: #16171A; border: 0; }
 .scene .phone .core { position: relative; box-shadow: none; }
 .scene img { width: 100%; height: auto; }
 .scene .link { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
@@ -234,7 +234,7 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
   transform: translateY(-140%); opacity: 0; transition: transform .6s var(--spring), opacity .3s; }
 .scene .notif.show { transform: none; opacity: 1; }
 .scene .notif small { display: block; font-size: clamp(7px, .6vw, 9px); color: #565B64; }
-.scene .notif p { font-size: clamp(9px, .85vw, 12px); font-weight: 600; line-height: 1.25; margin: 2px 0 4px; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.scene .notif p { font-size: clamp(9px, .85vw, 12px); font-weight: 600; line-height: 1.25; margin: 2px 0 4px; overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .scene .notif span { display: inline-flex; align-items: center; gap: 4px; font-size: clamp(7px, .6vw, 9px); color: #1FA34A; font-weight: 600; }
 
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
