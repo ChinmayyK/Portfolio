@@ -4,8 +4,8 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight } from "@phosphor-icons/react";
 
 const USER = "ChinmayyK";
-// Public mirror of the GitHub contribution calendar (no token needed, CORS open).
-const API = `https://github-contributions-api.jogruber.de/v4/${USER}?y=last`;
+// Our own Worker route (worker/index.js): GitHub's calendar, cached at the edge.
+const API = "/api/commits";
 
 type Day = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
 type State = { kind: "loading" } | { kind: "error" } | { kind: "ok"; days: (Day | null)[]; total: number };
@@ -26,7 +26,7 @@ export default function Commits() {
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       io.disconnect();
-      fetch(API)
+      fetch(API, { signal: AbortSignal.timeout(12000) }) // never sit on "Counting commits…" forever
         .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
         .then((j: { total: { lastYear: number }; contributions: Day[] }) => {
           if (cancelled) return;

@@ -1,9 +1,11 @@
-// Deploys the static export (out/) as Workers static assets.
+// Deploys the static export (out/) as Workers static assets, plus a small Worker for /api/*.
 // Having this file stops `wrangler deploy` from auto-configuring OpenNext,
 // which expects a server build and fails on `output: "export"`.
 {
   "name": "portfolio",
   "compatibility_date": "2026-10-01",
   "build": { "command": "npm run build" },
-  "assets": { "directory": "./out", "not_found_handling": "404-page" }
+  // only /api/* reaches the Worker (worker/index.js); everything else is served straight from the assets
+  "main": "worker/index.js",
+  "assets": { "directory": "./out", "binding": "ASSETS", "not_found_handling": "404-page", "run_worker_first": ["/api/*"] }
 }
