@@ -75,8 +75,9 @@ export default function Home() {
                     <p className="org">Mintskill HR Solutions</p>
                   </div>
                   <ul>
-                    <li>Node.js services and REST integrations connecting hiring tools (ATS) to CRMs.</li>
-                    <li>Redis-backed background job queues.</li>
+                    <li>Node.js backend services that connect hiring tools (ATS) to CRMs through REST APIs, automating recruiting workflows.</li>
+                    <li>Redis-backed background job queues, so slow work runs asynchronously and the APIs respond quickly.</li>
+                    <li>Designed the services as separate modules, so each could be changed and maintained on its own.</li>
                   </ul>
                 </div>
               </article>
