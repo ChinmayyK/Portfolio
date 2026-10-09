@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import {
-  ArrowRight, CalendarCheck, Copy as CopyIcon, GithubLogo, LinkedinLogo, Path, Phone, SteeringWheel, WarningCircle, ArrowUpRight,
+  ArrowRight, Broadcast, Copy as CopyIcon, Eye, GithubLogo, LinkedinLogo, MapTrifold, Phone, WarningCircle, ArrowUpRight,
 } from "@phosphor-icons/react/dist/ssr";
 import { EMAIL, TOOLS } from "@/lib/content";
 import Nav from "@/components/Nav";
@@ -30,14 +30,14 @@ export default function Home() {
                   <span className="chip" style={{ justifySelf: "start" }}>Since August 2026</span>
                   <div>
                     <h2 id="now-h">Interning at <em>ideaForge</em>.</h2>
-                    <p style={{ marginTop: 16 }}>I work on iF FleetDesk, the internal app staff use to book vehicles for people and material, on web and mobile.</p>
+                    <p style={{ marginTop: 16 }}>I work on iF FleetDesk, the internal app staff use to book, dispatch and track vehicles for people and material, on web and mobile.</p>
                   </div>
                 </div>
                 <ol>
-                  <li data-r style={d(100)}><i><Path weight="light" /></i>A four-step booking flow, including multi-stop and outstation trips.</li>
-                  <li data-r style={d(180)}><i><SteeringWheel weight="light" /></i>Driver assignment, dispatch and reassignment.</li>
-                  <li data-r style={d(260)}><i><WarningCircle weight="light" /></i>Checks for conflicting vehicle and driver bookings.</li>
-                  <li data-r style={d(340)}><i><CalendarCheck weight="light" /></i>Scheduled rides with seat reservations and no-shows.</li>
+                  <li data-r style={d(100)}><i><Broadcast weight="light" /></i>Live vehicle telemetry from the Varroc TCU APIs, with caching, retries and deadlines, so positions arrive within 3 seconds even when the vendor is slow.</li>
+                  <li data-r style={d(180)}><i><MapTrifold weight="light" /></i>A live operations map on the Google Maps API: vehicle search, status filters, stale-GPS detection and dark mode.</li>
+                  <li data-r style={d(260)}><i><WarningCircle weight="light" /></i>Booking and dispatch that stay correct when two people act at once, checked inside database transactions.</li>
+                  <li data-r style={d(340)}><i><Eye weight="light" /></i>Tracking visibility an admin controls, from trip status only to the full map, enforced on the server.</li>
                 </ol>
               </div>
             </div>
@@ -58,10 +58,12 @@ export default function Home() {
                     <p className="org">ideaForge Technology, Navi Mumbai</p>
                   </div>
                   <ul>
-                    <li><i><ArrowRight weight="light" /></i>iF FleetDesk, the fleet and employee transport platform, on web and mobile for five kinds of user.</li>
-                    <li><i><ArrowRight weight="light" /></i>Booking for passengers, material or both, for yourself or someone else.</li>
-                    <li><i><ArrowRight weight="light" /></i>Vehicle availability, capacity matching, driver assignment and dispatch.</li>
-                    <li><i><ArrowRight weight="light" /></i>Scheduled rides with set routes and timings, seat reservations, cancellations and no-shows.</li>
+                    <li><i><ArrowRight weight="light" /></i>iF FleetDesk: a TypeScript monorepo with a NestJS, Prisma and PostgreSQL API, a React web app and an Expo mobile app, for employees, drivers and admins.</li>
+                    <li><i><ArrowRight weight="light" /></i>Integrated the Varroc TCU APIs for vehicle telemetry and the Google Maps API for live tracking.</li>
+                    <li><i><ArrowRight weight="light" /></i>Booking for passengers or material, including multi-stop and outstation trips, with driver assignment and dispatch.</li>
+                    <li><i><ArrowRight weight="light" /></i>Scheduled shuttles with timetables, seat capacity, cancellation cutoffs, no-shows and driver manifests.</li>
+                    <li><i><ArrowRight weight="light" /></i>An offline queue in the driver app, so location and trip events sync once the connection is back.</li>
+                    <li><i><ArrowRight weight="light" /></i>Concurrency tests on real PostgreSQL, with typecheck, lint and build checks before every merge.</li>
                   </ul>
                 </div>
               </article>

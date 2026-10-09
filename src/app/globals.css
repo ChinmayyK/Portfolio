@@ -314,6 +314,7 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 .role { font-size: clamp(28px, 2.8vw, 40px); font-weight: 600; letter-spacing: -.04em; line-height: 1.02; margin-top: 18px; }
 .org { margin-top: 10px; color: var(--ink-2); }
 .b-a .org { color: var(--invert-ink-2); }
+.b-b .core { align-content: start; }
 .b-b ul { padding-left: 1.1em; display: grid; gap: 8px; color: var(--ink-2); font-size: 16px; }
 .b-c dd { color: var(--ink-2); font-size: 16px; }
 .b-c dl { display: grid; gap: 16px; }
