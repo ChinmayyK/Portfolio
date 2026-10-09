@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Moon, Sun } from "@phosphor-icons/react";
 
-const LINKS = [["#now", "Now"], ["#link-all", "Work"], ["#background", "Background"], ["#contact", "Contact"]] as const;
+const LINKS = [["#link-all", "Work"], ["#now", "Now"], ["#background", "Background"], ["#contact", "Contact"]] as const;
 
 export default function Nav() {
   const [open, setOpen] = useState(false);

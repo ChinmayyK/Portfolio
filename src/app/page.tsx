@@ -22,6 +22,8 @@ export default function Home() {
       <main>
         <Hero />
 
+        <LinkAllStory />
+
         <section className="now" id="now" aria-labelledby="now-h">
           <div className="wrap">
             <div className="bezel lifted" data-r>
@@ -43,8 +45,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <LinkAllStory />
 
         <section id="background" aria-labelledby="bg-h">
           <div className="wrap">

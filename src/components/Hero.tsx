@@ -3,11 +3,25 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
 import Shot from "@/components/Shot";
+import { detect } from "@/lib/visitor";
 
 export default function Hero() {
   const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer drift, hover)
   const hero = useRef<HTMLElement>(null);
   const cas = useRef<HTMLDivElement>(null);
+  const [time, setTime] = useState("");
+  const [win, setWin] = useState(false); // Windows visitors see Link All on Windows, matching the scene this card flies into
+
+  useEffect(() => { setWin(!!detect()?.win); }, []);
+
+  // local time in India, ticking over each minute (rendered after mount, so the static HTML never holds a stale time)
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true });
+    let t = 0;
+    const tick = () => { setTime(fmt.format(new Date()).toUpperCase()); t = window.setTimeout(tick, 60000 - (Date.now() % 60000)); };
+    tick();
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setStage("go"));
@@ -45,20 +59,24 @@ export default function Hero() {
             <span className="ln" aria-hidden="true"><span style={{ "--i": 0 } as CSSProperties}>Chinmay</span></span>
             <span className="ln" aria-hidden="true"><span style={{ "--i": 1 } as CSSProperties}>Kudalkar<span className="dot">.</span></span></span>
           </h1>
-          <p className="sub" data-r style={{ "--d": "300ms" } as CSSProperties}>
-            I build web and mobile apps, and the backend services behind them. Final-year B.Tech student, graduating in 2027.
+          <p className="claim" data-r style={{ "--d": "260ms" } as CSSProperties}>I build apps that keep working when the network doesn&apos;t.</p>
+          <p className="sub" data-r style={{ "--d": "340ms" } as CSSProperties}>
+            Web and mobile apps, and the backend services behind them. Final-year B.Tech student, graduating in 2027.
           </p>
           <div className="cta" data-r style={{ "--d": "420ms" } as CSSProperties}>
             <a className="pill dark" href="#link-all">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
             <a className="pill light" href="/resume" target="_blank" rel="noopener">Résumé <span className="isl"><ArrowUpRight weight="light" /></span></a>
           </div>
+          <p className="status" data-r style={{ "--d": "520ms" } as CSSProperties}>
+            <span>Now</span> <a href="#now">iF FleetDesk at ideaForge</a> <i className="loc">· Navi Mumbai</i>{time && <> <i>· <time>{time} IST</time></i></>}
+          </p>
         </div>
 
         <div className="cascade" ref={cas}>
           <a href="#link-all" className="bezel lifted main" data-depth={22} style={{ "--i": 0 } as CSSProperties}
             aria-label="Link All, my latest project. See the project.">
             <div className="core">
-              <Shot file="linkall-mac-devices.png" alt="" />
+              <Shot file={win ? "linkall-win-clipboard.png" : "linkall-mac-devices.png"} alt="" />
               <div className="cap">
                 <span><b>Link All</b><span className="chip">Latest project</span></span>
               </div>
