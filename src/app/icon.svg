@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs><clipPath id="in"><rect x="4" y="4" width="56" height="56" rx="12"/></clipPath></defs>
   <rect width="64" height="64" rx="16" fill="#D9DCE1"/>
   <rect x="4" y="4" width="56" height="56" rx="12" fill="#0E0F12"/>
+  <text x="32" y="53" clip-path="url(#in)" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="60" font-weight="700" letter-spacing="-5" fill="#F9F9FA" fill-opacity=".05">11</text>
   <text x="29" y="43" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="700" letter-spacing="-1.5" fill="#F9F9FA">CK</text>
   <circle cx="50" cy="41" r="3" fill="#F0561D"/>
 </svg>
