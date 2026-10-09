@@ -15,12 +15,24 @@ import LinkAllStory from "@/components/LinkAllStory";
 
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
-export default function Home() {
+// The contribution count, read once at build time from the live site's own /api/commits, so the hero
+// never shows an empty pill. The browser refreshes it after load; a failed build-time read just leaves 0.
+async function commitsAtBuild() {
+  try {
+    const r = await fetch("https://chinmaykudalkar.com/api/commits", { signal: AbortSignal.timeout(10000) });
+    return r.ok ? ((await r.json()) as { total: { lastYear: number } }).total.lastYear : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export default async function Home() {
+  const commits = await commitsAtBuild();
   return (
     <>
       <Nav />
       <main>
-        <Hero />
+        <Hero commits={commits} />
 
         <LinkAllStory />
 

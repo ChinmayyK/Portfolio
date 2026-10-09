@@ -5,14 +5,14 @@ import { ArrowDown, ArrowUpRight, CheckCircle, Copy, Image, LinkSimple, TextAa }
 import Shot from "@/components/Shot";
 import { detect } from "@/lib/visitor";
 
-export default function Hero() {
+export default function Hero({ commits: built }: { commits: number }) {
   const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer drift, hover)
   const hero = useRef<HTMLElement>(null);
   const cas = useRef<HTMLDivElement>(null);
   const [time, setTime] = useState("");
   const [win, setWin] = useState(false); // Windows visitors see Link All on Windows, matching the scene this card flies into
 
-  const [commits, setCommits] = useState(0);
+  const [commits, setCommits] = useState(built);
   const relay = useRelay(cas);
   const name = useRef<HTMLHeadingElement>(null);
   useLively(hero, name);
@@ -20,12 +20,15 @@ export default function Hero() {
 
   useEffect(() => { setWin(!!detect()?.win); }, []);
 
-  // the same calendar the graph further down uses; the edge cache makes the second request free
+  // refresh the count baked in at build with today's; the edge cache makes this the same request the
+  // graph further down makes. One retry, since a cold edge cache has to wait on GitHub.
   useEffect(() => {
-    fetch("/api/commits", { signal: AbortSignal.timeout(12000) })
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((j: { total: { lastYear: number } }) => setCommits(j.total.lastYear))
-      .catch(() => {});
+    const get = (left: number): Promise<void> =>
+      fetch("/api/commits", { signal: AbortSignal.timeout(12000) })
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then((j: { total: { lastYear: number } }) => setCommits(j.total.lastYear))
+        .catch(() => (left ? new Promise<void>((ok) => setTimeout(ok, 1500)).then(() => get(left - 1)) : undefined));
+    get(1);
   }, []);
 
   // local time in India, ticking over each minute (rendered after mount, so the static HTML never holds a stale time)
