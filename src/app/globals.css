@@ -222,34 +222,62 @@ dialog[open][data-vt] { animation: none; }
   .tabs { display: none; }
 }
 
-/* ---------- the lamp over the starred project ---------- */
-.lamp { position: absolute; left: 50%; top: -96px; width: 0; z-index: 3; pointer-events: none; }
-.lamp .cord { position: absolute; left: -1px; bottom: 100%; width: 2px; height: 100vh; background: var(--ink); opacity: .85; }
-.lamp .shade { pointer-events: auto; position: absolute; left: -40px; top: 0; width: 80px; height: 40px; border-radius: 80px 80px 6px 6px; background: var(--ink);
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .18), 0 10px 20px -10px rgba(var(--shade), .5); cursor: pointer; transform-origin: 50% -100vh; }
-.lamp .shade::before { content: ""; position: absolute; left: 50%; top: -7px; width: 14px; height: 9px; margin-left: -7px; border-radius: 3px 3px 0 0; background: var(--ink); }
-.lamp .bulb { position: absolute; left: 50%; bottom: -9px; width: 22px; height: 18px; margin-left: -11px; border-radius: 0 0 11px 11px; background: #C9CCD2; transition: background .3s, box-shadow .3s; }
-.lamp .beam { position: absolute; left: -380px; top: 40px; width: 760px; height: 560px; clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
-  background: radial-gradient(ellipse 50% 85% at 50% 0, rgba(255, 226, 170, .5), rgba(255, 226, 170, .16) 55%, transparent 80%); mix-blend-mode: soft-light; opacity: 0; transition: opacity .5s var(--ease); }
-:root[data-theme="dark"] .lamp .beam { mix-blend-mode: screen; background: radial-gradient(ellipse 50% 85% at 50% 0, rgba(255, 220, 160, .32), rgba(255, 220, 160, .08) 55%, transparent 80%); }
-.card.on .lamp .bulb { background: #FFE7B0; box-shadow: 0 0 0 4px rgba(255, 220, 150, .25), 0 6px 26px 6px rgba(255, 210, 130, .55); animation: flick .9s steps(1) both; }
-.card.on .lamp .beam { opacity: 1; animation: flick .9s steps(1) both; }
-.card.on .lamp .shade { animation: sway 2.6s var(--ease) both; }
-.card.starred .core { transition: box-shadow .8s var(--ease); }
-.card.on .core { box-shadow: inset 0 1px 1px var(--hi), 0 -30px 80px -40px rgba(255, 210, 130, .55); }
-@keyframes flick { 0% { opacity: 0; } 12% { opacity: 1; } 20% { opacity: .2; } 30% { opacity: 1; } 38% { opacity: .5; } 46%, 100% { opacity: 1; } }
-@keyframes sway { 0% { rotate: 2.2deg; } 35% { rotate: -1.4deg; } 65% { rotate: .6deg; } 100% { rotate: 0deg; } }
-.stage .dimmer { position: absolute; inset: 0; z-index: 99; pointer-events: none; background: rgba(var(--shade), .28); opacity: 0; transition: opacity .8s var(--ease); }
-:root[data-theme="dark"] .stage .dimmer { background: rgba(0, 0, 0, .5); }
+/* ---------- the lamp over the starred project ----------
+   Choreography when Link All comes to the front: the stage goes dark (0s), the bulb stutters on (.35s),
+   then the cone, the dust in it and the pool of light under the card fade up (.6s). */
+.lamp { position: absolute; left: 50%; top: -84px; width: 0; z-index: 3; pointer-events: none; }
+.lamp .cord { position: absolute; left: -1px; bottom: 100%; width: 2px; height: 70vh; background: linear-gradient(to top, var(--ink), transparent); }
+.lamp .swing { position: absolute; left: 0; top: 0; transform-origin: 0 -8px; rotate: var(--tilt, 0deg); transition: rotate 1.2s cubic-bezier(.25, 1.6, .4, 1); }
+.lamp .shade { pointer-events: auto; position: absolute; left: -38px; top: 0; width: 76px; height: 38px; border-radius: 76px 76px 4px 4px; cursor: pointer;
+  background: linear-gradient(160deg, #2A2C31, #0E0F12 60%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 12px 22px -12px rgba(0, 0, 0, .6); }
+.lamp .shade::before { content: ""; position: absolute; left: 50%; top: -8px; width: 12px; height: 10px; margin-left: -6px; border-radius: 3px 3px 0 0; background: #1A1B1F; }
+.lamp .shade:focus-visible { outline-offset: 6px; border-radius: 76px 76px 4px 4px; }
+.lamp .bulb { position: absolute; left: 50%; bottom: -8px; width: 22px; height: 16px; margin-left: -11px; border-radius: 0 0 11px 11px; background: #8E9299; transition: background .2s, box-shadow .2s; }
+.lamp .beam { position: absolute; left: -420px; top: 34px; width: 840px; height: 640px; opacity: 0; transition: opacity .6s var(--ease);
+  clip-path: polygon(46.5% 0, 53.5% 0, 100% 100%, 0 100%); filter: blur(10px);
+  background: radial-gradient(ellipse 46% 100% at 50% 0, rgba(255, 228, 176, .55), rgba(255, 228, 176, .18) 48%, transparent 78%); mix-blend-mode: screen; }
+.lamp .dust { position: absolute; left: -200px; top: 60px; width: 400px; height: 420px; opacity: 0; transition: opacity 1s var(--ease);
+  clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); }
+.lamp .dust i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 236, 200, .9); box-shadow: 0 0 6px rgba(255, 220, 160, .9);
+  left: var(--x); top: var(--y); animation: drift var(--t) ease-in-out infinite alternate; animation-delay: var(--d); }
+@keyframes drift { from { transform: translate(0, 0); opacity: .15; } 50% { opacity: .9; } to { transform: translate(var(--dx), 34px); opacity: .25; } }
+.card .pool { position: absolute; left: 12%; right: 12%; bottom: -46px; height: 90px; border-radius: 50%; pointer-events: none; z-index: -1; opacity: 0;
+  background: radial-gradient(closest-side, rgba(255, 214, 150, .55), rgba(255, 214, 150, .14) 60%, transparent); filter: blur(6px); transition: opacity .8s var(--ease); }
+
+.card.on .lamp .bulb { background: #FFF1CF; box-shadow: 0 0 0 5px rgba(255, 224, 160, .22), 0 8px 34px 10px rgba(255, 210, 130, .6); animation: stutter .7s steps(1) .35s both; }
+.card.on .lamp .beam { opacity: 1; transition-delay: .6s; }
+.card.on .lamp .dust { opacity: 1; transition-delay: 1s; }
+.card.on .pool { opacity: 1; transition-delay: .7s; }
+.card.on .lamp .swing { animation: sway 3s var(--ease) .35s both; }
+.card.starred .core { position: relative; transition: box-shadow .9s var(--ease) .6s; }
+.card.starred .core::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity .9s var(--ease) .6s;
+  background: radial-gradient(ellipse 60% 70% at 50% -10%, rgba(255, 224, 170, .16), transparent 70%); box-shadow: inset 0 1px 0 rgba(255, 226, 170, .7); }
+.card.on .core::before { opacity: 1; }
+.card.on .core { box-shadow: inset 0 1px 1px var(--hi), 0 -40px 90px -50px rgba(255, 210, 130, .7); }
+@keyframes stutter { 0% { opacity: 0; } 14% { opacity: 1; } 22% { opacity: .1; } 34% { opacity: 1; } 42% { opacity: .35; } 52%, 100% { opacity: 1; } }
+@keyframes sway { 0% { rotate: calc(var(--tilt, 0deg) + 3deg); } 30% { rotate: calc(var(--tilt, 0deg) - 2deg); } 60% { rotate: calc(var(--tilt, 0deg) + .8deg); } 100% { rotate: var(--tilt, 0deg); } }
+
+/* lights down: the room darkens around the card, with spill fading out from it */
+.stage .dimmer { position: absolute; inset: 0; z-index: 99; pointer-events: none; opacity: 0; transition: opacity .7s var(--ease);
+  background: radial-gradient(ellipse 58% 62% at 50% 56%, rgba(10, 11, 14, .38), rgba(10, 11, 14, .72) 75%, rgba(10, 11, 14, .82)); }
+:root[data-theme="dark"] .stage .dimmer { background: radial-gradient(ellipse 58% 62% at 50% 56%, rgba(0, 0, 0, .45), rgba(0, 0, 0, .8) 75%, rgba(0, 0, 0, .88)); }
 .stage.lit .dimmer { opacity: 1; }
+.stage .hint { position: absolute; left: 50%; bottom: 90px; translate: -50% 0; z-index: 101; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 236, 205, .8);
+  opacity: 0; transition: opacity .6s var(--ease); pointer-events: none; }
+.stage.lit .hint { opacity: 1; transition-delay: 2.2s; }
+.stage.lit ~ .tabs, .stage.lit .tabs { background: rgba(28, 29, 33, .7); border-color: rgba(255, 255, 255, .1); }
+.stage.lit .tabs button { color: #A2A6AF; }
+.stage.lit .tabs button[aria-current="true"] { background: #ECEDEF; color: #16171A; }
+
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .stage .dimmer { display: none; }
+  .stage .dimmer, .stage .hint { display: none; }
   .card.starred { margin-top: 84px; }
-  .lamp { top: -78px; }
-  .lamp .cord { height: 60px; }
-  .lamp .shade { left: -30px; width: 60px; height: 30px; border-radius: 60px 60px 5px 5px; }
-  .lamp .bulb { width: 18px; height: 14px; margin-left: -9px; bottom: -7px; }
-  .lamp .beam { left: -220px; top: 30px; width: 440px; height: 420px; }
+  .lamp { top: -74px; }
+  .lamp .cord { height: 64px; }
+  .lamp .shade { left: -30px; width: 60px; height: 30px; border-radius: 60px 60px 4px 4px; }
+  .lamp .bulb { width: 18px; height: 13px; margin-left: -9px; bottom: -6px; }
+  .lamp .beam { left: -240px; top: 26px; width: 480px; height: 460px; }
+  .lamp .dust { left: -120px; width: 240px; height: 300px; }
 }
 
 /* ---------- background bento ---------- */

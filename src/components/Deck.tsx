@@ -10,6 +10,12 @@ import Shot from "@/components/Shot";
 
 const N = PROJECTS.length;
 
+// Dust motes drifting in the lamp's beam (fixed positions so server and client markup match).
+const DUST = [
+  [46, 8, 7, -10, 0], [55, 20, 9, 12, 1.2], [38, 34, 8, -14, .4], [62, 42, 11, 8, 2.1], [50, 55, 10, -6, .9],
+  [30, 66, 12, 16, 1.6], [70, 72, 9, -12, .2], [44, 82, 13, 10, 2.6], [58, 88, 10, -8, 1.1], [52, 30, 8, 6, 3],
+].map(([x, y, t, dx, dl]) => ({ "--x": `${x}%`, "--y": `${y}%`, "--t": `${t}s`, "--dx": `${dx}px`, "--d": `-${dl}s` }) as CSSProperties);
+
 type VTDoc = Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
 
 /** A short tick on phones that support it (Android); silently does nothing elsewhere. */
@@ -33,6 +39,26 @@ export default function Deck() {
   const [starSeen, setStarSeen] = useState(false);
   const [lampOn, setLampOn] = useState(true);
   const lit = lampOn && starSeen && active === star;
+  const lamp = useRef<HTMLDivElement>(null);
+
+  // the lamp leans a few degrees toward the pointer, then swings back when it leaves
+  useEffect(() => {
+    const el = deck.current;
+    if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(hover: hover)").matches) return;
+    let raf = 0;
+    const move = (e: PointerEvent) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const x = (e.clientX / innerWidth - 0.5) * 2;
+        lamp.current?.style.setProperty("--tilt", `${(-x * 7).toFixed(2)}deg`);
+      });
+    };
+    const leave = () => lamp.current?.style.setProperty("--tilt", "0deg");
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); cancelAnimationFrame(raf); };
+  }, []);
   const [open, setOpen] = useState<Project | null>(null);
   const [screen, setScreen] = useState<number[]>(() => PROJECTS.map(() => 0));
   const sheetCore = useRef<HTMLDivElement>(null);
@@ -170,14 +196,20 @@ export default function Deck() {
           {PROJECTS.map((p, i) => (
             <article key={p.t} className={`card bezel lifted${i === star ? " starred" : ""}${i === star && lit ? " on" : ""}`} ref={(el) => { if (el) cards.current[i] = el; }} aria-labelledby={`ct-${i}`}>
               {i === star && (
-                <div className="lamp">
-                  <span className="cord" aria-hidden="true" />
-                  <button type="button" className="shade" onClick={() => { setLampOn(!lampOn); buzz(); }} aria-pressed={lampOn}
-                    aria-label={lampOn ? "Switch the lamp off" : "Switch the lamp on"}>
-                    <span className="bulb" />
-                  </button>
-                  <span className="beam" aria-hidden="true" />
-                </div>
+                <>
+                  <div className="lamp" ref={lamp}>
+                    <span className="cord" aria-hidden="true" />
+                    <div className="swing">
+                      <span className="beam" aria-hidden="true" />
+                      <span className="dust" aria-hidden="true">{DUST.map((s, k) => <i key={k} style={s} />)}</span>
+                      <button type="button" className="shade" onClick={() => { setLampOn(!lampOn); buzz(); }} aria-pressed={lampOn}
+                        aria-label={lampOn ? "Switch the lamp off" : "Switch the lamp on"}>
+                        <span className="bulb" />
+                      </button>
+                    </div>
+                  </div>
+                  <span className="pool" aria-hidden="true" />
+                </>
               )}
               <div className="core">
                 <div className="txt">
@@ -202,6 +234,7 @@ export default function Deck() {
             </article>
           ))}
           <div className="dimmer" aria-hidden="true" />
+          <p className="hint" aria-hidden="true">My favourite. Tap the lamp.</p>
           <div className={`tabs${inDeck ? "" : " off"}`} aria-label="Projects">
             {PROJECTS.map((p, i) => (
               <button key={p.t} type="button" aria-current={i === active} onClick={() => goTo(i)}>{p.t}</button>
