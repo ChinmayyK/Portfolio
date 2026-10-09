@@ -5,7 +5,7 @@ import {
 import { EMAIL, TOOLS } from "@/lib/content";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import Deck from "@/components/Deck";
+import ProjectSheet from "@/components/ProjectSheet";
 import CopyButton from "@/components/CopyButton";
 import WhoAmI from "@/components/WhoAmI";
 import Reveal from "@/components/Reveal";
@@ -45,14 +45,6 @@ export default function Home() {
         </section>
 
         <LinkAllStory />
-
-        <section className="work" id="work" aria-labelledby="work-h">
-          <div className="wrap">
-            <h2 id="work-h" data-r>More things I&apos;ve built.</h2>
-            <p className="lead" data-r style={d(120)}>Side projects and college work. Open any of them for screenshots and details.</p>
-          </div>
-          <Deck />
-        </section>
 
         <section id="background" aria-labelledby="bg-h">
           <div className="wrap">
@@ -150,6 +142,7 @@ export default function Home() {
 
       <footer><div className="wrap"><span>Chinmay Kudalkar, 2026</span><span>Type <button type="button" className="kbd" data-whoami>whoami</button> anywhere</span></div></footer>
 
+      <ProjectSheet />
       <WhoAmI />
       <Reveal />
     </>

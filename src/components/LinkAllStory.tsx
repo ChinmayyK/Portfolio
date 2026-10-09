@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, Check, FileZip, GithubLogo, WifiSlash } from "@phosphor-icons/react";
 import { PROJECTS } from "@/lib/content";
 import Shot from "@/components/Shot";
-import { buzz } from "@/components/Deck";
+import { buzz } from "@/lib/buzz";
 
 const P = PROJECTS.find((p) => p.star)!;
 const DROP_AT = 48; // percent where the demo connection drops
@@ -143,6 +143,7 @@ export default function LinkAllStory() {
               {P.site && <a className="pill light" href={P.site}>Website <span className="isl"><ArrowUpRight weight="light" /></span></a>}
               <a className="pill light" href={P.src}>GitHub <span className="isl"><GithubLogo weight="light" /></span></a>
             </div>
+            <a className="story-more" href="https://github.com/ChinmayyK?tab=repositories">Other projects live on GitHub <ArrowUpRight weight="light" /></a>
           </div>
         </div>
       </div>

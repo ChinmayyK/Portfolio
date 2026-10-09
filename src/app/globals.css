@@ -138,16 +138,11 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .cascade .core img { width: 100%; height: auto; }
 .cascade .cap { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; }
 .cascade .cap span:last-child { color: var(--ink-2); }
-.cascade .back { width: 56%; top: 0; z-index: 1; }
-.cascade .back .core::after { content: ""; position: absolute; inset: 0; background: var(--bg); opacity: .32; transition: opacity .6s var(--ease); pointer-events: none; }
-.cascade .back:hover .core::after { opacity: 0; }
-.cascade .c-lineup { left: 0; rotate: -6deg; }
-.cascade .c-vault { right: 0; top: 5%; rotate: 5deg; }
-.cascade .main { width: 84%; left: 2%; top: 25%; rotate: -1.5deg; z-index: 2; --r: 10px; --pad: 2px; }
+.cascade .main { width: 90%; left: 0; top: 14%; rotate: -1.5deg; z-index: 2; --r: 10px; --pad: 2px; }
 .cascade .main .cap { padding: 13px 16px 13px 18px; font-size: 15px; }
 .cascade .main .cap b { font-weight: 600; }
 .cascade .main .cap .chip { white-space: nowrap; padding: 4px 10px; font-size: 10px; margin-left: 10px; }
-.cascade .phone { width: 23%; right: -2%; top: 34%; rotate: 5deg; z-index: 3; --r: 16px; --pad: 2px; background: #16171A; border: 0; }
+.cascade .phone { width: 25%; right: -3%; top: 30%; rotate: 5deg; z-index: 3; --r: 16px; --pad: 2px; background: #16171A; border: 0; }
 .cascade .phone .core { box-shadow: none; }
 :root[data-theme="dark"] .cascade .phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), var(--lift); }
 .js .cascade .bezel { opacity: 0; transform: translateY(120px) scale(.94); }
@@ -157,10 +152,9 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 @media (max-width: 900px) {
   .hero .wrap { grid-template-columns: 1fr; }
   .cascade { height: auto; padding: 0 0 36px; }
-  .cascade::before, .cascade .back { display: none; }
+  .cascade::before { display: none; }
   .cascade .main { position: relative; inset: auto; width: 88%; rotate: -1deg; }
   .cascade .phone { top: auto; bottom: 0; right: 0; width: 28%; }
-  .cascade .main .cap > span:last-child { display: none; }
   .cascade .main .cap > span:first-child { display: flex; align-items: center; white-space: nowrap; }
 }
 
@@ -180,47 +174,6 @@ h2 { font-size: clamp(44px, 6vw, 88px); font-weight: 700; letter-spacing: -.05em
 .now li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: center; padding: 14px 18px 14px 14px; border-radius: 20px; background: var(--core); box-shadow: inset 0 1px 1px var(--hi), 0 1px 2px rgba(var(--shade), .06), 0 14px 30px -24px rgba(var(--shade), .4); font-size: 16.5px; line-height: 1.35; }
 .now li i { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--tray); font-size: 22px; }
 @media (max-width: 900px) { .now .core { grid-template-columns: 1fr; } }
-
-/* ---------- work: a deck you scroll through in depth ---------- */
-.work { padding-bottom: 0; }
-.deck { position: relative; height: calc(var(--n) * 80vh + 100vh); margin-top: 40px; }
-.stage { position: sticky; top: 0; height: 100dvh; perspective: 1500px; perspective-origin: 50% 30%; display: grid; place-items: center; overflow: hidden; }
-.card { position: absolute; width: min(1120px, 100% - 48px); --r: 34px; --pad: 8px; background: var(--card-tray); transform-origin: 50% 100%; will-change: transform, opacity; }
-.card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--bg); opacity: var(--dim, 0); pointer-events: none; }
-.card .core { display: grid; grid-template-columns: 4.4fr 7.6fr; min-height: min(500px, 62vh); }
-.card .txt { padding: clamp(28px, 3.6vw, 48px); display: grid; align-content: space-between; gap: 28px; }
-.card h3 { margin-top: 16px; font-size: clamp(40px, 4.2vw, 58px); font-weight: 700; letter-spacing: -.05em; line-height: .95; }
-.card .line { margin-top: 14px; font-size: 18px; color: var(--ink-2); max-width: 32ch; }
-.card .pic { position: relative; }
-/* whole screenshot, never cropped: it sits on the tray at its own aspect ratio */
-.card .pic .fit { position: absolute; inset: clamp(18px, 2.4vw, 32px) clamp(18px, 2.4vw, 32px) 44px; display: grid; place-items: center; cursor: pointer; }
-.card .pic img { max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 5px; box-shadow: 0 0 0 1px var(--shot-line), 0 18px 34px -22px rgba(var(--shade), .45); transition: transform 1.4s var(--ease); }
-.card:hover .pic img { transform: scale(1.02); }
-.card .pic img.swap { animation: swap .5s var(--ease); }
-@keyframes swap { from { opacity: 0; transform: translateY(8px) scale(.985); } }
-.screens { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; gap: 6px; }
-.screens button { position: relative; width: 8px; height: 8px; border-radius: 4px; background: var(--tray-line); box-shadow: inset 0 0 0 1px var(--tray-line); transition: width .5s var(--ease), background .4s var(--ease); }
-.screens button[aria-current="true"] { width: 22px; background: var(--ink); }
-.screens button::before { content: ""; position: absolute; inset: -10px -4px; }
-dialog[open][data-vt] { animation: none; }
-::view-transition-group(project) { animation-duration: .6s; animation-timing-function: var(--ease); }
-::view-transition-old(project), ::view-transition-new(project) { height: 100%; object-fit: cover; object-position: top; }
-.card .pic.none { display: grid; place-items: center; color: var(--ink-2); }
-.card .pic.none p { font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
-.tabs { position: absolute; left: 50%; bottom: 26px; translate: -50% 0; z-index: 120; display: flex; gap: 4px; padding: 5px; border-radius: 99px; background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-line); box-shadow: 0 10px 30px -14px rgba(var(--shade), .3); }
-.tabs { transition: opacity .5s var(--ease), translate .6s var(--ease); }
-.tabs.off { opacity: 0; translate: -50% 20px; pointer-events: none; }
-.tabs button { padding: 7px 14px; border-radius: 99px; font-size: 14px; color: var(--ink-2); transition: background .5s var(--ease), color .5s var(--ease); white-space: nowrap; }
-.tabs button[aria-current="true"] { background: var(--ink); color: var(--core); }
-@media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .deck { height: auto; }
-  .stage { position: static; height: auto; perspective: none; display: grid; gap: 20px; overflow: visible; }
-  .card { position: relative; width: min(1120px, 100% - 32px); margin: 0 auto; transform: none !important; opacity: 1 !important; }
-  .card .core { grid-template-columns: 1fr; min-height: 0; }
-  .card .pic { aspect-ratio: 16 / 11; }
-  .card .pic .fit { inset: 14px 14px 38px; }
-  .tabs { display: none; }
-}
 
 /* ---------- Link All chapter ----------
    Desktop: a tall section with a sticky stage; scroll scrubs the transfer timeline.
@@ -310,6 +263,11 @@ dialog[open][data-vt] { animation: none; }
   .story-actions .pill .isl { width: 32px; height: 32px; }
   .scene .rx { font-size: 7px; }
 }
+
+.story-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 15px; color: var(--ink-2); justify-self: start; transition: color .3s var(--ease); }
+.story-more:hover { color: var(--ink); }
+.story-more svg { transition: transform .4s var(--spring); }
+.story-more:hover svg { transform: translate(2px, -2px); }
 
 /* ---------- background bento ---------- */
 .bento { margin-top: 56px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
@@ -431,7 +389,7 @@ dialog[open] { animation: up .8s var(--ease); }
   .hero .cta { margin-top: 26px; flex-wrap: nowrap; gap: 10px; }
   .hero .cta .pill { flex: 1; justify-content: space-between; font-size: 15px; padding-left: 18px; }
 
-  .bezel, .now .bezel, .contact .bezel, .card, .bento > .bezel { --r: 24px; --pad: 3px; }
+  .bezel, .now .bezel, .contact .bezel, .bento > .bezel { --r: 24px; --pad: 3px; }
   .cascade .main { --r: 8px; --pad: 2px; }
   .cascade .phone { --r: 14px; --pad: 2px; }
   .now .say { padding: 26px 22px; gap: 22px; }
@@ -440,17 +398,6 @@ dialog[open] { animation: up .8s var(--ease); }
   .now ol { padding: 12px; gap: 8px; }
   .now li { grid-template-columns: 38px 1fr; gap: 12px; padding: 12px; border-radius: 16px; font-size: 15.5px; }
   .now li i { width: 38px; height: 38px; border-radius: 12px; font-size: 19px; }
-
-  .deck { margin-top: 28px; }
-  .stage { gap: 14px; }
-  .card { width: calc(100% - 32px); }
-  .card .txt { padding: 24px 22px 20px; gap: 20px; }
-  .card h3 { margin-top: 12px; font-size: 40px; }
-  .card .line { font-size: 16.5px; }
-  .card .pic { aspect-ratio: 4 / 3; margin: 0; border-radius: 0; background: none; }
-  .card .pic .fit { inset: 0 16px 36px; }
-  .screens { bottom: 14px; }
-  .card .pic img { border-radius: 5px; box-shadow: 0 0 0 1px var(--shot-line), 0 18px 34px -22px rgba(var(--shade), .45); }
 
   .bento { margin-top: 28px; gap: 12px; }
   .bento .core { padding: 24px 22px; gap: 22px; }

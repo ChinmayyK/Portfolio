@@ -1,20 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowDown, DownloadSimple } from "@phosphor-icons/react";
 import Shot from "@/components/Shot";
-
-// Entrance order (--i) runs back to front; depth sets how far each drifts with the pointer.
-const SCENE = [
-  { cls: "back c-lineup", i: 0, depth: 12, img: "lineup-dashboard.png", project: "Lineup", what: "Interview platform" },
-  { cls: "back c-vault", i: 1, depth: 18, img: "doc-redact-engine.png", project: "BlockVault", what: "Encrypted vault" },
-];
-
-/** Asks the project deck to bring a project's card to the front. */
-function openInDeck(e: MouseEvent, project: string) {
-  e.preventDefault();
-  dispatchEvent(new CustomEvent("deck:go", { detail: project }));
-}
 
 export default function Hero() {
   const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer drift, hover)
@@ -67,26 +55,16 @@ export default function Hero() {
         </div>
 
         <div className="cascade" ref={cas}>
-          {SCENE.map((c) => (
-            <a key={c.project} href="#work" className={`bezel lifted ${c.cls}`} data-depth={c.depth} style={{ "--i": c.i } as CSSProperties}
-              onClick={(e) => openInDeck(e, c.project)} aria-label={`${c.project}: ${c.what}. See the project.`}>
-              <div className="core">
-                <Shot file={c.img} alt="" />
-                <div className="cap"><span>{c.project}</span><span>{c.what}</span></div>
-              </div>
-            </a>
-          ))}
-          <a href="#link-all" className="bezel lifted main" data-depth={30} style={{ "--i": 2 } as CSSProperties}
+          <a href="#link-all" className="bezel lifted main" data-depth={22} style={{ "--i": 0 } as CSSProperties}
             aria-label="Link All, my latest project. See the project.">
             <div className="core">
               <Shot file="linkall-mac-devices.png" alt="" />
               <div className="cap">
                 <span><b>Link All</b><span className="chip">Latest project</span></span>
-                <span>Clipboard and files across devices</span>
               </div>
             </div>
           </a>
-          <a href="#link-all" className="bezel lifted phone" data-depth={46} style={{ "--i": 3 } as CSSProperties}
+          <a href="#link-all" className="bezel lifted phone" data-depth={40} style={{ "--i": 1 } as CSSProperties}
             tabIndex={-1} aria-hidden="true">
             <div className="core"><Shot file="linkall-android-home.png" alt="" /></div>
           </a>
