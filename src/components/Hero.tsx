@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowDown, DownloadSimple } from "@phosphor-icons/react";
+import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
 import Shot from "@/components/Shot";
 
 export default function Hero() {
@@ -50,7 +50,7 @@ export default function Hero() {
           </p>
           <div className="cta" data-r style={{ "--d": "420ms" } as CSSProperties}>
             <a className="pill dark" href="#link-all">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
-            <a className="pill light" href="/Chinmay_Kudalkar_Resume.pdf" download>Résumé <span className="isl"><DownloadSimple weight="light" /></span></a>
+            <a className="pill light" href="/resume" target="_blank" rel="noopener">Résumé <span className="isl"><ArrowUpRight weight="light" /></span></a>
           </div>
         </div>
 
