@@ -34,9 +34,10 @@ export default function Commits() {
           // pad the first column so each column is one Sunday-to-Saturday week, like GitHub
           const lead = new Date(days[0].date + "T00:00:00").getDay();
           setState({ kind: "ok", days: [...Array(lead).fill(null), ...days], total: j.total.lastYear });
+          dispatchEvent(new CustomEvent("commits:total", { detail: j.total.lastYear }));
         })
         .catch(() => !cancelled && setState({ kind: "error" }));
-    }, { rootMargin: "400px 0px" });
+    }, { rootMargin: "900px 0px" });
     io.observe(el);
     return () => { cancelled = true; io.disconnect(); };
   }, []);

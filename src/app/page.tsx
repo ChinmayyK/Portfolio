@@ -10,6 +10,7 @@ import CopyButton from "@/components/CopyButton";
 import WhoAmI from "@/components/WhoAmI";
 import Reveal from "@/components/Reveal";
 import Commits from "@/components/Commits";
+import Quote from "@/components/Quote";
 
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
@@ -113,7 +114,7 @@ export default function Home() {
 
         <section className="receipts" id="receipts" aria-labelledby="q-h">
           <div className="wrap">
-            <h2 id="q-h" className="quote" data-r>I don&apos;t need a hype man.<br /><span>I have a commit graph.</span></h2>
+            <Quote />
             <div className="bezel lifted" data-r style={d(120)}>
               <div className="core"><Commits /></div>
             </div>
