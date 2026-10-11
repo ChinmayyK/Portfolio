@@ -83,7 +83,7 @@ export default function LinkAllStory() {
   const [synced, setSynced] = useState("");
   const [sending, setSending] = useState(false);
   const [you, setYou] = useState<Visitor | null>(null);
-  const sendText = useRef("Sending to OnePlus Nord 4");
+  const sendText = useRef("Sending to Galaxy S25 Ultra");
 
   useEffect(() => {
     const v = detect();

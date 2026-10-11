@@ -24,7 +24,7 @@ export const PROJECTS: Project[] = [
       "File transfers that resume after a dropped connection, using chunk-level acknowledgements.",
       "A shared clipboard history, with a filter that keeps OTPs, passwords and card numbers from syncing.",
       "X25519 key exchange and ChaCha20-Poly1305 encryption. Pairing is confirmed with a matching code or a QR code.",
-      "Notification mirroring, remote file browsing and a wireless camera, on the same encrypted connection.",
+      "Notification mirroring, call alerts and remote file browsing, on the same encrypted connection.",
       "Its website, built with Next.js and deployed on Cloudflare.",
     ],
     stack: "Rust, Swift and SwiftUI, Kotlin and Jetpack Compose, WinUI 3, GTK, Next.js",
