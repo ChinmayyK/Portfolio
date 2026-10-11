@@ -45,7 +45,7 @@ export const EMAIL = "chinmayy.kudalkar@gmail.com";
 
 /** Natural pixel sizes, so images reserve their space and never need cropping. */
 export const IMG_SIZE: Record<string, [number, number]> = {
-  "linkall-android-home.png": [1240, 2772], "linkall-mac-clipboard.png": [2400, 1584], "linkall-mac-command-palette.png": [1200, 1244],
+  "linkall-android-home.png": [1240, 2772], "linkall-mac-clipboard.png": [2400, 1584], "linkall-mac-command-palette.png": [1200, 1268],
   "linkall-mac-devices.png": [2400, 1584], "linkall-mac-transfers-active.png": [2400, 1584], "linkall-win-clipboard.png": [1572, 921],
   "chinmay-photo.png": [750, 1000],
 };
