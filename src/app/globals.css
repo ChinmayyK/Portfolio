@@ -138,13 +138,9 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .js .hero h1 .tittle { opacity: 0; }   /* shown by the script when it starts bouncing in */
 /* the dot in flight, loose over the whole page */
 .ball { position: fixed; left: 0; top: 0; z-index: 70; border-radius: 50%; background: var(--accent); pointer-events: none; will-change: transform; }
-/* three facts instead of a paragraph */
-.hero .proof { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
-.hero .proof li { display: flex; }
-.hero .proof li > a, .hero .proof li:not(:has(a)) { display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 14px; border-radius: 99px; background: var(--tray); border: 1px solid var(--tray-line); font-size: 14.5px; color: var(--ink-2); transition: background .4s var(--ease), color .4s var(--ease); }
-.hero .proof li > a:hover { background: var(--core); color: var(--ink); }
-.hero .proof b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
-.hero .proof li.wait b { opacity: .4; }
+/* one line pointing at the figure */
+.hero .lede { margin-top: 28px; max-width: 32ch; font-size: 19px; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+.hero .lede b { font-weight: 400; color: var(--ink); }
 .hero .cta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* every orange period is drawn as a round dot: the glyph stays for spacing and screen readers, invisible */
@@ -158,41 +154,53 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .hero .status i { font-style: normal; white-space: nowrap; }   /* wrap between parts, never inside one */
 .hero .status time { font-variant-numeric: tabular-nums; }
 
-/* hero scene: Link All up front (Mac + phone), the other projects tucked behind */
-.cascade { position: relative; z-index: 42; height: min(620px, 70vh); }   /* above the Link All chapter, which the cards fly into */
-.cascade::before { content: ""; position: absolute; left: 8%; right: 8%; bottom: 2%; height: 12%; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--shade), .16), transparent); filter: blur(8px); }
-.cascade .bezel { position: absolute; display: block; --r: 8px; --pad: 2px; color: inherit; transition: transform 1.4s var(--ease), opacity 1s var(--ease), box-shadow .6s var(--ease); }
-.cascade .core { position: relative; }
-.cascade .core img { width: 100%; height: auto; }
-.cascade .main { width: 90%; left: 0; top: 14%; rotate: -1.5deg; z-index: 2; --r: 10px; --pad: 2px; }
-.cascade .phone { width: 25%; right: -3%; top: 30%; rotate: 5deg; z-index: 3; --r: 16px; --pad: 2px; background: #16171A; border: 0; }
-.cascade .phone .core { box-shadow: none; }
-:root[data-theme="dark"] .cascade .phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), var(--lift); }
-.js .cascade .bezel { opacity: 0; transform: translateY(120px) scale(.94); }
-.hero.go .cascade .bezel { opacity: 1; transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc((var(--py, 0px) + var(--hy, 0px)) * var(--k, 1)), 0); transition-delay: calc(var(--i) * 140ms + 350ms); }
-.hero.go.settled .cascade .bezel { transition: transform .9s var(--ease), box-shadow .6s var(--ease); transition-delay: 0ms; }
-.hero.go.settled .cascade .bezel:hover { --hy: -10px; }
-
-/* the clip that hops between the two cards, and the notes it leaves */
-.relay { position: absolute; left: 0; top: 0; z-index: 5; display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px 7px 9px; border-radius: 99px; background: var(--core); box-shadow: inset 0 0 0 1px var(--tray-line), 0 14px 30px -14px rgba(var(--shade), .6); font: 400 12px/1 var(--mono); color: var(--ink); white-space: nowrap; transform: translate(-50%, -50%); opacity: 0; pointer-events: none; }
-.relay svg { font-size: 15px; color: var(--accent); }
-.cascade .note { position: absolute; z-index: 2; top: 10px; right: 10px; display: flex; align-items: center; gap: 8px; padding: 8px 12px 8px 9px; border-radius: 12px; background: var(--glass); backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px var(--glass-line), 0 12px 26px -14px rgba(var(--shade), .55); font: 400 12px/1.25 var(--mono); color: var(--ink); white-space: nowrap; opacity: 0; transform: translateY(-10px) scale(.96); transition: opacity .35s var(--ease), transform .6s var(--spring); pointer-events: none; }
-.cascade .note.on { opacity: 1; transform: none; }
-.cascade .note svg { flex: none; font-size: 17px; color: var(--accent); }
-.cascade .note small { display: block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 2px; }
-.cascade .note.copy { border-radius: 99px; padding: 6px 11px 6px 8px; font-size: 11.5px; }
-.cascade .note.copy svg { font-size: 14px; color: var(--ink-2); }
-/* the phone's screen is narrow: its notes sit centred and smaller */
-.cascade .phone .note { top: 12%; left: 50%; right: auto; translate: -50% 0; font-size: 10px; padding: 6px 9px 6px 7px; max-width: 92%; }
-.cascade .phone .note span { overflow: hidden; text-overflow: ellipsis; }
-.cascade .phone .note small { font-size: 8px; }
-.cascade .phone .note svg { font-size: 14px; }
+/* hero figure: Link All's phone on a drafting grid, with what's inside it called out */
+.spec { position: relative; z-index: 42; margin: 0; }   /* above the Link All chapter, which the phone flies into */
+.spec figcaption { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 14px; font: 400 11.5px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+.spec .plate { --line: color-mix(in srgb, var(--ink) 42%, transparent); position: relative; aspect-ratio: 680 / 720; }
+.spec .plate::before { content: ""; position: absolute; inset: 0; border-radius: 22px; border: 1px solid var(--tray-line); opacity: var(--k, 1);
+  background-image: linear-gradient(var(--tray-line) 1px, transparent 1px), linear-gradient(90deg, var(--tray-line) 1px, transparent 1px); background-size: 34px 34px; background-position: -1px -1px; }
+.spec .phone { position: absolute; left: 31%; top: 3.5%; width: 38%; z-index: 2; display: block; color: inherit; --r: 26px; --pad: 4px; background: #16171A; border: 0; transition: transform 1.4s var(--ease), opacity 1s var(--ease), box-shadow .6s var(--ease); }
+.spec .phone .core { position: relative; box-shadow: none; }
+.spec .phone img { width: 100%; height: auto; }
+:root[data-theme="dark"] .spec .phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), var(--lift); }
+.js .spec .phone { opacity: 0; transform: translateY(120px) scale(.94); }
+.hero.go .spec .phone { opacity: 1; transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc((var(--py, 0px) + var(--hy, 0px)) * var(--k, 1)), 0); transition-delay: 350ms; }
+.hero.go.settled .spec .phone { transition: transform .9s var(--ease), box-shadow .6s var(--ease); transition-delay: 0ms; }
+.hero.go.settled .spec .phone:hover { --hy: -10px; }
+/* each callout: a label, a leader line drawn towards the phone, and a ring where it lands */
+.spec ol { list-style: none; padding: 0; opacity: calc(var(--k, 1) * 2 - 1); }   /* gone by halfway through the phone's flight */
+.spec li { position: absolute; z-index: 3; top: var(--y); width: 36%; display: flex; align-items: center; translate: 0 -50%; }
+.spec li.l { left: 0; }
+.spec li.r { right: 0; flex-direction: row-reverse; }
+.spec li p { flex: none; max-width: 152px; display: flex; flex-direction: column; gap: 3px; padding: 0 10px 0 16px; font-size: 12.5px; line-height: 1.35; color: var(--ink-2); }
+.spec li.r p { padding: 0 16px 0 10px; }
+.spec li small { font: 400 11px/1.2 var(--mono); color: var(--accent); }
+.spec li b { font-size: 14px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
+.spec li i { flex: 1; min-width: 14px; height: 1px; background: var(--line); transform-origin: left; }
+.spec li.r i { transform-origin: right; }
+.spec li::after { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 1.5px var(--accent); }
+.js .spec li { opacity: 0; }
+.js .spec li i { transform: scaleX(0); }
+.hero.go .spec li { opacity: 1; transition: opacity .6s var(--ease); transition-delay: calc(var(--n) * 140ms + 1200ms); }
+.hero.go .spec li i { transform: none; transition: transform .9s var(--ease); transition-delay: calc(var(--n) * 140ms + 1250ms); }
+/* the dimension line under the phone: what it spans */
+.spec .dim { position: absolute; left: 4%; right: 4%; bottom: 3.5%; display: flex; align-items: center; gap: 12px; font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; opacity: var(--k, 1); }
+.spec .dim::before, .spec .dim::after { content: ""; flex: 1; height: 11px; background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat; }
+.spec .dim::before { border-left: 1px solid var(--line); }
+.spec .dim::after { border-right: 1px solid var(--line); }
 @media (max-width: 900px) {
   .hero .wrap { grid-template-columns: 1fr; }
-  .cascade { height: auto; padding: 0 0 36px; }
-  .cascade::before { display: none; }
-  .cascade .main { position: relative; inset: auto; width: 88%; rotate: -1deg; }
-  .cascade .phone { top: auto; bottom: 0; right: 0; width: 28%; }
+  .spec { width: 100%; max-width: 600px; }
+}
+/* phones: the callouts leave the drawing and sit as a list under the phone */
+@media (max-width: 600px) {
+  .spec .plate { aspect-ratio: auto; padding: 24px 14px 18px; }
+  .spec .phone { position: relative; left: auto; top: auto; width: 54%; margin: 0 auto; }
+  .spec ol { position: relative; z-index: 3; margin-top: 22px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 10px; }
+  .spec li, .spec li.r { position: static; width: auto; translate: none; flex-direction: row; }
+  .spec li p, .spec li.r p { flex: 1; min-width: 0; max-width: none; padding: 0 4px; }
+  .spec li i, .spec li::after, .spec .dim { display: none; }
 }
 
 /* ---------- sections ---------- */
@@ -453,17 +461,14 @@ dialog[open] { animation: up .8s var(--ease); }
   .hero .wrap { gap: 36px; }
   .hero .chip { margin-right: 104px; }
   .hero h1 { margin-top: 18px; font-size: min(20vw, 96px); }
-  .hero .proof { margin-top: 22px; gap: 6px; }
-  .hero .proof li > a, .hero .proof li:not(:has(a)) { padding: 7px 12px; font-size: 13px; }
-  .cascade .note { top: 8px; right: 8px; font-size: 11px; }
-  .hero .status { margin-top: 20px; font-size: 11px; letter-spacing: 0; }
+  .hero .lede { margin-top: 20px; font-size: 16.5px; }
+    .hero .status { margin-top: 20px; font-size: 11px; letter-spacing: 0; }
   .hero .status .loc { display: none; }   /* keeps the line to one row on phones */
   .hero .cta { margin-top: 26px; flex-wrap: nowrap; gap: 10px; }
   .hero .cta .pill { flex: 1; justify-content: space-between; font-size: 15px; padding-left: 18px; }
 
   .bezel, .now .bezel, .contact .bezel, .bento > .bezel { --r: 24px; --pad: 3px; }
-  .cascade .main { --r: 8px; --pad: 2px; }
-  .cascade .phone { --r: 14px; --pad: 2px; }
+  .spec .phone { --r: 22px; --pad: 3px; }
   .now .say { padding: 26px 22px; gap: 22px; }
   .now .say h2 { font-size: 36px; }
   .now .say p { font-size: 16.5px; }

@@ -1,24 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
-import { ArrowDown, ArrowUpRight, CheckCircle, Copy, Image, LinkSimple, TextAa } from "@phosphor-icons/react";
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
 import Shot from "@/components/Shot";
-import { detect } from "@/lib/visitor";
+
+// what's inside Link All, called out around the phone: left side, then right, top to bottom
+const CALLOUTS: { side: "l" | "r"; y: string; t: string; d: string }[] = [
+  { side: "l", y: "20%", t: "One Rust core", d: "Shared by native apps in Swift, Kotlin, WinUI 3 and GTK" },
+  { side: "r", y: "39%", t: "Resumable transfers", d: "Chunk-level acks survive a dropped connection" },
+  { side: "l", y: "61%", t: "X25519 + ChaCha20", d: "End-to-end encrypted, paired by code or QR" },
+  { side: "r", y: "76%", t: "Secret filter", d: "OTPs, passwords and cards never sync" },
+];
 
 export default function Hero({ commits: built }: { commits: number }) {
   const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer drift, hover)
   const hero = useRef<HTMLElement>(null);
-  const cas = useRef<HTMLDivElement>(null);
+  const plate = useRef<HTMLDivElement>(null);
   const [time, setTime] = useState("");
-  const [win, setWin] = useState(false); // Windows visitors see Link All on Windows, matching the scene this card flies into
 
   const [commits, setCommits] = useState(built);
-  const relay = useRelay(cas);
   const name = useRef<HTMLHeadingElement>(null);
   useLively(hero, name);
   useBall(name);
-
-  useEffect(() => { setWin(!!detect()?.win); }, []);
 
   // refresh the count baked in at build with today's; the edge cache makes this the same request the
   // graph further down makes. One retry, since a cold edge cache has to wait on GitHub.
@@ -46,7 +49,7 @@ export default function Hero({ commits: built }: { commits: number }) {
     return () => { cancelAnimationFrame(raf); clearTimeout(t); };
   }, []);
 
-  // cards drift by depth with the pointer, like plates at different heights
+  // the phone drifts with the pointer, a plate lifted off the drawing
   useEffect(() => {
     const el = hero.current;
     if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(hover: hover) and (min-width: 901px)").matches) return;
@@ -56,7 +59,7 @@ export default function Hero({ commits: built }: { commits: number }) {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
-        cas.current?.querySelectorAll<HTMLElement>(".bezel").forEach((b) => {
+        plate.current?.querySelectorAll<HTMLElement>(".bezel").forEach((b) => {
           const d = Number(b.dataset.depth);
           b.style.setProperty("--px", `${(-tx * d).toFixed(1)}px`);
           b.style.setProperty("--py", `${(-ty * d).toFixed(1)}px`);
@@ -76,115 +79,38 @@ export default function Hero({ commits: built }: { commits: number }) {
             <span className="ln" aria-hidden="true">{letters("Chinmay", 0)}</span>
             <span className="ln" aria-hidden="true">{letters("Kudalkar", 7)}<span className="ch dot" style={{ "--n": 15 } as CSSProperties}>.</span></span>
           </h1>
-          <ul className="proof" data-r style={{ "--d": "340ms" } as CSSProperties}>
-            <li><a href="#link-all"><b>Link All</b> macOS, Windows, Linux, Android</a></li>
-            <li className={commits ? "" : "wait"}><a href="#receipts"><b>{commits ? commits.toLocaleString("en-IN") : "—"}</b> contributions this year</a></li>
-            <li><b>B.Tech</b> graduating 2027</li>
-          </ul>
+          <p className="lede" data-r style={{ "--d": "340ms" } as CSSProperties}>
+            I like the parts nobody screenshots. <b>Here&rsquo;s what&rsquo;s inside the app I&rsquo;m proudest of</b>: Link All, clipboard and files across four platforms with no cloud.
+          </p>
           <div className="cta" data-r style={{ "--d": "420ms" } as CSSProperties}>
             <a className="pill dark" href="#link-all">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
             <a className="pill light" href="/resume" target="_blank" rel="noopener">Résumé <span className="isl"><ArrowUpRight weight="light" /></span></a>
           </div>
           <p className="status" data-r style={{ "--d": "520ms" } as CSSProperties}>
             <span>Now</span> <a href="#now">Interning at ideaForge</a> <i className="loc">· Navi Mumbai</i>{time && <> <i>· <time>{time} IST</time></i></>}
+            {" "}<i>· B.Tech &rsquo;27</i>{commits > 0 && <> <i>· <a href="#receipts">{commits.toLocaleString("en-IN")} contributions</a></i></>}
           </p>
         </div>
 
-        <div className="cascade" ref={cas}>
-          <a href="#link-all" className="bezel lifted main" data-depth={22} style={{ "--i": 0 } as CSSProperties}
-            aria-label="Link All, my latest project. See the project.">
-            <div className="core">
-              <Shot file={win ? "linkall-win-clipboard.png" : "linkall-mac-devices.png"} alt="" />
-              <Note show={relay.at === "mac"} kind={relay.phase} item={relay.item} from="your phone" />
-            </div>
-          </a>
-          <a href="#link-all" className="bezel lifted phone" data-depth={40} style={{ "--i": 1 } as CSSProperties}
-            tabIndex={-1} aria-hidden="true">
-            <div className="core">
-              <Shot file="linkall-android-home.png" alt="" />
-              <Note show={relay.at === "phone"} kind={relay.phase} item={relay.item} from={win ? "your PC" : "your Mac"} />
-            </div>
-          </a>
-          <span className="relay" ref={relay.ref} aria-hidden="true">{ICON[relay.item.kind]}<span>{relay.item.label}</span></span>
-        </div>
+        <figure className="spec" aria-labelledby="spec-cap">
+          <figcaption id="spec-cap"><span>Fig. 01 — Link All</span><span>Android</span></figcaption>
+          <div className="plate" ref={plate}>
+            <a href="#link-all" className="bezel lifted phone" data-depth={30} aria-label="Link All on Android. See the project.">
+              <div className="core"><Shot file="linkall-android-home.png" alt="" /></div>
+            </a>
+            <ol>
+              {CALLOUTS.map((c, i) => (
+                <li key={c.t} className={c.side} style={{ "--y": c.y, "--n": i } as CSSProperties}>
+                  <p><small>0{i + 1}</small><b>{c.t}</b>{c.d}</p><i aria-hidden="true" />
+                </li>
+              ))}
+            </ol>
+            <span className="dim" aria-hidden="true">macOS · Windows · Linux · Android</span>
+          </div>
+        </figure>
       </div>
     </header>
   );
-}
-
-// While the visitor reads, the two cards pass a clip back and forth: copied on one device, it travels
-// over and lands on the other. Phone to Mac, then Mac to phone, and so on.
-type Kind = "text" | "link" | "photo";
-const ICON: Record<Kind, ReactNode> = { text: <TextAa weight="light" />, link: <LinkSimple weight="light" />, photo: <Image weight="light" /> };
-const CLIPS: { kind: Kind; label: string }[] = [
-  { kind: "text", label: "Gate 12, boards 07:10" },
-  { kind: "link", label: "github.com/ChinmayyK" },
-  { kind: "photo", label: "IMG_2041.jpg" },
-];
-type Phase = "" | "copy" | "land";
-
-function Note({ show, kind, item, from }: { show: boolean; kind: Phase; item: { kind: Kind; label: string }; from: string }) {
-  // the sending device says "Copied"; the receiving one shows what arrived
-  const copy = kind === "copy";
-  return (
-    <span className={`note${show && kind ? " on" : ""}${copy ? " copy" : ""}`} aria-hidden="true">
-      {copy ? <><Copy weight="bold" /> Copied</> : <><CheckCircle weight="fill" /><span><small>From {from}</small>{item.label}</span></>}
-    </span>
-  );
-}
-
-function useRelay(cas: RefObject<HTMLDivElement | null>) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [n, setN] = useState(0);
-  const [phase, setPhase] = useState<Phase>("");
-  const [at, setAt] = useState<"" | "mac" | "phone">("");
-
-  useEffect(() => {
-    const box = cas.current, el = ref.current;
-    if (!box || !el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let live = true, t = 0, seen = false, anim: Animation | undefined;
-    const wait = (ms: number) => new Promise<void>((r) => { t = window.setTimeout(r, ms); });
-    const io = new IntersectionObserver(([e]) => { seen = e.isIntersecting; }, { threshold: 0.5 });
-    io.observe(box);
-    // held while off screen, in a background tab, or once the cards start flying into the Link All chapter
-    const idle = () => !seen || document.hidden || Number(box.style.getPropertyValue("--k") || 1) < 0.99;
-    const centre = (sel: string, b: DOMRect, dy = 0.5) => {
-      const r = box.querySelector(sel)!.getBoundingClientRect();
-      return [r.left - b.left + r.width / 2, r.top - b.top + r.height * dy];
-    };
-
-    (async () => {
-      await wait(2600); // let the entrance finish
-      for (let i = 0; live; i++) {
-        while (live && idle()) await wait(700);
-        if (!live) return;
-        const up = i % 2 === 1; // odd rounds go Mac to phone
-        setN(i);
-        setAt(up ? "mac" : "phone"); setPhase("copy");
-        await wait(900);
-        const b = box.getBoundingClientRect();
-        const [fx, fy] = centre(up ? ".main .core" : ".phone .core", b, up ? 0.4 : 0.5);
-        const [tx, ty] = centre(up ? ".phone .core" : ".main .core", b, up ? 0.5 : 0.4);
-        const lift = Math.min(140, Math.hypot(tx - fx, ty - fy) * 0.35);
-        setAt("");
-        anim = el.animate([
-          { translate: `${fx}px ${fy}px`, scale: 0.4, opacity: 0 },
-          { translate: `${fx + (tx - fx) * 0.15}px ${fy + (ty - fy) * 0.15 - lift * 0.5}px`, scale: 1, opacity: 1, offset: 0.18 },
-          { translate: `${(fx + tx) / 2}px ${(fy + ty) / 2 - lift}px`, scale: 1, opacity: 1, offset: 0.5 },
-          { translate: `${tx}px ${ty}px`, scale: 0.5, opacity: 0 },
-        ], { duration: 1300, easing: "cubic-bezier(.45, 0, .25, 1)" });
-        await anim.finished.catch(() => {});
-        if (!live) return;
-        setAt(up ? "phone" : "mac"); setPhase("land");
-        await wait(2600);
-        setAt(""); setPhase("");
-        await wait(1500);
-      }
-    })();
-    return () => { live = false; clearTimeout(t); anim?.cancel(); io.disconnect(); };
-  }, [cas]);
-
-  return { ref, phase, at, item: CLIPS[n % CLIPS.length] };
 }
 
 // the i is drawn dotless, with its dot as a separate piece that can bounce in on its own

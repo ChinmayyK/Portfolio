@@ -13,12 +13,12 @@ const P = PROJECTS.find((p) => p.star)!;
 const DROP_AT = 48; // percent where the demo connection drops
 
 /**
- * Desktop only: the hero's Mac and phone cards fly into the scene while the page scrolls from the
- * top to the chapter, then hand over to the scene's own devices. Returns its cleanup.
+ * Desktop only: the hero's phone flies into the scene while the page scrolls from the top to the
+ * chapter, then hands over to the scene's own phone. Returns its cleanup.
  */
 function handoff(story: HTMLElement) {
-  const cas = document.querySelector<HTMLElement>(".hero .cascade");
-  const pairs = ([[".main", ".mac"], [".phone", ".phone"]] as const).map(([a, b]) => ({
+  const cas = document.querySelector<HTMLElement>(".hero .plate");
+  const pairs = ([[".phone", ".phone"]] as const).map(([a, b]) => ({
     from: cas?.querySelector<HTMLElement>(a), to: story.querySelector<HTMLElement>(`.scene ${b}`), x: 0, y: 0, s: 1, r: 0,
   }));
   const stage = story.querySelector<HTMLElement>(".story-stage");
@@ -125,13 +125,11 @@ export default function LinkAllStory() {
       scene.dataset.phase = phase;
     };
 
-    // flown: the hero's cards already brought the devices in, so the timeline skips their entrance
+    // flown: the hero's phone already brought itself in, so the timeline skips its entrance
     const build = (flown = false) => {
       const tl = gsap.timeline({ defaults: { ease: "power2.out" }, onUpdate: () => show(tl.time()) });
-      if (!flown) {
-        tl.from(q(".mac"), { xPercent: -14, opacity: 0, duration: 1.4 }, 0)
-          .from(q(".phone"), { xPercent: 40, opacity: 0, duration: 1.4 }, 0.15);
-      }
+      tl.from(q(".mac"), { xPercent: -14, opacity: 0, duration: 1.4 }, 0);
+      if (!flown) tl.from(q(".phone"), { xPercent: 40, opacity: 0, duration: 1.4 }, 0.15);
       tl.from(q(".link"), { opacity: 0, duration: 0.6 }, 1.2)
         .from(q(".xfer"), { y: 24, opacity: 0, duration: 0.6 }, 1.4)
         .from(q(".file"), { scale: 0.6, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 1.6)
