@@ -1,27 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
-import Shot from "@/components/Shot";
+import Teardown from "@/components/Teardown";
 
-// what's inside Link All, called out around the phone: left side, then right, top to bottom
-const CALLOUTS: { side: "l" | "r"; y: string; t: string; d: string }[] = [
-  { side: "l", y: "20%", t: "One Rust core", d: "Shared by native apps in Swift, Kotlin, WinUI 3 and GTK" },
-  { side: "r", y: "39%", t: "Resumable transfers", d: "Chunk-level acks survive a dropped connection" },
-  { side: "l", y: "61%", t: "X25519 + ChaCha20", d: "End-to-end encrypted, paired by code or QR" },
-  { side: "r", y: "76%", t: "Secret filter", d: "OTPs, passwords and cards never sync" },
-];
+const CLAIM = ["I build", "the parts nobody", "screenshots"];
 
 export default function Hero({ commits: built }: { commits: number }) {
-  const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer drift, hover)
+  const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer)
   const hero = useRef<HTMLElement>(null);
-  const plate = useRef<HTMLDivElement>(null);
   const [time, setTime] = useState("");
 
   const [commits, setCommits] = useState(built);
-  const name = useRef<HTMLHeadingElement>(null);
-  useLively(hero, name);
-  useBall(name);
+  const claim = useRef<HTMLHeadingElement>(null);
+  useLively(hero, claim);
+  useBall(claim);
 
   // refresh the count baked in at build with today's; the edge cache makes this the same request the
   // graph further down makes. One retry, since a cold edge cache has to wait on GitHub.
@@ -49,68 +42,49 @@ export default function Hero({ commits: built }: { commits: number }) {
     return () => { cancelAnimationFrame(raf); clearTimeout(t); };
   }, []);
 
-  // the phone drifts with the pointer, a plate lifted off the drawing
-  useEffect(() => {
-    const el = hero.current;
-    if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(hover: hover) and (min-width: 901px)").matches) return;
-    let raf = 0, tx = 0, ty = 0;
-    const move = (e: PointerEvent) => {
-      tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5;
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        plate.current?.querySelectorAll<HTMLElement>(".bezel").forEach((b) => {
-          const d = Number(b.dataset.depth);
-          b.style.setProperty("--px", `${(-tx * d).toFixed(1)}px`);
-          b.style.setProperty("--py", `${(-ty * d).toFixed(1)}px`);
-        });
-      });
-    };
-    el.addEventListener("pointermove", move);
-    return () => { el.removeEventListener("pointermove", move); cancelAnimationFrame(raf); };
-  }, []);
-
   return (
     <header className={`hero ${stage}`} id="top" ref={hero}>
-      <div className="wrap">
-        <div>
-          <span className="chip" data-r>Full-stack developer</span>
-          <h1 aria-label="Chinmay Kudalkar" ref={name}>
-            <span className="ln" aria-hidden="true">{letters("Chinmay", 0)}</span>
-            <span className="ln" aria-hidden="true">{letters("Kudalkar", 7)}<span className="ch dot" style={{ "--n": 15 } as CSSProperties}>.</span></span>
-          </h1>
-          <p className="lede" data-r style={{ "--d": "340ms" } as CSSProperties}>
-            I like the parts nobody screenshots. <b>Here&rsquo;s what&rsquo;s inside the app I&rsquo;m proudest of</b>: Link All, clipboard and files across four platforms with no cloud.
-          </p>
-          <div className="cta" data-r style={{ "--d": "420ms" } as CSSProperties}>
-            <a className="pill dark" href="#link-all">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
-            <a className="pill light" href="/resume" target="_blank" rel="noopener">Résumé <span className="isl"><ArrowUpRight weight="light" /></span></a>
-          </div>
-          <p className="status" data-r style={{ "--d": "520ms" } as CSSProperties}>
-            <span>Now</span> <a href="#now">Interning at ideaForge</a> <i className="loc">· Navi Mumbai</i>{time && <> <i>· <time>{time} IST</time></i></>}
-            {" "}<i>· B.Tech &rsquo;27</i>{commits > 0 && <> <i>· <a href="#receipts">{commits.toLocaleString("en-IN")} contributions</a></i></>}
-          </p>
-        </div>
-
-        <figure className="spec" aria-labelledby="spec-cap">
-          <figcaption id="spec-cap"><span>Fig. 01 — Link All</span><span>Android</span></figcaption>
-          <div className="plate" ref={plate}>
-            <a href="#link-all" className="bezel lifted phone" data-depth={30} aria-label="Link All on Android. See the project.">
-              <div className="core"><Shot file="linkall-android-home.png" alt="" /></div>
-            </a>
-            <ol>
-              {CALLOUTS.map((c, i) => (
-                <li key={c.t} className={c.side} style={{ "--y": c.y, "--n": i } as CSSProperties}>
-                  <p><small>0{i + 1}</small><b>{c.t}</b>{c.d}</p><i aria-hidden="true" />
-                </li>
+      <div className="hero-stage">
+        <div className="wrap">
+          <div className="say">
+            <p className="by" data-r>Chinmay Kudalkar <span>Full-stack developer, Navi Mumbai</span></p>
+            <h1 aria-label={`${CLAIM.join(" ")}.`} ref={claim}>
+              {CLAIM.map((l, i) => (
+                <span className="ln" aria-hidden="true" key={l}>
+                  {line(l, count(CLAIM.slice(0, i).join("")))}
+                  {i === CLAIM.length - 1 && <span className="ch dot" style={{ "--n": count(CLAIM.join("")) } as CSSProperties}>.</span>}
+                </span>
               ))}
-            </ol>
-            <span className="dim" aria-hidden="true">macOS · Windows · Linux · Android</span>
+            </h1>
+            <p className="lede" data-r style={{ "--d": "340ms" } as CSSProperties}>
+              Under the screen of <b>Link All</b>, the app I&rsquo;m proudest of: a filter that keeps secrets off the network, one Rust core for four platforms, and an encrypted wire with no cloud.
+            </p>
+            <div className="cta" data-r style={{ "--d": "420ms" } as CSSProperties}>
+              <a className="pill dark" href="#link-all">See my work <span className="isl"><ArrowDown weight="light" /></span></a>
+              <a className="pill light" href="/resume" target="_blank" rel="noopener">Résumé <span className="isl"><ArrowUpRight weight="light" /></span></a>
+            </div>
+            <p className="status" data-r style={{ "--d": "520ms" } as CSSProperties}>
+              <span>Now</span> <a href="#now">Interning at ideaForge</a>{time && <> <i>· <time>{time} IST</time></i></>}
+              {" "}<i>· B.Tech &rsquo;27</i>{commits > 0 && <> <i>· <a href="#receipts">{commits.toLocaleString("en-IN")} contributions</a></i></>}
+            </p>
           </div>
-        </figure>
+          <Teardown />
+        </div>
       </div>
     </header>
   );
+}
+
+const count = (text: string) => text.replaceAll(" ", "").length;
+
+// each word stays whole, so on narrow screens a line breaks between words, never inside one
+function line(text: string, from: number) {
+  let n = from;
+  return text.split(" ").map((w, j) => {
+    const at = n;
+    n += w.length;
+    return <Fragment key={j}>{j > 0 && " "}<span className="w">{letters(w, at)}</span></Fragment>;
+  });
 }
 
 // the i is drawn dotless, with its dot as a separate piece that can bounce in on its own
@@ -119,7 +93,7 @@ const letters = (word: string, from: number) =>
     ? <span className="ch" key={i} style={{ "--n": from + i } as CSSProperties}>{"ı"}<span className="tittle" /></span>
     : <span className="ch" key={i} style={{ "--n": from + i } as CSSProperties}>{c}</span>);
 
-// Under the pointer the name thins out: Geist is a variable font, so each letter's weight eases from
+// Under the pointer the claim thins out: Geist is a variable font, so each letter's weight eases from
 // bold down towards light by how close the pointer is, and springs back as it moves away.
 function useLively(hero: RefObject<HTMLElement | null>, name: RefObject<HTMLHeadingElement | null>) {
   useEffect(() => {

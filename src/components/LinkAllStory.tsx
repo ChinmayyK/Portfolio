@@ -13,63 +13,6 @@ const P = PROJECTS.find((p) => p.star)!;
 const DROP_AT = 48; // percent where the demo connection drops
 
 /**
- * Desktop only: the hero's phone flies into the scene while the page scrolls from the top to the
- * chapter, then hands over to the scene's own phone. Returns its cleanup.
- */
-function handoff(story: HTMLElement) {
-  const cas = document.querySelector<HTMLElement>(".hero .plate");
-  const pairs = ([[".phone", ".phone"]] as const).map(([a, b]) => ({
-    from: cas?.querySelector<HTMLElement>(a), to: story.querySelector<HTMLElement>(`.scene ${b}`), x: 0, y: 0, s: 1, r: 0,
-  }));
-  const stage = story.querySelector<HTMLElement>(".story-stage");
-  if (!cas || !stage || pairs.some((p) => !p.from || !p.to)) return () => {};
-  for (const p of pairs) p.r = parseFloat(getComputedStyle(p.from!).rotate) || 0;
-
-  // page-space boxes, from layout sizes so the cards' own transforms don't skew them.
-  // The scene is read relative to the stage, which may be pinned (sticky) at this moment.
-  const measure = () => {
-    const c = cas.getBoundingClientRect(), st = story.getBoundingClientRect(), sg = stage.getBoundingClientRect();
-    for (const p of pairs) {
-      const f = p.from!, t = p.to!, sc = (t.offsetParent as HTMLElement).getBoundingClientRect();
-      const fx = c.left + f.offsetLeft, fy = c.top + scrollY + f.offsetTop;
-      const tx = sc.left + t.offsetLeft, ty = st.top + scrollY + (sc.top - sg.top) + t.offsetTop;
-      p.s = t.offsetWidth / f.offsetWidth;
-      p.x = tx + (p.s - 1) * f.offsetWidth / 2 - fx;
-      p.y = ty + (p.s - 1) * f.offsetHeight / 2 - fy;
-    }
-  };
-  const set = (k: number) => {
-    cas.style.setProperty("--k", String(1 - k)); // pointer drift fades out on the way
-    for (const p of pairs) {
-      const f = p.from!;
-      f.style.translate = `${p.x * k}px ${p.y * k}px`;
-      f.style.scale = String(1 + (p.s - 1) * k);
-      f.style.rotate = `${p.r * (1 - k)}deg`;
-      // swap only once landed: the card sits exactly on the scene's device, so the swap can't be seen
-      p.to!.style.opacity = k >= 1 ? "1" : "0";
-      f.style.visibility = k >= 1 ? "hidden" : "";
-    }
-  };
-  const st = ScrollTrigger.create({
-    start: 0, end: () => story.getBoundingClientRect().top + scrollY,
-    onRefresh: (self) => { measure(); set(self.progress); },
-    onUpdate: (self) => set(self.progress),
-  });
-  measure(); set(st.progress);
-  // the cards change size when their screenshots load or swap, so measure again then
-  const ro = new ResizeObserver(() => { measure(); set(st.progress); });
-  for (const p of pairs) { ro.observe(p.from!); ro.observe(p.to!); }
-  return () => {
-    st.kill(); ro.disconnect();
-    cas.style.removeProperty("--k");
-    for (const p of pairs) {
-      for (const k of ["translate", "scale", "rotate", "visibility"] as const) p.from!.style[k] = "";
-      p.to!.style.opacity = "";
-    }
-  };
-}
-
-/**
  * Link All's own chapter. On desktop the stage pins while scrolling plays a transfer from the
  * Mac to the phone: it drops at 48%, reconnects and resumes from there, the thing the app is built
  * around. On phones the same sequence plays once when it comes into view. The text box is live:
@@ -125,12 +68,11 @@ export default function LinkAllStory() {
       scene.dataset.phase = phase;
     };
 
-    // flown: the hero's phone already brought itself in, so the timeline skips its entrance
-    const build = (flown = false) => {
+    const build = () => {
       const tl = gsap.timeline({ defaults: { ease: "power2.out" }, onUpdate: () => show(tl.time()) });
-      tl.from(q(".mac"), { xPercent: -14, opacity: 0, duration: 1.4 }, 0);
-      if (!flown) tl.from(q(".phone"), { xPercent: 40, opacity: 0, duration: 1.4 }, 0.15);
-      tl.from(q(".link"), { opacity: 0, duration: 0.6 }, 1.2)
+      tl.from(q(".mac"), { xPercent: -14, opacity: 0, duration: 1.4 }, 0)
+        .from(q(".phone"), { xPercent: 40, opacity: 0, duration: 1.4 }, 0.15)
+        .from(q(".link"), { opacity: 0, duration: 0.6 }, 1.2)
         .from(q(".xfer"), { y: 24, opacity: 0, duration: 0.6 }, 1.4)
         .from(q(".file"), { scale: 0.6, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 1.6)
         // there: halfway across, then it stalls while the link is down
@@ -156,11 +98,10 @@ export default function LinkAllStory() {
       calm: "(prefers-reduced-motion: no-preference)",
     }, (ctx) => {
       const { wide, calm } = ctx.conditions as { wide: boolean; calm: boolean };
-      const tl = build(wide && calm);
+      const tl = build();
       if (!calm) { tl.progress(1); return; }
       if (wide) {
         ScrollTrigger.create({ trigger: el, start: "top top", end: "bottom bottom", scrub: 0.8, animation: tl });
-        return handoff(el);
       } else {
         tl.pause(0);
         ScrollTrigger.create({ trigger: q(".scene")[0], start: "top 70%", once: true, onEnter: () => { tl.timeScale(1.3).play(); } });
