@@ -117,45 +117,50 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .menu.open a span { transform: none; transition-delay: calc(var(--i) * 60ms + 120ms); }
 @media (max-width: 760px) { .nav .links { display: none; } .burger { display: block; } }
 
-/* ---------- hero ---------- */
-.hero { padding: 0; }
-.hero-stage { padding: 120px 0 64px; }
-/* desktop: the hero holds the screen while scrolling takes the phone apart */
-@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  .hero { height: 230vh; }
-  .hero-stage { position: sticky; top: 0; height: 100dvh; display: grid; align-items: center; padding: 88px 0 24px; }
-}
-.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 32px; align-items: center; }
-.hero > .wrap, .hero .wrap > * { min-width: 0; }
-/* who, said small, above the claim */
-.hero .by { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
-.hero .by span { margin-left: 12px; font: 400 11.5px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
-.hero h1 { margin-top: 18px; font-size: clamp(44px, 5.5vw, 88px); font-weight: 700; letter-spacing: -.055em; line-height: .94; cursor: default; user-select: none; }
-.hero h1 .ln { display: block; }
-/* each word is masked for the entrance only, so rising letters stay hidden below it and lifted ones never clip */
-.hero h1 .w { display: inline-block; white-space: nowrap; overflow: clip; padding: .06em 0 .14em; margin: -.06em 0 -.14em; }
-.hero.go.settled h1 .w { overflow: visible; }
-/* each letter rises in on its own, then the dot drops in last with a little bounce */
-.hero h1 .ch { display: inline-block; position: relative; }
-.js .hero h1 .ch { transform: translateY(115%); }
-.hero.go h1 .ch { transform: none; transition: transform 1s var(--ease); transition-delay: calc(var(--n) * 30ms + 120ms); }
-.js .hero h1 .ch.dot { transform: translateY(-160%); opacity: 0; }
-.hero.go h1 .ch.dot { transform: none; opacity: 1; transition: transform .8s var(--spring), opacity .2s; transition-delay: calc(var(--n) * 30ms + 200ms); }
-/* the i's dot: a ball over the middle of the dotless i's stem (half its advance, which the letter-spacing
-   trims off the box), .686em up from the letter box's bottom, where Geist puts its own dot. Measured from
-   the box rather than the glyph, so it stays centred while the letter's weight changes under the pointer. */
-.hero h1 .tittle { position: absolute; left: calc(50% + .0275em); bottom: .686em; translate: -50% 0; width: .16em; height: .16em; border-radius: 50%; background: var(--accent); transform-origin: 50% 100%; }   /* squashes against the i, not around its middle */
-.js .hero h1 .tittle { opacity: 0; }   /* shown by the script when it starts bouncing in */
-/* the dot in flight, loose over the whole page */
-.ball { position: fixed; left: 0; top: 0; z-index: 70; border-radius: 50%; background: var(--accent); pointer-events: none; will-change: transform; }
-.hero .lede { margin-top: 28px; max-width: 40ch; font-size: 18px; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
-.hero .lede b { font-weight: 400; color: var(--ink); }
-.hero .cta { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+/* ---------- hero: who, what, and a few pieces of real work ---------- */
+.hero { min-height: 100dvh; display: grid; align-content: center; padding: 112px 0 32px; }
+.hero .split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 72px; align-items: center; }
+.hero .split > * { min-width: 0; }
+.hero h1 { display: grid; gap: 18px; font-weight: 600; }
+.hero .by { font: 400 12px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+.hero .big { font-size: clamp(36px, 4.4vw, 64px); letter-spacing: -.04em; line-height: 1.08; text-wrap: balance; }
+.hero .soft { color: var(--ink-2); }
+.hero .nb { white-space: nowrap; }   /* a word and the comma after it never part */
+/* the words that match a piece of work: dotted until pointed at */
+.hero .word { display: inline; padding: 0; letter-spacing: inherit; text-decoration: underline dotted; text-decoration-thickness: .06em; text-underline-offset: .14em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent); transition: text-decoration-color .3s var(--ease); }
+.hero .word:hover, .hero .word[aria-pressed="true"] { text-decoration-color: var(--accent); }
+.hero .lede { margin-top: 24px; max-width: 44ch; font-size: 17px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
+.hero .cta { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
 
-/* every orange period is drawn as a round dot: the glyph stays for spacing and screen readers, invisible */
-.dot { display: inline-block; width: .165em; height: .165em; margin-left: .04em; border-radius: 50%; background: var(--accent); color: transparent; overflow: hidden; vertical-align: baseline; }
-.dot.ink { color: inherit; background: currentColor; -webkit-text-fill-color: transparent; }   /* a period in the heading's own colour */
-.hero .status { margin-top: 26px; font: 400 12.5px/1.6 var(--mono); letter-spacing: .02em; color: var(--ink-2); }
+/* the pile: the Mac window at the back, the fleet map and the phone in front; the one pointed at comes forward */
+.works { display: grid; gap: 16px; }
+.pile { position: relative; aspect-ratio: 600 / 560; }
+.pile .card { position: absolute; display: block; color: inherit; transition: transform .7s var(--ease), opacity .5s var(--ease); }
+.pile .desk { left: 20%; top: 6%; width: 77%; z-index: 1; }
+.pile .web { left: 0; top: 52%; width: 52%; z-index: 2; }
+.pile .phone { left: 70%; top: 30%; width: 28.5%; z-index: 3; }
+.pile[data-on] .card { opacity: .28; }
+.pile[data-on="desk"] .desk, .pile[data-on="web"] .web, .pile[data-on="phone"] .phone { opacity: 1; z-index: 10; transform: translateY(-8px) scale(1.03); }
+.pile .plate { display: block; padding: 3px; border-radius: 12px; background: var(--tray); box-shadow: inset 0 0 0 1px var(--tray-line), var(--lift); }
+.pile .plate img { display: block; width: 100%; height: auto; border-radius: 9px; }
+.pile .phone .plate { padding: 4px; border-radius: 24px; background: #0B0C0E; }
+.pile .phone .plate img { border-radius: 20px; }
+:root[data-theme="dark"] .pile .phone .plate { box-shadow: 0 0 0 1px rgba(255, 255, 255, .12), var(--lift); }
+/* the fleet map is internal, so it's drawn rather than captured */
+.sketch { display: block; overflow: hidden; border-radius: 9px; background: var(--core); font: 400 10.5px/1.3 var(--mono); color: var(--ink-2); }
+.sketch .bar { display: flex; justify-content: space-between; gap: 8px; padding: 8px 10px; }
+.sketch .bar:first-child { border-bottom: 1px solid var(--tray-line); }
+.sketch .bar b { font-weight: 400; color: var(--ink); }
+.sketch .bar em { font-style: normal; color: var(--accent); }
+.sketch .map { position: relative; display: block; aspect-ratio: 2 / 1; overflow: hidden; background-color: var(--soft);
+  background-image: linear-gradient(var(--tray-line) 1px, transparent 1px), linear-gradient(90deg, var(--tray-line) 1px, transparent 1px); background-size: 22px 22px; }
+.sketch .map i { position: absolute; background: var(--card-tray); }
+.sketch .map b { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #2DBE7A; box-shadow: 0 0 0 3px rgba(45, 190, 122, .2); }
+.sketch .map b.stale { background: var(--accent); box-shadow: 0 0 0 3px rgba(240, 86, 29, .22); }
+.works figcaption { min-height: 3.2em; font: 400 12px/1.6 var(--mono); color: var(--ink-2); }
+
+.hero .status { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--tray-line); font: 400 12.5px/1.6 var(--mono); letter-spacing: .02em; color: var(--ink-2); }
 .hero .status > span { display: inline-flex; align-items: center; gap: 7px; margin-right: 4px; color: var(--ink); text-transform: uppercase; letter-spacing: .1em; }
 .hero .status > span::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s var(--ease) infinite; }
 .hero .status a { color: var(--ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 30%, transparent); text-underline-offset: 3px; transition: text-decoration-color .3s var(--ease); }
@@ -163,82 +168,14 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 80; pointer-event
 .hero .status i { font-style: normal; white-space: nowrap; }   /* wrap between parts, never inside one */
 .hero .status time { font-variant-numeric: tabular-nums; }
 
-/* ---------- the teardown: Link All's phone, its layers pulled apart in 3D ----------
-   --p runs 0 (upright and whole) to 1 (tilted and fully apart); --turn and --open ease out of it */
-.tear {
-  --w: clamp(180px, 25vh, 250px); --h: calc(var(--w) * 2.235); --gap: calc(var(--w) * .44);
-  --line: color-mix(in srgb, var(--ink) 34%, transparent);
-  --t: clamp(0, var(--p, 0) / .45, 1); --turn: calc(var(--t) * var(--t) * (3 - 2 * var(--t)));
-  --o: clamp(0, (var(--p, 0) - .1) / .75, 1); --open: calc(var(--o) * var(--o) * (3 - 2 * var(--o)));
-  position: relative; margin: 0; height: min(84dvh, 760px); display: grid; place-items: center; perspective: 2200px; perspective-origin: 50% 40%;
-}
-.js .tear { opacity: 0; transform: translateY(80px); }
-.hero.go .tear { opacity: 1; transform: none; transition: opacity 1.2s var(--ease), transform 1.4s var(--ease); transition-delay: 350ms; }
-.tear-stack {
-  --rx: calc(var(--turn) * 54deg - var(--my, 0) * 12deg * var(--turn));
-  --rz: calc(var(--turn) * -34deg + var(--mx, 0) * 14deg * var(--turn));
-  position: relative; z-index: 1; width: var(--w); height: var(--h); transform-style: preserve-3d;
-  transform: translateX(calc(var(--turn) * var(--w) * var(--shift, -.6))) rotateX(var(--rx)) rotateZ(var(--rz)) scale(calc(1 - var(--turn) * .06));
-}
-.slab { position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(calc((2 - var(--i)) * var(--open) * var(--gap))); }
-.slab .face { position: absolute; inset: 0; border-radius: calc(var(--w) * .13); overflow: hidden; }
-/* where each layer's label points: the middle of its right edge */
-.slab .at { position: absolute; left: 100%; top: 50%; width: 0; height: 0; }
-/* the labels, flat on the page in a column right of the stack; the script places each one and its leader */
-.tear-tags { list-style: none; position: absolute; inset: 0; z-index: 2; pointer-events: none; transform: translateZ(0); }
-.tear-tags li { position: absolute; left: 0; top: 0; width: 250px; padding-left: 12px; display: grid; opacity: 0; will-change: transform; }
-.tear-tags li > i { position: absolute; left: 0; top: 0; width: var(--len, 0); height: 1px; background: var(--line); transform-origin: 0 0; rotate: var(--ang, 0rad); }
-.tear-tags li > i::before { content: ""; position: absolute; left: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 1.5px var(--accent); }
-.tear-tags li > i::after { content: ""; position: absolute; right: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-.tear-tags small { margin-top: -8px; font: 400 11px/1.3 var(--mono); color: var(--accent); }
-.tear-tags b { font-size: 15px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
-.tear-tags span { font-size: 12.5px; line-height: 1.35; color: var(--ink-2); }
-
-/* 01 the screen everybody screenshots */
-.slab.screen .face { background: #16171A; padding: calc(var(--w) * .018); box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), var(--lift); }
-.slab.screen img { width: 100%; height: auto; border-radius: calc(var(--w) * .115); }
-/* 02 the same screen as layout boxes */
-.slab.ui .face { background: color-mix(in srgb, var(--core) 55%, transparent); box-shadow: inset 0 0 0 1px var(--line); }
-.slab.ui i { position: absolute; left: 7%; right: 7%; border: 1px dashed color-mix(in srgb, var(--accent) 75%, transparent); border-radius: 6px; }
-/* 03 the clipboard, with what the filter keeps back */
-.slab.filter .face { background: var(--core); box-shadow: inset 0 0 0 1px var(--tray-line), var(--lift); padding: 14% 8%; }
-.slab.filter ul { list-style: none; display: grid; gap: calc(var(--w) * .045); font: 400 calc(var(--w) * .043)/1.3 var(--mono); }
-.slab.filter li { display: flex; justify-content: space-between; gap: 6px; padding: 6% 6%; border-radius: 8px; background: var(--tray); }
-.slab.filter li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.slab.filter li em { font-style: normal; color: var(--accent); }
-.slab.filter li.no { color: var(--ink-2); }
-.slab.filter li.no em { color: var(--ink); }
-/* 04 the core, one die with a pin out to each platform's app */
-.slab.core .face { background: #16171A; color: #E8E9EC; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), var(--lift);
-  background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1px); background-size: 12px 12px; }
-.slab.core .die { position: absolute; left: 50%; top: 50%; width: 52%; aspect-ratio: 1; translate: -50% -50%; display: grid; place-content: center; text-align: center; border-radius: 12%;
-  background: #0E0F12; box-shadow: 0 0 0 1.5px var(--accent), 0 0 40px -6px rgba(240, 86, 29, .55); }
-.slab.core .die b { font: 600 calc(var(--w) * .085)/1 var(--mono); letter-spacing: .04em; }
-.slab.core .die small { margin-top: 4px; font: 400 calc(var(--w) * .04)/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
-.slab.core .pin { position: absolute; left: 50%; translate: -50% 0; font: 400 calc(var(--w) * .042)/1 var(--mono); color: #A9ADB6; white-space: nowrap; }
-.slab.core .pin::after { content: ""; position: absolute; left: 50%; width: 1px; height: calc(var(--h) * .12); background: rgba(240, 86, 29, .6); }
-.slab.core .p0 { top: 10%; } .slab.core .p0::after { top: 160%; }
-.slab.core .p1 { top: 22%; } .slab.core .p1::after { display: none; }
-.slab.core .p2 { bottom: 22%; } .slab.core .p2::after { display: none; }
-.slab.core .p3 { bottom: 10%; } .slab.core .p3::after { bottom: 160%; }
-/* 05 the wire: ciphertext, and the transfer's chunks with the one that had to go again */
-.slab.wire .face { box-shadow: inset 0 0 0 1px var(--line); padding: 10% 8%; display: grid; grid-template-rows: 1fr auto; gap: 8%; }
-.slab.wire .hex { font: 400 calc(var(--w) * .045)/1.55 var(--mono); color: color-mix(in srgb, var(--ink) 40%, transparent); word-spacing: .2em; overflow: hidden; }
-.slab.wire .chunks { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
-.slab.wire .chunks i { aspect-ratio: 1; border-radius: 3px; box-shadow: inset 0 0 0 1px var(--line); }
-.slab.wire .chunks i.ok { background: var(--accent); box-shadow: none; }
-.slab.wire .chunks i.redo { background: var(--ink); box-shadow: none; animation: pulse 1.2s var(--ease) infinite; }
-
-.tear figcaption { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; font: 400 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); opacity: var(--open); }
+/* every orange period is drawn as a round dot: the glyph stays for spacing and screen readers, invisible */
+.dot { display: inline-block; width: .165em; height: .165em; margin-left: .04em; border-radius: 50%; background: var(--accent); color: transparent; overflow: hidden; vertical-align: baseline; }
+.dot.ink { color: inherit; background: currentColor; -webkit-text-fill-color: transparent; }   /* a period in the heading's own colour */
 
 @media (max-width: 900px) {
-  .hero .wrap { grid-template-columns: 1fr; gap: 8px; }
-  .tear { height: calc(min(34vw, 170px) * 4.4); }
-  .tear { --w: min(34vw, 170px); --shift: -.78; }
-  .tear-tags li { width: 128px; }
-  .tear-tags li { padding-left: 8px; }
-  .tear-tags b { font-size: 13px; }
-  .tear-tags span { font-size: 11px; }
+  .hero { min-height: 0; }
+  .hero .split { grid-template-columns: 1fr; gap: 48px; }
+  .works { max-width: 560px; }
 }
 
 /* ---------- sections ---------- */
@@ -495,12 +432,12 @@ dialog[open] { animation: up .8s var(--ease); }
   .nav.brand .me { padding: 6px 10px 6px 14px; }
   .nav.hide { transform: translateY(-150%); }
 
-  .hero-stage { padding: 24px 0 32px; }
-  .hero .by { margin-right: 104px; min-height: 50px; }   /* clear of the nav pill */
-  .hero .by span { display: block; margin: 2px 0 0; font-size: 10.5px; }
-  .hero h1 { margin-top: 14px; font-size: 13vw; }
-  .hero .lede { margin-top: 20px; font-size: 16.5px; }
-  .hero .status { margin-top: 16px; font-size: 11px; letter-spacing: 0; }
+  .hero { padding: 24px 0 32px; }
+  .hero .by { margin-right: 104px; min-height: 50px; display: flex; align-items: center; }   /* clear of the nav pill */
+  .hero .big { font-size: clamp(32px, 9vw, 44px); }
+  .hero .lede { margin-top: 18px; font-size: 16.5px; }
+  .hero .status { margin-top: 36px; font-size: 11px; letter-spacing: 0; }
+  .hero .status .open { display: block; }
   .hero .cta { margin-top: 24px; flex-wrap: nowrap; gap: 10px; }
   .hero .cta .pill { flex: 1; justify-content: space-between; font-size: 15px; padding-left: 18px; }
 
