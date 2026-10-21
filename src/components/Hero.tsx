@@ -2,7 +2,15 @@
 
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Teardown from "@/components/Teardown";
+import Relay from "@/components/Relay";
+import CoreLog from "@/components/CoreLog";
+
+// Figures the hero can try out beside the claim, picked with ?hero=<name>; the first is the default.
+// The static HTML always holds the default, and the swap happens before the figure fades in.
+const FIGURES = { teardown: Teardown, relay: Relay, log: CoreLog };
+type Figure = keyof typeof FIGURES;
 
 const CLAIM = ["I build", "the parts nobody", "screenshots"];
 
@@ -10,6 +18,8 @@ export default function Hero({ commits: built }: { commits: number }) {
   const [stage, setStage] = useState(""); // "" -> "go" (entrance) -> "go settled" (pointer)
   const hero = useRef<HTMLElement>(null);
   const [time, setTime] = useState("");
+  const [figure, setFigure] = useState<Figure>("teardown");
+  const [trying, setTrying] = useState(false); // shows the switcher while ?hero= is in the address
 
   const [commits, setCommits] = useState(built);
   const claim = useRef<HTMLHeadingElement>(null);
@@ -37,13 +47,20 @@ export default function Hero({ commits: built }: { commits: number }) {
   }, []);
 
   useEffect(() => {
+    const q = new URLSearchParams(location.search).get("hero");
+    if (q !== null) setTrying(true);
+    if (q && q in FIGURES) setFigure(q as Figure);
     const raf = requestAnimationFrame(() => setStage("go"));
     const t = setTimeout(() => setStage("go settled"), 2000);
     return () => { cancelAnimationFrame(raf); clearTimeout(t); };
   }, []);
 
+  // only the teardown holds the screen while scrolling, so the rest of the page moves when the figure changes
+  useEffect(() => { ScrollTrigger.refresh(); }, [figure]);
+
+  const Fig = FIGURES[figure];
   return (
-    <header className={`hero ${stage}`} id="top" ref={hero}>
+    <header className={`hero fig-${figure} ${stage}`} id="top" ref={hero}>
       <div className="hero-stage">
         <div className="wrap">
           <div className="say">
@@ -68,9 +85,15 @@ export default function Hero({ commits: built }: { commits: number }) {
               {" "}<i>· B.Tech &rsquo;27</i>{commits > 0 && <> <i>· <a href="#receipts">{commits.toLocaleString("en-IN")} contributions</a></i></>}
             </p>
           </div>
-          <Teardown />
+          <Fig />
         </div>
       </div>
+      {trying && (
+        <nav className="try" aria-label="Hero figure">
+          <span>Hero</span>
+          {(Object.keys(FIGURES) as Figure[]).map((f) => <a key={f} href={`?hero=${f}`} aria-current={f === figure ? "true" : undefined}>{f}</a>)}
+        </nav>
+      )}
     </header>
   );
 }
