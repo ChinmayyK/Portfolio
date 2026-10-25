@@ -1,164 +1,102 @@
 import type { CSSProperties } from "react";
-import {
-  ArrowRight, Broadcast, Copy as CopyIcon, Eye, GithubLogo, LinkedinLogo, MapTrifold, Phone, WarningCircle, ArrowUpRight,
-} from "@phosphor-icons/react/dist/ssr";
-import { EMAIL, TOOLS } from "@/lib/content";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { EDUCATION, EMAIL, EXPERIENCE, PROJECTS, SOCIALS, TOOLS } from "@/lib/content";
+import { commitsAtBuild } from "@/lib/commits";
 import Nav from "@/components/Nav";
-import Hero from "@/components/Hero";
-import ProjectSheet from "@/components/ProjectSheet";
-import CopyButton from "@/components/CopyButton";
-import WhoAmI from "@/components/WhoAmI";
+import Board from "@/components/Board";
+import Shots from "@/components/Shots";
+import CopyEmail from "@/components/CopyEmail";
 import Reveal from "@/components/Reveal";
-import Commits from "@/components/Commits";
-import Quote from "@/components/Quote";
-import LinkAllStory from "@/components/LinkAllStory";
 
-const d = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
+// devicons drawn in black, which disappear on the dark theme unless inverted
+const INK_ICONS = new Set(["nextjs", "rust", "prisma"]);
 
-// The contribution count, read once at build time from the live site's own /api/commits, so the hero
-// never shows an empty pill. The browser refreshes it after load; a failed build-time read just leaves 0.
-async function commitsAtBuild() {
-  try {
-    const r = await fetch("https://chinmaykudalkar.com/api/commits", { signal: AbortSignal.timeout(10000) });
-    return r.ok ? ((await r.json()) as { total: { lastYear: number } }).total.lastYear : 0;
-  } catch {
-    return 0;
-  }
-}
+const d = (i: number) => ({ "--d": `${i * 80}ms` }) as CSSProperties;
+
+const Head = ({ n, id, children }: { n: string; id: string; children: React.ReactNode }) => (
+  <h2 className="s-head mono" id={id} data-r><span>{n}</span>{children}</h2>
+);
 
 export default async function Home() {
-  const commits = await commitsAtBuild();
+  const days = await commitsAtBuild();
+  const linkAll = PROJECTS[0];
+
   return (
     <>
       <Nav />
       <main>
-        <Hero commits={commits} />
+        <Board initial={days} />
 
-        <LinkAllStory />
-
-        <section className="now" id="now" aria-labelledby="now-h">
-          <div className="wrap">
-            <div className="bezel lifted" data-r>
-              <div className="core">
-                <div className="say">
-                  <span className="chip" style={{ justifySelf: "start" }}>Since August 2026</span>
-                  <div>
-                    <h2 id="now-h">Interning at <em>ideaForge</em><span className="dot ink">.</span></h2>
-                    <p style={{ marginTop: 16 }}>I work on iF FleetDesk, the internal app staff use to book, dispatch and track vehicles for people and material, on web and mobile.</p>
-                  </div>
-                </div>
-                <ol>
-                  <li data-r style={d(100)}><i><Broadcast weight="light" /></i>Live vehicle telemetry from the Varroc TCU APIs, with caching, retries and deadlines, so positions arrive within 3 seconds even when the vendor is slow.</li>
-                  <li data-r style={d(180)}><i><MapTrifold weight="light" /></i>A live operations map on the Google Maps API: vehicle search, status filters, stale-GPS detection and dark mode.</li>
-                  <li data-r style={d(260)}><i><WarningCircle weight="light" /></i>Booking and dispatch that stay correct when two people act at once, checked inside database transactions.</li>
-                  <li data-r style={d(340)}><i><Eye weight="light" /></i>Tracking visibility an admin controls, from trip status only to the full map, enforced on the server.</li>
-                </ol>
+        <section className="wrap sect" id="work" aria-labelledby="work-h">
+          <Head n="01" id="work-h">Work</Head>
+          <article className="card feature" data-r>
+            <div className="feature-text">
+              <span className="mono">Personal project · 2026</span>
+              <h3>{linkAll.t}</h3>
+              <p>Copy on one device, paste on another. Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
+              <p className="mono stack">Rust · Swift · Kotlin · WinUI 3</p>
+              <div className="row">
+                {linkAll.site && <a className="b-btn solid" href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
+                <a className="b-btn" href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section id="background" aria-labelledby="bg-h">
-          <div className="wrap">
-            <h2 id="bg-h" data-r>Background<span className="dot ink">.</span></h2>
-            <div className="bento">
-              <article className="bezel lifted b-a" data-r>
-                <div className="core">
-                  <div>
-                    <span className="chip">Aug 2026 to now</span>
-                    <h3 className="role">Web &amp; Mobile App Developer Intern</h3>
-                    <p className="org">ideaForge Technology, Navi Mumbai</p>
-                  </div>
-                  <ul>
-                    <li><i><ArrowRight weight="light" /></i>iF FleetDesk: a TypeScript monorepo with a NestJS, Prisma and PostgreSQL API, a React web app and an Expo mobile app, for employees, drivers and admins.</li>
-                    <li><i><ArrowRight weight="light" /></i>Integrated the Varroc TCU APIs for vehicle telemetry and the Google Maps API for live tracking.</li>
-                    <li><i><ArrowRight weight="light" /></i>Booking for passengers or material, including multi-stop and outstation trips, with driver assignment and dispatch.</li>
-                    <li><i><ArrowRight weight="light" /></i>Scheduled shuttles with timetables, seat capacity, cancellation cutoffs, no-shows and driver manifests.</li>
-                    <li><i><ArrowRight weight="light" /></i>An offline queue in the driver app, so location and trip events sync once the connection is back.</li>
-                    <li><i><ArrowRight weight="light" /></i>Concurrency tests on real PostgreSQL, with typecheck, lint and build checks before every merge.</li>
-                  </ul>
-                </div>
-              </article>
-              <article className="bezel lifted b-b" data-r style={d(100)}>
-                <div className="core">
-                  <div>
-                    <span className="chip">Dec 2025 to Apr 2026</span>
-                    <h3 className="role">Software Engineering Intern</h3>
-                    <p className="org">Mintskill HR Solutions</p>
-                  </div>
-                  <ul>
-                    <li>Node.js backend services that connect hiring tools (ATS) to CRMs through REST APIs, automating recruiting workflows.</li>
-                    <li>Redis-backed background job queues, so slow work runs asynchronously and the APIs respond quickly.</li>
-                    <li>Designed the services as separate modules, so each could be changed and maintained on its own.</li>
-                  </ul>
-                </div>
-              </article>
-              <article className="bezel lifted b-d" data-r style={d(120)}>
-                <div className="core">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                    <h3 className="role" style={{ margin: 0 }}>What I use</h3>
-                    <p className="org" style={{ margin: 0 }}>Plus AWS, LLM integration and RAG.</p>
-                  </div>
-                  <div className="logos">
-                    {TOOLS.map(([name, slug]) => (
-                      <span className="logo" key={slug}>
-                        <span><img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/${slug}/${slug}-original.svg`} alt="" loading="lazy" /></span>
-                        {name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </article>
-              <article className="bezel lifted b-c" data-r style={d(180)}>
-                <div className="core">
-                  <span className="chip" style={{ justifySelf: "start" }}>Education</span>
-                  <dl>
-                    <div><dt>B.Tech, Computer Technology</dt><dd>RT-MSSU, 2023 to 2027. CGPA 7.3.</dd></div>
-                    <div><dt>Certificates</dt><dd>AWS Certified Cloud Practitioner (2026). Deep Learning, Skillsoft (2025). AI, Databases, HTML &amp; CSS from Certiport.</dd></div>
-                  </dl>
-                </div>
-              </article>
+            <Shots files={linkAll.shots.filter((s) => !s.includes("command-palette"))} alt={`${linkAll.t} on desktop`} />
+          </article>
+          <article className="card plain" data-r style={d(1)}>
+            <div>
+              <span className="mono">At ideaForge · 2026</span>
+              <h3>iF FleetDesk</h3>
+              <p>Book, dispatch and track company vehicles, for employees, drivers and admins.</p>
             </div>
-          </div>
+            <p className="mono stack">NestJS · Prisma · PostgreSQL · React · Expo<br /><span>Internal, not public</span></p>
+          </article>
         </section>
 
-        <section className="receipts" id="receipts" aria-labelledby="q-h">
-          <div className="wrap">
-            <Quote />
-            <div className="bezel lifted" data-r style={d(120)}>
-              <div className="core"><Commits /></div>
-            </div>
-          </div>
+        <section className="wrap sect" id="experience" aria-labelledby="exp-h">
+          <Head n="02" id="exp-h">Experience</Head>
+          <ol className="rows">
+            {EXPERIENCE.map((x, i) => (
+              <li key={x.org} data-r style={d(i)}>
+                <span className="mono when">{x.now && <i className="live" aria-hidden />}{x.when}</span>
+                <div><h3>{x.role} <span>· {x.org}</span></h3><p>{x.line}</p></div>
+              </li>
+            ))}
+            <li data-r style={d(EXPERIENCE.length)}>
+              <span className="mono when">{EDUCATION.when}</span>
+              <div><h3>{EDUCATION.degree} <span>· {EDUCATION.school}</span></h3><p>Education.</p></div>
+            </li>
+          </ol>
         </section>
 
-        <section className="contact" id="contact" aria-labelledby="c-h">
-          <div className="wrap">
-            <div className="bezel lifted" data-r>
-              <div className="core">
-                <div>
-                  <span className="chip">Open to full-time roles from 2027</span>
-                  <h2 id="c-h" style={{ marginTop: 22 }}>Say hello<span className="dot ink">.</span></h2>
-                  <a className="mail" href={`mailto:${EMAIL}`}>{EMAIL}</a>
-                </div>
-                <div className="side">
-                  <a className="pill dark" href={`mailto:${EMAIL}`}>Email me <span className="isl"><ArrowUpRight weight="light" /></span></a>
-                  <CopyButton text={EMAIL} icon={<CopyIcon weight="light" />} />
-                  <div className="row">
-                    <a className="pill light" href="https://linkedin.com/in/chinmayyk">LinkedIn <span className="isl"><LinkedinLogo weight="light" /></span></a>
-                    <a className="pill light" href="https://github.com/chinmayyk">GitHub <span className="isl"><GithubLogo weight="light" /></span></a>
-                  </div>
-                  <a className="pill light" href="tel:+918766983907">+91 87669 83907 <span className="isl"><Phone weight="light" /></span></a>
-                </div>
-              </div>
+        <section className="wrap sect" id="toolkit" aria-labelledby="tools-h">
+          <Head n="03" id="tools-h">Toolkit</Head>
+          <ul className="tools">
+            {TOOLS.map(([name, slug], i) => (
+              <li key={slug} data-r style={{ "--d": `${i * 30}ms` } as CSSProperties}>
+                <img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/${slug}/${slug}-original.svg`} alt="" loading="lazy" width={22} height={22} className={INK_ICONS.has(slug) ? "ink" : undefined} />
+                {name}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="wrap sect" id="contact" aria-labelledby="c-h">
+          <Head n="04" id="c-h">Contact</Head>
+          <div className="card contact" data-r>
+            <span className="mono"><i className="live" aria-hidden />Open to full-time roles from 2027</span>
+            <a className="mail" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            <div className="row">
+              <CopyEmail email={EMAIL} />
+              {SOCIALS.map(([label, href]) => <a key={label} className="b-btn" href={href}>{label}<ArrowUpRight weight="light" /></a>)}
             </div>
           </div>
         </section>
       </main>
 
-      <footer><div className="wrap"><span>Chinmay Kudalkar, 2026</span><span>Type <button type="button" className="kbd" data-whoami>whoami</button> anywhere</span></div></footer>
-
-      <ProjectSheet />
-      <WhoAmI />
+      <footer className="wrap foot mono">
+        <span>Chinmay Kudalkar, 2026</span>
+        <a href="#top">Back to top ↑</a>
+      </footer>
       <Reveal />
     </>
   );
