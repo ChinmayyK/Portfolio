@@ -40,7 +40,7 @@ export default async function Home() {
                 <a className="b-btn" href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
               </div>
             </div>
-            <Shots files={linkAll.shots.filter((s) => !s.includes("command-palette"))} alt={`${linkAll.t} on desktop`} />
+            <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
           </article>
           <article className="card plain" data-r style={d(1)}>
             <div>
