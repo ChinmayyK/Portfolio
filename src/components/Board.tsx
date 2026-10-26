@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowUpRight, GitFork, Star, Tag } from "@phosphor-icons/react";
 import { EDUCATION, EMAIL, EXPERIENCE, GITHUB, PROJECTS, SOCIALS, TOOLS } from "@/lib/content";
 import type { Day } from "@/lib/commits";
+import { repoStats, type Repo } from "@/lib/repo";
 import Shots from "@/components/Shots";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
@@ -12,6 +13,13 @@ const month = new Intl.DateTimeFormat("en-GB", { month: "short" });
 const monthYear = new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric" });
 const clock = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Kolkata" });
 const at = (date: string) => new Date(date + "T00:00:00");
+// GitHub timestamps, read in UTC so the server and browser print the same day
+const stamp = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const num = (n: number) => n.toLocaleString("en-IN");
+
+// GitHub's own language colours for the ones Link All is written in; the long tail shares one grey bar
+const LANG_COLORS: Record<string, string> = { Rust: "#DEA584", Kotlin: "#A97BFF", Swift: "#F05138", "C#": "#178600" };
+const OTHER = "var(--ink-3)";
 
 // devicons drawn in black, which disappear on the dark theme unless inverted
 const INK_ICONS = new Set(["nextjs", "rust", "prisma"]);
@@ -48,8 +56,9 @@ function Clock() {
 }
 
 /** The whole page: one board of tiles that flip up one after another. */
-export default function Board({ initial }: { initial: Day[] }) {
+export default function Board({ initial, repo: builtRepo }: { initial: Day[]; repo: Repo | null }) {
   const [days, setDays] = useState(initial);
+  const [repo, setRepo] = useState(builtRepo);
   const [hover, setHover] = useState<Day | null>(null);
   const cells = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
@@ -61,8 +70,17 @@ export default function Board({ initial }: { initial: Day[] }) {
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((j: { contributions: Day[] }) => { if (!cancelled && j.contributions?.length) setDays(j.contributions.slice(-365)); })
       .catch(() => {}); // the build-time copy stays up
+    repoStats(linkAll.src).then((r) => { if (!cancelled && r) setRepo(r); });
     return () => { cancelled = true; };
-  }, []);
+  }, [linkAll.src]);
+
+  // the four biggest languages get their own bar, the rest are lumped into "Other"
+  const langs = useMemo(() => {
+    const all = repo?.langs ?? [];
+    const top = all.filter(([l]) => l in LANG_COLORS).slice(0, 4);
+    const rest = 1 - top.reduce((s, [, n]) => s + n, 0);
+    return rest > 0.005 ? [...top, ["Other", rest] as [string, number]] : top;
+  }, [repo]);
 
   const lead = days.length ? at(days[0].date).getDay() : 0;
   const total = useMemo(() => days.reduce((s, d) => s + d.count, 0), [days]);
@@ -191,7 +209,16 @@ export default function Board({ initial }: { initial: Day[] }) {
       <a className="tile t-work" id="work" href={linkAll.site ?? linkAll.src} {...tile(7)}>
         <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
         <div className="cap">
-          <div><span className="k mono">Project · 2026</span><h2>{linkAll.t}</h2></div>
+          <div>
+            {repo && (
+              <div className="chips mono">
+                <span><Star weight="fill" />{num(repo.stars)}<em>stars</em></span>
+                <span><GitFork />{num(repo.forks)}<em>{repo.forks === 1 ? "fork" : "forks"}</em></span>
+                {repo.latest && <span><Tag />{repo.latest.tag}</span>}
+              </div>
+            )}
+            <span className="k mono">Project · 2026</span><h2>{linkAll.t}</h2>
+          </div>
           <span className="mono">Copy here, paste there <ArrowUpRight weight="light" /></span>
         </div>
       </a>
@@ -199,8 +226,31 @@ export default function Board({ initial }: { initial: Day[] }) {
       <div className="tile t-about" {...tile(8)}>
         <span className="k mono">About Link All</span>
         <p>Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
+        {repo && (
+          <dl className="facts">
+            {repo.commits !== null && <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>}
+            <div><dt className="mono">Releases</dt><dd>{repo.releases}</dd></div>
+            <div><dt className="mono">Downloads</dt><dd>{num(repo.downloads)}</dd></div>
+          </dl>
+        )}
+        {langs.length > 0 && (
+          <div className="langs">
+            <div className="track" aria-hidden>
+              {langs.map(([l, n]) => <i key={l} style={{ flexGrow: n, background: LANG_COLORS[l] ?? OTHER }} />)}
+            </div>
+            <ul className="mono">
+              {langs.map(([l, n]) => (
+                <li key={l}><i style={{ background: LANG_COLORS[l] ?? OTHER }} aria-hidden />{l} <span>{Math.round(n * 100)}%</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div>
-          <p className="mono">Rust · Swift · Kotlin · WinUI 3</p>
+          <p className="mono">
+            {repo
+              ? [repo.license, `Updated ${stamp.format(new Date(repo.pushed))}`].filter(Boolean).join(" · ")
+              : "Rust · Swift · Kotlin · WinUI 3"}
+          </p>
           <div className="pills mono">
             {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
             <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
