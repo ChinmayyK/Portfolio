@@ -6,6 +6,7 @@ import { EDUCATION, EMAIL, EXPERIENCE, GITHUB, PROJECTS, SOCIALS, TOOLS } from "
 import type { Day } from "@/lib/commits";
 import type { Repo } from "@/lib/repo";
 import Shots from "@/components/Shots";
+import { land } from "@/components/landing";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
 const short = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
@@ -20,6 +21,12 @@ const num = (n: number) => n.toLocaleString("en-IN");
 // GitHub's own language colours for the ones Link All is written in; the long tail shares one grey bar
 const LANG_COLORS: Record<string, string> = { Rust: "#DEA584", Kotlin: "#A97BFF", Swift: "#F05138", "C#": "#178600" };
 const OTHER = "var(--ink-3)";
+
+// what Link All does beyond copy and paste, from its README
+const LINKALL_FEATURES = [
+  "Clipboard", "File transfer", "Notes", "Notifications & calls", "Now Playing", "Phone remote",
+  "Keyboard & mouse sharing", "Browse files", "Find my phone", "Guest Drop", "Folder sync",
+];
 
 // devicons drawn in black, which disappear on the dark theme unless inverted
 const INK_ICONS = new Set(["nextjs", "rust", "prisma"]);
@@ -39,10 +46,10 @@ function tilt(e: React.PointerEvent<HTMLElement>) {
   if (e.pointerType !== "mouse") return;
   const t = e.currentTarget, r = t.getBoundingClientRect();
   const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-  t.style.transform = `rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg)`;
+  t.style.transform = `perspective(1200px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg)`;
 }
 const level = (e: React.PointerEvent<HTMLElement>) => { e.currentTarget.style.transform = ""; };
-const tile = (i: number) => ({ onPointerMove: tilt, onPointerLeave: level, style: { "--i": i } as React.CSSProperties });
+const tile = { onPointerMove: tilt, onPointerLeave: level };
 
 function Clock() {
   const [now, setNow] = useState("");
@@ -55,14 +62,17 @@ function Clock() {
   return <b suppressHydrationWarning>{now}</b>;
 }
 
-/** The whole page: one board of tiles that flip up one after another. */
+/** The whole page: one board of tiles, revealed by a camera swoop on landing (see landing.ts). */
 export default function Board({ initial, repo: builtRepo }: { initial: Day[]; repo: Repo | null }) {
   const [days, setDays] = useState(initial);
   const [repo, setRepo] = useState(builtRepo);
   const [hover, setHover] = useState<Day | null>(null);
   const cells = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const board = useRef<HTMLElement>(null);
   const linkAll = PROJECTS[0];
+
+  useEffect(() => { if (board.current) land(board.current); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -131,8 +141,8 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
   };
 
   return (
-    <main className="board wrap" id="top">
-      <div className="tile t-id" {...tile(0)}>
+    <main className="board wrap" id="top" ref={board}>
+      <div className="tile t-id" {...tile}>
         <div className="blob" aria-hidden />
         <span className="k mono">Full-stack developer</span>
         <h1>Chinmay<br />Kudalkar</h1>
@@ -143,12 +153,12 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
       </div>
 
-      <div className="tile t-clock" {...tile(1)}>
+      <div className="tile t-clock" {...tile}>
         <span className="k mono">Navi Mumbai</span>
         <Clock />
       </div>
 
-      <div className="tile t-now" {...tile(2)}>
+      <div className="tile t-now" {...tile}>
         <svg viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden>
           <path id="route" d="M-10 160 C 80 150, 90 60, 180 80 S 300 170, 410 40" />
           <circle r="5"><animateMotion dur="7s" repeatCount="indefinite"><mpath href="#route" /></animateMotion></circle>
@@ -157,22 +167,22 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <h2>Fleet software at ideaForge</h2>
       </div>
 
-      <div className="tile t-status" {...tile(3)}>
+      <div className="tile t-status" {...tile}>
         <span className="k mono">Status</span>
         <p><i className="live" aria-hidden />Open to full-time roles from 2027</p>
       </div>
 
-      <div className="tile t-streak" {...tile(4)}>
+      <div className="tile t-streak" {...tile}>
         <span className="k mono">Streak</span>
         <p><b>{streak.current}</b> days <span>· best {streak.longest}</span></p>
       </div>
 
-      <div className="tile t-edu" {...tile(5)}>
+      <div className="tile t-edu" {...tile}>
         <span className="k mono">Education · {EDUCATION.when}</span>
         <p>{EDUCATION.school}<span>{EDUCATION.degree}</span></p>
       </div>
 
-      <div className="tile t-graph" id="github" {...tile(6)}>
+      <div className="tile t-graph" id="github" {...tile}>
         <div className="gh-main">
           <div className="row mono">
             <span className="k">GitHub · last year</span>
@@ -210,67 +220,66 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
       </div>
 
-      <a className="tile t-work" id="work" href={linkAll.site ?? linkAll.src} {...tile(7)}>
-        <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
-        <div className="cap">
+      <div className="tile t-work" id="work" {...tile}>
+        <a className="shot-box" href={linkAll.site ?? linkAll.src} tabIndex={-1} aria-hidden>
+          <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
+        </a>
+        <div className="panel">
           <div>
-            {repo && (
-              <div className="chips mono">
-                <span><Star weight="fill" />{num(repo.stars)}<em>stars</em></span>
-                <span><GitFork />{num(repo.forks)}<em>{repo.forks === 1 ? "fork" : "forks"}</em></span>
-                {repo.latest && <span><Tag />{repo.latest.tag}</span>}
-              </div>
-            )}
-            <span className="k mono">Project · 2026</span><h2>{linkAll.t}</h2>
-          </div>
-          <span className="mono">Copy here, paste there <ArrowUpRight weight="light" /></span>
-        </div>
-      </a>
-
-      <div className="tile t-about" {...tile(8)}>
-        <span className="k mono">About Link All</span>
-        <p>Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
-        {repo && (
-          <dl className="facts">
-            <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>
-            <div><dt className="mono">Releases</dt><dd>{repo.releases}</dd></div>
-            <div><dt className="mono">Downloads</dt><dd>{num(repo.downloads)}</dd></div>
-          </dl>
-        )}
-        {langs.length > 0 && (
-          <div className="langs">
-            <div className="track" aria-hidden>
-              {langs.map(([l, n]) => <i key={l} style={{ flexGrow: n, background: LANG_COLORS[l] ?? OTHER }} />)}
-            </div>
-            <ul className="mono">
-              {langs.map(([l, n]) => (
-                <li key={l}><i style={{ background: LANG_COLORS[l] ?? OTHER }} aria-hidden />{l} <span>{Math.round(n * 100)}%</span></li>
-              ))}
+            <span className="k mono">Project · 2026</span>
+            <h2><a href={linkAll.site ?? linkAll.src}>{linkAll.t}</a></h2>
+            <p>Your devices, working as one. Phones and computers on macOS, Windows, Android and Linux share over your own network, with no cloud.</p>
+            <ul className="features mono">
+              {LINKALL_FEATURES.map((f) => <li key={f}>{f}</li>)}
             </ul>
           </div>
-        )}
-        <div>
-          <p className="mono">
-            {repo
-              ? [repo.license, `Updated ${stamp.format(new Date(repo.pushed))}`].filter(Boolean).join(" · ")
-              : "Rust · Swift · Kotlin · WinUI 3"}
-          </p>
-          <div className="pills mono">
-            {linkAll.store && <a className="go" href={linkAll.store}>Microsoft Store<ArrowUpRight weight="light" /></a>}
-            {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
-            <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
+          {repo && (
+            <dl className="facts">
+              <div><dt className="mono"><Star weight="fill" className="star" />Stars</dt><dd>{num(repo.stars)}</dd></div>
+              <div><dt className="mono"><GitFork />Forks</dt><dd>{num(repo.forks)}</dd></div>
+              <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>
+              <div><dt className="mono">Downloads</dt><dd>{num(repo.downloads)}</dd></div>
+            </dl>
+          )}
+          {langs.length > 0 && (
+            <div className="langs">
+              <div className="track" aria-hidden>
+                {langs.map(([l, n]) => <i key={l} style={{ flexGrow: n, background: LANG_COLORS[l] ?? OTHER }} />)}
+              </div>
+              <ul className="mono">
+                {langs.map(([l, n]) => (
+                  <li key={l}><i style={{ background: LANG_COLORS[l] ?? OTHER }} aria-hidden />{l} <span>{Math.round(n * 100)}%</span></li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div>
+            <p className="mono meta">
+              {repo ? (
+                <>
+                  {repo.latest && <span><Tag />{repo.latest.tag}</span>}
+                  {repo.license && <span>{repo.license}</span>}
+                  <span>Updated {stamp.format(new Date(repo.pushed))}</span>
+                </>
+              ) : "Rust · Swift · Kotlin · WinUI 3"}
+            </p>
+            <div className="pills mono">
+              {linkAll.store && <a className="go" href={linkAll.store}>Microsoft Store<ArrowUpRight weight="light" /></a>}
+              {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
+              <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="tile t-exp" id="experience" {...tile(9)}>
+      <div className="tile t-exp" id="experience" {...tile}>
         <span className="k mono">Experience</span>
         <ul>
           {EXPERIENCE.map((x) => <li key={x.org}>{x.org}<span>{x.role} · {x.when}</span></li>)}
         </ul>
       </div>
 
-      <div className="tile t-fleet" {...tile(10)}>
+      <div className="tile t-fleet" {...tile}>
         <span className="k mono">At ideaForge · 2026</span>
         <div>
           <h2>iF FleetDesk</h2>
@@ -279,7 +288,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <p className="mono">NestJS · Prisma · PostgreSQL · React · Expo<br /><span>Internal, not public</span></p>
       </div>
 
-      <div className="tile t-tools" {...tile(11)}>
+      <div className="tile t-tools" {...tile}>
         <span className="k mono">Toolkit</span>
         <ul>
           {TOOLS.map(([name, slug]) => (
@@ -291,18 +300,18 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </ul>
       </div>
 
-      <div className="tile t-stack" {...tile(12)}>
+      <div className="tile t-stack" {...tile}>
         <div className="marq mono" aria-label={TOOLS.map(([n]) => n).join(", ")}>
           {[0, 1].map((k) => TOOLS.map(([n]) => <span key={`${k}${n}`} aria-hidden>{n}</span>))}
         </div>
       </div>
 
-      <div className="tile t-links" {...tile(13)}>
+      <div className="tile t-links" {...tile}>
         <span className="k mono">Elsewhere</span>
         <nav>{SOCIALS.map(([label, href]) => <a key={label} href={href}>{label}<ArrowUpRight weight="light" /></a>)}</nav>
       </div>
 
-      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile(14)}>
+      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile}>
         <span><span className="k mono">Say hello</span><br />Email me</span>
         <ArrowUpRight weight="light" />
       </a>

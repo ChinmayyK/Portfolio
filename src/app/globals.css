@@ -81,17 +81,22 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---------- the board ---------- */
 .board {
   display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(clamp(104px, 9vw, 136px), auto); gap: 12px;
-  padding-top: 76px; perspective: 1600px;
+  position: relative; isolation: isolate; padding-top: 76px;
 }
 .tile {
   position: relative; overflow: hidden; min-width: 0; border-radius: var(--r); padding: 22px;
   background: var(--tile); border: 1px solid var(--line);
   box-shadow: inset 0 1px 0 var(--edge);
   transition: transform .6s var(--ease), border-color .3s;
-  animation: flip 1s var(--ease) backwards; animation-delay: calc(var(--i) * 70ms);
 }
 .tile:hover { border-color: var(--line-hi); }
-@keyframes flip { from { opacity: 0; transform: translateY(40px) rotateX(-25deg) scale(.94); } }
+/* hidden until the landing deals them in, so they never flash in place first */
+.js .board:not(.landed) > .tile { opacity: 0; }
+.intro-sweep {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(110deg, transparent 38%, color-mix(in srgb, var(--accent) 22%, transparent) 48%, rgba(255, 255, 255, .08) 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
+}
+.intro-echo { position: absolute; z-index: 5; pointer-events: none; border: 1.5px solid var(--accent); border-radius: var(--r); }
 .k { color: var(--ink-3); }
 .tile h2 { font-weight: 500; letter-spacing: -.02em; line-height: 1.1; }
 
@@ -160,29 +165,26 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .gh-side { flex: none; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 18px 0 0; border-left: 0; border-top: 1px solid var(--line); }
 }
 
-/* work */
-.t-work { grid-column: span 8; grid-row: span 4; padding: 0; }
-.t-work::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(transparent 55%, var(--tile)); }
+/* work: Link All's screens on the left, everything about it on the right, in one tile */
+.t-work { grid-column: span 12; grid-row: span 5; padding: 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); }
+.shot-box { position: relative; overflow: hidden; }
+.shot-box::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(transparent 60%, var(--tile)); pointer-events: none; }
 .shots { position: absolute; inset: 0; }
 .shots > div { position: absolute; left: 6%; top: 8%; width: 88%; opacity: 0; transform: scale(1.08) translateY(20px); transition: opacity 1s, transform 6s linear; }
 .shots > div.on { opacity: 1; transform: none; }
 .shots img { border-radius: 10px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .7); }
-.t-work .cap { position: absolute; z-index: 2; left: 22px; right: 22px; bottom: 20px; display: flex; justify-content: space-between; align-items: end; gap: 12px; }
-.t-work h2 { font-size: clamp(26px, 2.6vw, 36px); }
-.t-work .cap > .mono { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); transition: color .25s; }
-.t-work:hover .cap > .mono { color: var(--accent); }
-.t-work .cap > .mono svg, .t-mail svg { width: 14px; height: 14px; transition: transform .35s var(--ease); }
-.t-work:hover .cap > .mono svg, .t-mail:hover svg { transform: translate(2px, -2px); }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-.chips span {
-  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px; border-radius: 99px;
-  color: var(--ink); background: color-mix(in srgb, var(--tile) 70%, transparent); border: 1px solid var(--line-hi);
-  backdrop-filter: blur(10px); font-variant-numeric: tabular-nums;
-}
-.chips svg { width: 13px; height: 13px; color: var(--ink-2); }
-.chips span:first-child svg { color: #E3B341; }
-.chips em { font-style: normal; color: var(--ink-2); }
-@media (max-width: 560px) { .chips em { display: none; } .t-work .cap { flex-wrap: wrap; } .t-work .cap > div { flex: 1 0 100%; } }
+.panel { display: flex; flex-direction: column; justify-content: space-between; gap: 16px; padding: 22px; border-left: 1px solid var(--line); }
+.panel h2 { font-size: clamp(26px, 2.6vw, 36px); margin-top: 10px; }
+.panel h2 a:hover { color: var(--accent); }
+.panel h2 + p { color: var(--ink-2); margin-top: 8px; }
+.features { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; list-style: none; font-size: 10px; }
+.features li { padding: 5px 9px; border-radius: 99px; border: 1px solid var(--line-hi); color: var(--ink-2); }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--ink-2); }
+.meta span { display: inline-flex; align-items: center; gap: 5px; }
+.meta svg, .facts svg { width: 12px; height: 12px; }
+.facts .star { color: #E3B341; }
+.t-mail svg { width: 14px; height: 14px; transition: transform .35s var(--ease); }
+.t-mail:hover svg { transform: translate(2px, -2px); }
 
 /* experience */
 .t-exp { grid-column: span 4; grid-row: span 2; }
@@ -197,13 +199,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .t-streak p { color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .t-streak b { font: 500 clamp(30px, 3vw, 46px)/1 var(--sans); letter-spacing: -.03em; color: var(--ink); }
 
-/* about Link All */
-.t-about { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
-.t-about > p { font-size: clamp(16px, 1.4vw, 21px); line-height: 1.35; }
-.t-about .mono { color: var(--ink-2); }
-.facts { display: flex; gap: 22px; margin: 0; }
-.facts dt { font-size: 10px; }
-.t-about .facts dt { color: var(--ink-3); }
+.facts { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 12px; margin: 0; padding-block: 14px; border-block: 1px solid var(--line); }
+.facts dt { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: var(--ink-3); }
 .facts dd { margin: 4px 0 0; font-size: 22px; font-weight: 500; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
 .langs .track { display: flex; gap: 2px; height: 6px; border-radius: 99px; overflow: hidden; }
 .langs .track i { min-width: 3px; }
@@ -219,16 +216,16 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .pills a:hover svg, .t-links a:hover svg { transform: translate(2px, -2px); }
 
 /* FleetDesk */
-.t-fleet { grid-column: span 6; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.t-fleet { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
 .t-fleet h2 { font-size: clamp(24px, 2.4vw, 36px); }
 .t-fleet h2 + p { color: var(--ink-2); margin-top: 8px; max-width: 30em; }
 .t-fleet .mono { color: var(--ink-2); line-height: 1.8; }
 .t-fleet .mono span { color: var(--ink-3); }
 
 /* toolkit */
-.t-tools { grid-column: span 6; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
-.t-tools ul { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; list-style: none; }
-.t-tools li { display: grid; place-items: center; aspect-ratio: 1; border-radius: 14px; background: rgba(var(--cell), .04); transition: background .25s, transform .4s var(--ease); }
+.t-tools { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.t-tools ul { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; list-style: none; }
+.t-tools li { display: grid; place-items: center; height: 44px; border-radius: 14px; background: rgba(var(--cell), .04); transition: background .25s, transform .4s var(--ease); }
 .t-tools li:hover { background: rgba(var(--cell), .09); transform: translateY(-3px); }
 .t-tools img { width: 46%; height: auto; }
 .t-tools li span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -264,10 +261,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .gh-scroll { mask-image: linear-gradient(90deg, transparent, #000 32px); }
   .gh-side { justify-content: flex-start; }
   .gh-who { flex: 1 0 100%; }
-  .t-work { grid-row: span 3; }
-  .t-tools { grid-row: span 3; }
-  .t-tools ul { grid-template-columns: repeat(4, 1fr); }
-  .t-tools li { aspect-ratio: auto; height: 44px; }
+  .t-work { grid-row: auto; grid-template-columns: 1fr; }
+  .shot-box { height: clamp(220px, 60vw, 420px); }
+  .panel { border-left: 0; border-top: 1px solid var(--line); }
   .hm i { border-radius: 2px; }
 }
 
