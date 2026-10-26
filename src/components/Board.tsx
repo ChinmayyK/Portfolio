@@ -21,6 +21,12 @@ const num = (n: number) => n.toLocaleString("en-IN");
 const LANG_COLORS: Record<string, string> = { Rust: "#DEA584", Kotlin: "#A97BFF", Swift: "#F05138", "C#": "#178600" };
 const OTHER = "var(--ink-3)";
 
+// what Link All does beyond copy and paste, from its README
+const LINKALL_FEATURES = [
+  "Clipboard", "File transfer", "Notes", "Notifications & calls", "Now Playing", "Phone remote",
+  "Keyboard & mouse sharing", "Browse files", "Find my phone", "Guest Drop", "Folder sync",
+];
+
 // devicons drawn in black, which disappear on the dark theme unless inverted
 const INK_ICONS = new Set(["nextjs", "rust", "prisma"]);
 
@@ -218,7 +224,10 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
           <div>
             <span className="k mono">Project · 2026</span>
             <h2><a href={linkAll.site ?? linkAll.src}>{linkAll.t}</a></h2>
-            <p>Copy on one device, paste on another. Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
+            <p>Your devices, working as one. Phones and computers on macOS, Windows, Android and Linux share over your own network, with no cloud.</p>
+            <ul className="features mono">
+              {LINKALL_FEATURES.map((f) => <li key={f}>{f}</li>)}
+            </ul>
           </div>
           {repo && (
             <dl className="facts">

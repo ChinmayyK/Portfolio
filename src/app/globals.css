@@ -161,7 +161,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 
 /* work: Link All's screens on the left, everything about it on the right, in one tile */
-.t-work { grid-column: span 12; grid-row: span 4; padding: 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); }
+.t-work { grid-column: span 12; grid-row: span 5; padding: 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); }
 .shot-box { position: relative; overflow: hidden; }
 .shot-box::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(transparent 60%, var(--tile)); pointer-events: none; }
 .shots { position: absolute; inset: 0; }
@@ -172,6 +172,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .panel h2 { font-size: clamp(26px, 2.6vw, 36px); margin-top: 10px; }
 .panel h2 a:hover { color: var(--accent); }
 .panel h2 + p { color: var(--ink-2); margin-top: 8px; }
+.features { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; list-style: none; font-size: 10px; }
+.features li { padding: 5px 9px; border-radius: 99px; border: 1px solid var(--line-hi); color: var(--ink-2); }
 .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--ink-2); }
 .meta span { display: inline-flex; align-items: center; gap: 5px; }
 .meta svg, .facts svg { width: 12px; height: 12px; }
