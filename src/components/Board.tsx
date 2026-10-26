@@ -2,13 +2,26 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import { EDUCATION, EMAIL, EXPERIENCE, PROJECTS, TOOLS } from "@/lib/content";
+import { EDUCATION, EMAIL, EXPERIENCE, PROJECTS, SOCIALS, TOOLS } from "@/lib/content";
 import type { Day } from "@/lib/commits";
 import Shots from "@/components/Shots";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
 const clock = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Kolkata" });
 const at = (date: string) => new Date(date + "T00:00:00");
+
+// devicons drawn in black, which disappear on the dark theme unless inverted
+const INK_ICONS = new Set(["nextjs", "rust", "prisma"]);
+
+/** Longest run of active days, and the run still going (a quiet today doesn't break it). */
+function streaks(days: Day[]) {
+  let longest = 0, run = 0;
+  for (const d of days) { run = d.count ? run + 1 : 0; longest = Math.max(longest, run); }
+  let current = 0, i = days.length - 1;
+  if (i >= 0 && !days[i].count) i--;
+  for (; i >= 0 && days[i].count; i--) current++;
+  return { longest, current };
+}
 
 /** Tilts a tile toward the pointer. */
 function tilt(e: React.PointerEvent<HTMLElement>) {
@@ -49,6 +62,7 @@ export default function Board({ initial }: { initial: Day[] }) {
 
   const lead = days.length ? at(days[0].date).getDay() : 0;
   const total = useMemo(() => days.reduce((s, d) => s + d.count, 0), [days]);
+  const streak = useMemo(() => streaks(days), [days]);
   const cols = Math.ceil((days.length + lead) / 7);
 
   // a ripple spreads from the pointer: nearby squares lift and grow, written straight to the DOM
@@ -93,7 +107,22 @@ export default function Board({ initial }: { initial: Day[] }) {
         <h2>Fleet software at ideaForge</h2>
       </div>
 
-      <div className="tile t-graph" id="github" {...tile(3)}>
+      <div className="tile t-status" {...tile(3)}>
+        <span className="k mono">Status</span>
+        <p><i className="live" aria-hidden />Open to full-time roles from 2027</p>
+      </div>
+
+      <div className="tile t-streak" {...tile(4)}>
+        <span className="k mono">Streak</span>
+        <p><b>{streak.current}</b> days <span>· best {streak.longest}</span></p>
+      </div>
+
+      <div className="tile t-edu" {...tile(5)}>
+        <span className="k mono">Education · {EDUCATION.when}</span>
+        <p>{EDUCATION.school}<span>{EDUCATION.degree}</span></p>
+      </div>
+
+      <div className="tile t-graph" id="github" {...tile(6)}>
         <div className="row mono">
           <span className="k">GitHub · last year</span>
           <span aria-live="polite">
@@ -109,7 +138,7 @@ export default function Board({ initial }: { initial: Day[] }) {
         </div>
       </div>
 
-      <a className="tile t-work" id="work" href={linkAll.site ?? linkAll.src} {...tile(4)}>
+      <a className="tile t-work" id="work" href={linkAll.site ?? linkAll.src} {...tile(7)}>
         <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
         <div className="cap">
           <div><span className="k mono">Project · 2026</span><h2>{linkAll.t}</h2></div>
@@ -117,21 +146,58 @@ export default function Board({ initial }: { initial: Day[] }) {
         </div>
       </a>
 
-      <div className="tile t-exp" id="experience" {...tile(5)}>
+      <div className="tile t-about" {...tile(8)}>
+        <span className="k mono">About Link All</span>
+        <p>Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
+        <div>
+          <p className="mono">Rust · Swift · Kotlin · WinUI 3</p>
+          <div className="pills mono">
+            {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
+            <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
+          </div>
+        </div>
+      </div>
+
+      <div className="tile t-exp" id="experience" {...tile(9)}>
         <span className="k mono">Experience</span>
         <ul>
           {EXPERIENCE.map((x) => <li key={x.org}>{x.org}<span>{x.role} · {x.when}</span></li>)}
-          <li>{EDUCATION.school}<span>{EDUCATION.degree} · {EDUCATION.when}</span></li>
         </ul>
       </div>
 
-      <div className="tile t-stack" {...tile(6)}>
+      <div className="tile t-fleet" {...tile(10)}>
+        <span className="k mono">At ideaForge · 2026</span>
+        <div>
+          <h2>iF FleetDesk</h2>
+          <p>Book, dispatch and track company vehicles, for employees, drivers and admins.</p>
+        </div>
+        <p className="mono">NestJS · Prisma · PostgreSQL · React · Expo<br /><span>Internal, not public</span></p>
+      </div>
+
+      <div className="tile t-tools" {...tile(11)}>
+        <span className="k mono">Toolkit</span>
+        <ul>
+          {TOOLS.map(([name, slug]) => (
+            <li key={slug} title={name}>
+              <img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/${slug}/${slug}-original.svg`} alt="" loading="lazy" width={28} height={28} className={INK_ICONS.has(slug) ? "ink" : undefined} />
+              <span>{name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="tile t-stack" {...tile(12)}>
         <div className="marq mono" aria-label={TOOLS.map(([n]) => n).join(", ")}>
           {[0, 1].map((k) => TOOLS.map(([n]) => <span key={`${k}${n}`} aria-hidden>{n}</span>))}
         </div>
       </div>
 
-      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile(7)}>
+      <div className="tile t-links" {...tile(13)}>
+        <span className="k mono">Elsewhere</span>
+        <nav>{SOCIALS.map(([label, href]) => <a key={label} href={href}>{label}<ArrowUpRight weight="light" /></a>)}</nav>
+      </div>
+
+      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile(14)}>
         <span><span className="k mono">Say hello</span><br />Email me</span>
         <ArrowUpRight weight="light" />
       </a>
