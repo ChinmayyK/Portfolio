@@ -1,8 +1,7 @@
 export type Repo = {
   stars: number;
   forks: number;
-  /** null when GitHub wouldn't say */
-  commits: number | null;
+  commits: number;
   releases: number;
   downloads: number;
   latest: { tag: string; date: string } | null;

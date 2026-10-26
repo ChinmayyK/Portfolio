@@ -27,8 +27,9 @@ export default {
 
 async function cached(url, env, ctx, load, maxAge) {
   const cache = caches.default;
-  const fresh = new Request(`${url.origin}${url.pathname}?fresh`);
-  const stale = new Request(`${url.origin}${url.pathname}?stale`);
+  // the v2 in the keys retired copies cached before a partly failed /api/repo read counted as an error
+  const fresh = new Request(`${url.origin}${url.pathname}?v2-fresh`);
+  const stale = new Request(`${url.origin}${url.pathname}?v2-stale`);
 
   const hit = await cache.match(fresh);
   if (hit) return hit;
@@ -84,26 +85,28 @@ function parse(html) {
   return { total: { lastYear }, contributions };
 }
 
-// The shape is the Repo type in src/lib/repo.ts. Only the repo itself has to answer;
-// releases, languages and the commit count fall back to empty if their calls fail.
+// The shape is the Repo type in src/lib/repo.ts. Every call has to answer: a half-read repo
+// (say, rate-limited part way) is an error, so it never replaces the last full copy.
 async function repo(env) {
   const headers = { Accept: "application/vnd.github+json", "User-Agent": "chinmaykudalkar.com" };
   if (env.GITHUB_TOKEN) headers.Authorization = `Bearer ${env.GITHUB_TOKEN}`;
   const get = (path) => fetch(`https://api.github.com/repos/${REPO}${path}`, { headers, signal: AbortSignal.timeout(8000) });
 
-  const [r, rel, langs, commits] = await Promise.all([get(""), get("/releases?per_page=100"), get("/languages"), get("/commits?per_page=1")]);
-  if (!r.ok) throw new Error(`GitHub ${r.status}`);
+  const res = await Promise.all([get(""), get("/releases?per_page=100"), get("/languages"), get("/commits?per_page=1")]);
+  const failed = res.find((x) => !x.ok);
+  if (failed) throw new Error(`GitHub ${failed.status} on ${failed.url}`);
+  const [r, rel, langs, commits] = res;
   const info = await r.json();
-  const releases = rel.ok ? (await rel.json()).filter((x) => !x.draft) : [];
+  const releases = (await rel.json()).filter((x) => !x.draft);
   const latest = releases.find((x) => !x.prerelease) ?? releases[0];
-  const bytes = langs.ok ? await langs.json() : {};
+  const bytes = await langs.json();
   const sum = Object.values(bytes).reduce((s, n) => s + n, 0);
   // one commit per page, so the last page number is the commit count
   const last = commits.headers.get("link")?.match(/[?&]page=(\d+)>; rel="last"/)?.[1];
   return {
     stars: info.stargazers_count,
     forks: info.forks_count,
-    commits: last ? Number(last) : commits.ok ? (await commits.json()).length : null,
+    commits: last ? Number(last) : (await commits.json()).length,
     releases: releases.length,
     downloads: releases.reduce((s, x) => s + x.assets.reduce((t, a) => t + a.download_count, 0), 0),
     latest: latest ? { tag: latest.tag_name, date: latest.published_at } : null,

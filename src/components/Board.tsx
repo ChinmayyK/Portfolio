@@ -232,7 +232,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <p>Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
         {repo && (
           <dl className="facts">
-            {repo.commits !== null && <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>}
+            <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>
             <div><dt className="mono">Releases</dt><dd>{repo.releases}</dd></div>
             <div><dt className="mono">Downloads</dt><dd>{num(repo.downloads)}</dd></div>
           </dl>
