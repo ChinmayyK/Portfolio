@@ -1,11 +1,10 @@
 import { commitsAtBuild } from "@/lib/commits";
-import { repoStats } from "@/lib/repo";
-import { PROJECTS } from "@/lib/content";
+import { repoAtBuild } from "@/lib/repo";
 import Nav from "@/components/Nav";
 import Board from "@/components/Board";
 
 export default async function Home() {
-  const [days, repo] = await Promise.all([commitsAtBuild(), repoStats(PROJECTS[0].src)]);
+  const [days, repo] = await Promise.all([commitsAtBuild(), repoAtBuild()]);
 
   return (
     <>

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, GitFork, Star, Tag } from "@phosphor-icons/react";
 import { EDUCATION, EMAIL, EXPERIENCE, GITHUB, PROJECTS, SOCIALS, TOOLS } from "@/lib/content";
 import type { Day } from "@/lib/commits";
-import { repoStats, type Repo } from "@/lib/repo";
+import type { Repo } from "@/lib/repo";
 import Shots from "@/components/Shots";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
@@ -70,9 +70,12 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((j: { contributions: Day[] }) => { if (!cancelled && j.contributions?.length) setDays(j.contributions.slice(-365)); })
       .catch(() => {}); // the build-time copy stays up
-    repoStats(linkAll.src).then((r) => { if (!cancelled && r) setRepo(r); });
+    fetch("/api/repo", { signal: AbortSignal.timeout(12000) })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((r: Repo) => { if (!cancelled && r.stars !== undefined) setRepo(r); })
+      .catch(() => {});
     return () => { cancelled = true; };
-  }, [linkAll.src]);
+  }, []);
 
   // the four biggest languages get their own bar, the rest are lumped into "Other"
   const langs = useMemo(() => {
