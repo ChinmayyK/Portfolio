@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://chinmaykudalkar.com"),
   title: "Chinmay Kudalkar",
   description: "Chinmay Kudalkar, full-stack developer. Projects, experience and contact.",
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Chinmay Kudalkar",
     description: "Full-stack developer. Projects, experience and contact.",

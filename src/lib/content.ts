@@ -14,7 +14,7 @@ export const PROJECTS: Project[] = [
     src: "https://github.com/ChinmayyK/Link-All",
     site: "https://linkall.chinmaykudalkar.com",
     store: "https://apps.microsoft.com/detail/9P9DJW3KCK9K",
-    shots: ["linkall-mac-devices.png", "linkall-mac-clipboard.png", "linkall-mac-transfers-active.png", "linkall-win-clipboard.png"],
+    shots: ["linkall-mac-devices.webp", "linkall-mac-clipboard.webp", "linkall-mac-transfers-active.webp", "linkall-win-clipboard.webp"],
   },
 ];
 

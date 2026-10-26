@@ -26,7 +26,7 @@ export default function Shots({ files, alt }: { files: string[]; alt: string }) 
       {files.map((f, i) => (
         <div key={f} className={i === n ? "on" : ""}>
           <img className="on-light" src={`/img/${f}`} alt={i === 0 ? alt : ""} loading={i ? "lazy" : undefined} />
-          <img className="on-dark" src={`/img/${f.replace(/\.png$/, "-dark.png")}`} alt="" loading="lazy" />
+          <img className="on-dark" src={`/img/${f.replace(/\.webp$/, "-dark.webp")}`} alt="" loading="lazy" />
         </div>
       ))}
     </div>
