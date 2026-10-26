@@ -6,6 +6,7 @@ import { EDUCATION, EMAIL, EXPERIENCE, GITHUB, PROJECTS, SOCIALS, TOOLS } from "
 import type { Day } from "@/lib/commits";
 import type { Repo } from "@/lib/repo";
 import Shots from "@/components/Shots";
+import { land } from "@/components/landing";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
 const short = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
@@ -45,10 +46,10 @@ function tilt(e: React.PointerEvent<HTMLElement>) {
   if (e.pointerType !== "mouse") return;
   const t = e.currentTarget, r = t.getBoundingClientRect();
   const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-  t.style.transform = `rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg)`;
+  t.style.transform = `perspective(1200px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg)`;
 }
 const level = (e: React.PointerEvent<HTMLElement>) => { e.currentTarget.style.transform = ""; };
-const tile = (i: number) => ({ onPointerMove: tilt, onPointerLeave: level, style: { "--i": i } as React.CSSProperties });
+const tile = { onPointerMove: tilt, onPointerLeave: level };
 
 function Clock() {
   const [now, setNow] = useState("");
@@ -61,14 +62,17 @@ function Clock() {
   return <b suppressHydrationWarning>{now}</b>;
 }
 
-/** The whole page: one board of tiles that flip up one after another. */
+/** The whole page: one board of tiles, revealed by a camera swoop on landing (see landing.ts). */
 export default function Board({ initial, repo: builtRepo }: { initial: Day[]; repo: Repo | null }) {
   const [days, setDays] = useState(initial);
   const [repo, setRepo] = useState(builtRepo);
   const [hover, setHover] = useState<Day | null>(null);
   const cells = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const board = useRef<HTMLElement>(null);
   const linkAll = PROJECTS[0];
+
+  useEffect(() => { if (board.current) land(board.current); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -137,8 +141,8 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
   };
 
   return (
-    <main className="board wrap" id="top">
-      <div className="tile t-id" {...tile(0)}>
+    <main className="board wrap" id="top" ref={board}>
+      <div className="tile t-id" {...tile}>
         <div className="blob" aria-hidden />
         <span className="k mono">Full-stack developer</span>
         <h1>Chinmay<br />Kudalkar</h1>
@@ -149,12 +153,12 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
       </div>
 
-      <div className="tile t-clock" {...tile(1)}>
+      <div className="tile t-clock" {...tile}>
         <span className="k mono">Navi Mumbai</span>
         <Clock />
       </div>
 
-      <div className="tile t-now" {...tile(2)}>
+      <div className="tile t-now" {...tile}>
         <svg viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden>
           <path id="route" d="M-10 160 C 80 150, 90 60, 180 80 S 300 170, 410 40" />
           <circle r="5"><animateMotion dur="7s" repeatCount="indefinite"><mpath href="#route" /></animateMotion></circle>
@@ -163,22 +167,22 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <h2>Fleet software at ideaForge</h2>
       </div>
 
-      <div className="tile t-status" {...tile(3)}>
+      <div className="tile t-status" {...tile}>
         <span className="k mono">Status</span>
         <p><i className="live" aria-hidden />Open to full-time roles from 2027</p>
       </div>
 
-      <div className="tile t-streak" {...tile(4)}>
+      <div className="tile t-streak" {...tile}>
         <span className="k mono">Streak</span>
         <p><b>{streak.current}</b> days <span>· best {streak.longest}</span></p>
       </div>
 
-      <div className="tile t-edu" {...tile(5)}>
+      <div className="tile t-edu" {...tile}>
         <span className="k mono">Education · {EDUCATION.when}</span>
         <p>{EDUCATION.school}<span>{EDUCATION.degree}</span></p>
       </div>
 
-      <div className="tile t-graph" id="github" {...tile(6)}>
+      <div className="tile t-graph" id="github" {...tile}>
         <div className="gh-main">
           <div className="row mono">
             <span className="k">GitHub · last year</span>
@@ -216,7 +220,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
       </div>
 
-      <div className="tile t-work" id="work" {...tile(7)}>
+      <div className="tile t-work" id="work" {...tile}>
         <a className="shot-box" href={linkAll.site ?? linkAll.src} tabIndex={-1} aria-hidden>
           <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
         </a>
@@ -268,14 +272,14 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
       </div>
 
-      <div className="tile t-exp" id="experience" {...tile(8)}>
+      <div className="tile t-exp" id="experience" {...tile}>
         <span className="k mono">Experience</span>
         <ul>
           {EXPERIENCE.map((x) => <li key={x.org}>{x.org}<span>{x.role} · {x.when}</span></li>)}
         </ul>
       </div>
 
-      <div className="tile t-fleet" {...tile(9)}>
+      <div className="tile t-fleet" {...tile}>
         <span className="k mono">At ideaForge · 2026</span>
         <div>
           <h2>iF FleetDesk</h2>
@@ -284,7 +288,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <p className="mono">NestJS · Prisma · PostgreSQL · React · Expo<br /><span>Internal, not public</span></p>
       </div>
 
-      <div className="tile t-tools" {...tile(10)}>
+      <div className="tile t-tools" {...tile}>
         <span className="k mono">Toolkit</span>
         <ul>
           {TOOLS.map(([name, slug]) => (
@@ -296,18 +300,18 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </ul>
       </div>
 
-      <div className="tile t-stack" {...tile(11)}>
+      <div className="tile t-stack" {...tile}>
         <div className="marq mono" aria-label={TOOLS.map(([n]) => n).join(", ")}>
           {[0, 1].map((k) => TOOLS.map(([n]) => <span key={`${k}${n}`} aria-hidden>{n}</span>))}
         </div>
       </div>
 
-      <div className="tile t-links" {...tile(12)}>
+      <div className="tile t-links" {...tile}>
         <span className="k mono">Elsewhere</span>
         <nav>{SOCIALS.map(([label, href]) => <a key={label} href={href}>{label}<ArrowUpRight weight="light" /></a>)}</nav>
       </div>
 
-      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile(13)}>
+      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile}>
         <span><span className="k mono">Say hello</span><br />Email me</span>
         <ArrowUpRight weight="light" />
       </a>
