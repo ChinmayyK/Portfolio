@@ -2,6 +2,8 @@ export type Project = {
   t: string;
   src: string;
   site?: string;
+  /** Microsoft Store listing */
+  store?: string;
   /** window captures, each with a -dark twin, in the order they cycle */
   shots: string[];
 };
@@ -11,6 +13,7 @@ export const PROJECTS: Project[] = [
     t: "Link All",
     src: "https://github.com/ChinmayyK/Link-All",
     site: "https://linkall.chinmaykudalkar.com",
+    store: "https://apps.microsoft.com/detail/9P9DJW3KCK9K",
     shots: ["linkall-mac-devices.png", "linkall-mac-clipboard.png", "linkall-mac-transfers-active.png", "linkall-win-clipboard.png"],
   },
 ];

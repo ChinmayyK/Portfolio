@@ -77,6 +77,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
   // the four biggest languages get their own bar, the rest are lumped into "Other"
   const langs = useMemo(() => {
     const all = repo?.langs ?? [];
+    if (!all.length) return [];
     const top = all.filter(([l]) => l in LANG_COLORS).slice(0, 4);
     const rest = 1 - top.reduce((s, [, n]) => s + n, 0);
     return rest > 0.005 ? [...top, ["Other", rest] as [string, number]] : top;
@@ -252,6 +253,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
               : "Rust · Swift · Kotlin · WinUI 3"}
           </p>
           <div className="pills mono">
+            {linkAll.store && <a className="go" href={linkAll.store}>Microsoft Store<ArrowUpRight weight="light" /></a>}
             {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
             <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
           </div>

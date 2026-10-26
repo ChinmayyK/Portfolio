@@ -211,7 +211,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .langs li { display: inline-flex; align-items: center; gap: 6px; }
 .langs li i { width: 7px; height: 7px; border-radius: 50%; }
 .langs li span { color: var(--ink-3); }
-.pills { display: flex; gap: 8px; margin-top: 14px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .pills a, .t-links a { display: inline-flex; align-items: center; gap: 6px; transition: color .25s, background .25s, border-color .25s; }
 .pills a { height: 36px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line-hi); color: var(--ink); }
 .pills a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
