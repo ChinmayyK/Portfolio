@@ -1,20 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const clock = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" });
+import { SOCIALS } from "@/lib/content";
 
 export default function Nav() {
   const [dark, setDark] = useState(true);
-  const [time, setTime] = useState("");
 
-  useEffect(() => {
-    setDark(document.documentElement.dataset.theme === "dark");
-    const tick = () => setTime(clock.format(new Date()));
-    tick();
-    const t = setInterval(tick, 15000);
-    return () => clearInterval(t);
-  }, []);
+  useEffect(() => setDark(document.documentElement.dataset.theme === "dark"), []);
 
   function toggleTheme() {
     const next = dark ? "light" : "dark";
@@ -29,13 +21,8 @@ export default function Nav() {
   return (
     <header className="bar wrap mono">
       <a href="#top">Chinmay Kudalkar</a>
-      <nav>
-        <a href="#work">Work</a>
-        <a href="#experience">Experience</a>
-        <a href="#contact">Contact</a>
-      </nav>
       <span className="bar-end">
-        <span suppressHydrationWarning>{time && `${time} IST`}</span>
+        <nav>{SOCIALS.map(([label, href]) => <a key={label} href={href}>{label}</a>)}</nav>
         <button type="button" className="switch" onClick={toggleTheme} aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}>
           <span>{dark ? "Dark" : "Light"}</span>
         </button>
