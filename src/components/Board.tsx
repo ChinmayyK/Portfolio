@@ -210,67 +210,63 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
       </div>
 
-      <a className="tile t-work" id="work" href={linkAll.site ?? linkAll.src} {...tile(7)}>
-        <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
-        <div className="cap">
+      <div className="tile t-work" id="work" {...tile(7)}>
+        <a className="shot-box" href={linkAll.site ?? linkAll.src} tabIndex={-1} aria-hidden>
+          <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
+        </a>
+        <div className="panel">
           <div>
-            {repo && (
-              <div className="chips mono">
-                <span><Star weight="fill" />{num(repo.stars)}<em>stars</em></span>
-                <span><GitFork />{num(repo.forks)}<em>{repo.forks === 1 ? "fork" : "forks"}</em></span>
-                {repo.latest && <span><Tag />{repo.latest.tag}</span>}
+            <span className="k mono">Project · 2026</span>
+            <h2><a href={linkAll.site ?? linkAll.src}>{linkAll.t}</a></h2>
+            <p>Copy on one device, paste on another. Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
+          </div>
+          {repo && (
+            <dl className="facts">
+              <div><dt className="mono"><Star weight="fill" className="star" />Stars</dt><dd>{num(repo.stars)}</dd></div>
+              <div><dt className="mono"><GitFork />Forks</dt><dd>{num(repo.forks)}</dd></div>
+              <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>
+              <div><dt className="mono">Downloads</dt><dd>{num(repo.downloads)}</dd></div>
+            </dl>
+          )}
+          {langs.length > 0 && (
+            <div className="langs">
+              <div className="track" aria-hidden>
+                {langs.map(([l, n]) => <i key={l} style={{ flexGrow: n, background: LANG_COLORS[l] ?? OTHER }} />)}
               </div>
-            )}
-            <span className="k mono">Project · 2026</span><h2>{linkAll.t}</h2>
-          </div>
-          <span className="mono">Copy here, paste there <ArrowUpRight weight="light" /></span>
-        </div>
-      </a>
-
-      <div className="tile t-about" {...tile(8)}>
-        <span className="k mono">About Link All</span>
-        <p>Clipboard and files across macOS, Windows, Android and Linux, with no cloud.</p>
-        {repo && (
-          <dl className="facts">
-            <div><dt className="mono">Commits</dt><dd>{num(repo.commits)}</dd></div>
-            <div><dt className="mono">Releases</dt><dd>{repo.releases}</dd></div>
-            <div><dt className="mono">Downloads</dt><dd>{num(repo.downloads)}</dd></div>
-          </dl>
-        )}
-        {langs.length > 0 && (
-          <div className="langs">
-            <div className="track" aria-hidden>
-              {langs.map(([l, n]) => <i key={l} style={{ flexGrow: n, background: LANG_COLORS[l] ?? OTHER }} />)}
+              <ul className="mono">
+                {langs.map(([l, n]) => (
+                  <li key={l}><i style={{ background: LANG_COLORS[l] ?? OTHER }} aria-hidden />{l} <span>{Math.round(n * 100)}%</span></li>
+                ))}
+              </ul>
             </div>
-            <ul className="mono">
-              {langs.map(([l, n]) => (
-                <li key={l}><i style={{ background: LANG_COLORS[l] ?? OTHER }} aria-hidden />{l} <span>{Math.round(n * 100)}%</span></li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <div>
-          <p className="mono">
-            {repo
-              ? [repo.license, `Updated ${stamp.format(new Date(repo.pushed))}`].filter(Boolean).join(" · ")
-              : "Rust · Swift · Kotlin · WinUI 3"}
-          </p>
-          <div className="pills mono">
-            {linkAll.store && <a className="go" href={linkAll.store}>Microsoft Store<ArrowUpRight weight="light" /></a>}
-            {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
-            <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
+          )}
+          <div>
+            <p className="mono meta">
+              {repo ? (
+                <>
+                  {repo.latest && <span><Tag />{repo.latest.tag}</span>}
+                  {repo.license && <span>{repo.license}</span>}
+                  <span>Updated {stamp.format(new Date(repo.pushed))}</span>
+                </>
+              ) : "Rust · Swift · Kotlin · WinUI 3"}
+            </p>
+            <div className="pills mono">
+              {linkAll.store && <a className="go" href={linkAll.store}>Microsoft Store<ArrowUpRight weight="light" /></a>}
+              {linkAll.site && <a href={linkAll.site}>Website<ArrowUpRight weight="light" /></a>}
+              <a href={linkAll.src}>Source<ArrowUpRight weight="light" /></a>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="tile t-exp" id="experience" {...tile(9)}>
+      <div className="tile t-exp" id="experience" {...tile(8)}>
         <span className="k mono">Experience</span>
         <ul>
           {EXPERIENCE.map((x) => <li key={x.org}>{x.org}<span>{x.role} · {x.when}</span></li>)}
         </ul>
       </div>
 
-      <div className="tile t-fleet" {...tile(10)}>
+      <div className="tile t-fleet" {...tile(9)}>
         <span className="k mono">At ideaForge · 2026</span>
         <div>
           <h2>iF FleetDesk</h2>
@@ -279,7 +275,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <p className="mono">NestJS · Prisma · PostgreSQL · React · Expo<br /><span>Internal, not public</span></p>
       </div>
 
-      <div className="tile t-tools" {...tile(11)}>
+      <div className="tile t-tools" {...tile(10)}>
         <span className="k mono">Toolkit</span>
         <ul>
           {TOOLS.map(([name, slug]) => (
@@ -291,18 +287,18 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </ul>
       </div>
 
-      <div className="tile t-stack" {...tile(12)}>
+      <div className="tile t-stack" {...tile(11)}>
         <div className="marq mono" aria-label={TOOLS.map(([n]) => n).join(", ")}>
           {[0, 1].map((k) => TOOLS.map(([n]) => <span key={`${k}${n}`} aria-hidden>{n}</span>))}
         </div>
       </div>
 
-      <div className="tile t-links" {...tile(13)}>
+      <div className="tile t-links" {...tile(12)}>
         <span className="k mono">Elsewhere</span>
         <nav>{SOCIALS.map(([label, href]) => <a key={label} href={href}>{label}<ArrowUpRight weight="light" /></a>)}</nav>
       </div>
 
-      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile(14)}>
+      <a className="tile t-mail" id="contact" href={`mailto:${EMAIL}`} {...tile(13)}>
         <span><span className="k mono">Say hello</span><br />Email me</span>
         <ArrowUpRight weight="light" />
       </a>
