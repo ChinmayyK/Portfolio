@@ -62,7 +62,7 @@ function Clock() {
   return <b suppressHydrationWarning>{now}</b>;
 }
 
-/** The whole page: one board of tiles, revealed by a camera swoop on landing (see landing.ts). */
+/** The whole page: one board of tiles, revealed by an intro on landing (see landing.ts). */
 export default function Board({ initial, repo: builtRepo }: { initial: Day[]; repo: Repo | null }) {
   const [days, setDays] = useState(initial);
   const [repo, setRepo] = useState(builtRepo);
