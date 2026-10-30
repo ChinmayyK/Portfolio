@@ -90,13 +90,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: transform .6s var(--ease), border-color .3s;
 }
 .tile:hover { border-color: var(--line-hi); }
-/* hidden until the landing deals them in, so they never flash in place first */
-.js .board:not(.landed) > .tile { opacity: 0; }
-.intro-sweep {
-  position: absolute; inset: 0; z-index: 5; pointer-events: none; mix-blend-mode: screen;
-  background: linear-gradient(110deg, transparent 38%, color-mix(in srgb, var(--accent) 22%, transparent) 48%, rgba(255, 255, 255, .08) 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
-}
-.intro-echo { position: absolute; z-index: 5; pointer-events: none; border: 1.5px solid var(--accent); border-radius: var(--r); }
 .k { color: var(--ink-3); }
 .tile h2 { font-weight: 500; letter-spacing: -.02em; line-height: 1.1; }
 
