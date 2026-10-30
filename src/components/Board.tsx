@@ -6,6 +6,7 @@ import { EDUCATION, EMAIL, EXPERIENCE, GITHUB, PROJECTS, SOCIALS, TOOLS } from "
 import type { Day } from "@/lib/commits";
 import type { Repo } from "@/lib/repo";
 import Shots from "@/components/Shots";
+import { land } from "@/components/landing";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
 const short = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
@@ -61,14 +62,17 @@ function Clock() {
   return <b suppressHydrationWarning>{now}</b>;
 }
 
-/** The whole page: one board of tiles. */
+/** The whole page: one board of tiles, revealed by an intro on landing (see landing.ts). */
 export default function Board({ initial, repo: builtRepo }: { initial: Day[]; repo: Repo | null }) {
   const [days, setDays] = useState(initial);
   const [repo, setRepo] = useState(builtRepo);
   const [hover, setHover] = useState<Day | null>(null);
   const cells = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const board = useRef<HTMLElement>(null);
   const linkAll = PROJECTS[0];
+
+  useEffect(() => { if (board.current) land(board.current); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -137,7 +141,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
   };
 
   return (
-    <main className="board wrap" id="top">
+    <main className="board wrap" id="top" ref={board}>
       <div className="tile t-id" {...tile}>
         <div className="blob" aria-hidden />
         <span className="k mono">Full-stack developer</span>

@@ -90,6 +90,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: transform .6s var(--ease), border-color .3s;
 }
 .tile:hover { border-color: var(--line-hi); }
+/* hidden until the landing brings them in, so they never flash in place first */
+.js .board:not(.landed) > .tile { opacity: 0; }
 .k { color: var(--ink-3); }
 .tile h2 { font-weight: 500; letter-spacing: -.02em; line-height: 1.1; }
 
