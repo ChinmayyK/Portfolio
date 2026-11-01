@@ -6,6 +6,12 @@ import { EDUCATION, EMAIL, EXPERIENCE, GITHUB, PROJECTS, SOCIALS, TOOLS } from "
 import type { Day } from "@/lib/commits";
 import type { Repo } from "@/lib/repo";
 import Shots from "@/components/Shots";
+import dynamic from "next/dynamic";
+import WhenNear from "@/components/WhenNear";
+
+// the two product demos load on their own, after the page is up and once they're near the screen
+const FleetStage = dynamic(() => import("@/components/FleetStage"), { ssr: false });
+const LinkAllPhone = dynamic(() => import("@/components/LinkAllPhone"), { ssr: false });
 import { land } from "@/components/landing";
 
 const long = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
@@ -29,7 +35,7 @@ const LINKALL_FEATURES = [
 ];
 
 // devicons drawn in black, which disappear on the dark theme unless inverted
-const INK_ICONS = new Set(["nextjs", "rust", "prisma"]);
+const INK_ICONS = new Set(["nextjs", "rust", "prisma", "linux"]);
 
 /** Longest run of active days, and the run still going (a quiet today doesn't break it). */
 function streaks(days: Day[]) {
@@ -141,7 +147,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
   };
 
   return (
-    <main className="board wrap" id="top" ref={board}>
+    <main className="board wrap" id="top" ref={board} suppressHydrationWarning>
       <div className="tile t-id" {...tile}>
         <div className="blob" aria-hidden />
         <span className="k mono">Full-stack developer</span>
@@ -207,7 +213,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         </div>
         <div className="gh-side">
           <a className="gh-who" href={`https://github.com/${GITHUB}`}>
-            <img src={`https://github.com/${GITHUB}.png?size=96`} alt="" width={40} height={40} loading="lazy" />
+            <img src="https://avatars.githubusercontent.com/u/146927108?s=80&v=4" alt="" width={40} height={40} loading="lazy" />
             <span>Chinmay Kudalkar<span className="mono">@{GITHUB}</span></span>
             <ArrowUpRight weight="light" />
           </a>
@@ -223,6 +229,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
       <div className="tile t-work" id="work" {...tile}>
         <a className="shot-box" href={linkAll.site ?? linkAll.src} tabIndex={-1} aria-hidden>
           <Shots files={linkAll.shots} alt={`${linkAll.t} on desktop`} />
+          <WhenNear className="la-art"><LinkAllPhone /></WhenNear>
         </a>
         <div className="panel">
           <div>
@@ -275,13 +282,20 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
       <div className="tile t-exp" id="experience" {...tile}>
         <span className="k mono">Experience</span>
         <ul>
-          {EXPERIENCE.map((x) => <li key={x.org}>{x.org}<span>{x.role} · {x.when}</span></li>)}
+          {EXPERIENCE.map((x) => (
+            <li key={x.org}>
+              <div className="exp-head">{x.org}<span className="mono">{x.when}</span></div>
+              <span>{x.role}</span>
+              <p>{x.line}</p>
+            </li>
+          ))}
         </ul>
       </div>
 
       <div className="tile t-fleet" {...tile}>
-        <span className="k mono">At ideaForge · 2026</span>
+        <WhenNear className="fleet-art"><FleetStage /></WhenNear>
         <div>
+          <span className="k mono">At ideaForge · 2026</span>
           <h2>iF FleetDesk</h2>
           <p>Book, dispatch and track company vehicles, for employees, drivers and admins.</p>
         </div>
@@ -293,7 +307,7 @@ export default function Board({ initial, repo: builtRepo }: { initial: Day[]; re
         <ul>
           {TOOLS.map(([name, slug]) => (
             <li key={slug} title={name}>
-              <img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/${slug}/${slug}-original.svg`} alt="" loading="lazy" width={28} height={28} className={INK_ICONS.has(slug) ? "ink" : undefined} />
+              <img src={`/icons/${slug}.svg`} alt="" loading="lazy" decoding="async" width={24} height={24} className={INK_ICONS.has(slug) ? "ink" : undefined} />
               <span>{name}</span>
             </li>
           ))}

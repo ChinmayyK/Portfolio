@@ -165,7 +165,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .shot-box { position: relative; overflow: hidden; }
 .shot-box::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(transparent 60%, var(--tile)); pointer-events: none; }
 .shots { position: absolute; inset: 0; }
-.shots > div { position: absolute; left: 6%; top: 8%; width: 88%; opacity: 0; transform: scale(1.08) translateY(20px); transition: opacity 1s, transform 6s linear; }
+.shots > div { position: absolute; left: 5%; top: 8%; width: 74%; opacity: 0; transform: scale(1.08) translateY(20px); transition: opacity 1s, transform 6s linear; }
 .shots > div.on { opacity: 1; transform: none; }
 .shots img { border-radius: 10px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .7); }
 .panel { display: flex; flex-direction: column; justify-content: space-between; gap: 16px; padding: 22px; border-left: 1px solid var(--line); }
@@ -182,10 +182,15 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .t-mail:hover svg { transform: translate(2px, -2px); }
 
 /* experience */
-.t-exp { grid-column: span 4; grid-row: span 2; }
-.t-exp ul { margin-top: 4px; }
-.t-exp li { list-style: none; padding: 9px 0; border-top: 1px solid var(--line); margin-top: 9px; font-weight: 500; line-height: 1.3; }
-.t-exp li span { display: block; color: var(--ink-2); font: 400 13px/1.4 var(--sans); margin-top: 2px; }
+.t-exp { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; gap: 14px; }
+/* the roles share the tile's height, each led by a rule, so the list ends where the tile does */
+.t-exp ul { flex: 1; display: grid; grid-auto-rows: 1fr; list-style: none; }
+.t-exp li { display: flex; flex-direction: column; padding-top: 14px; border-top: 1px solid var(--line); font-weight: 500; line-height: 1.3; }
+.t-exp li + li { margin-top: 14px; }
+.exp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 18px; letter-spacing: -.01em; }
+.exp-head .mono { font-size: 10px; font-weight: 400; color: var(--ink-3); white-space: nowrap; }
+.t-exp li > span { color: var(--ink-2); font: 400 13px/1.4 var(--sans); margin-top: 3px; }
+.t-exp li p { margin-top: 10px; color: var(--ink-2); font: 400 14px/1.5 var(--sans); max-width: 32em; }
 
 /* small facts */
 .t-status, .t-streak, .t-edu { grid-column: span 4; display: flex; flex-direction: column; justify-content: space-between; }
@@ -210,20 +215,31 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .pills svg, .t-links svg { width: 14px; height: 14px; transition: transform .35s var(--ease); }
 .pills a:hover svg, .t-links a:hover svg { transform: translate(2px, -2px); }
 
+/* product demos: their boxes are page CSS so they hold their space before the demo code arrives */
+.fleet-art { flex: none; align-self: flex-end; width: min(340px, calc(100% + 22px)); height: 150px; margin: -22px -22px 0 0; }
+.la-art { position: absolute; z-index: 2; right: 4%; bottom: -40px; width: 330px; height: 560px; pointer-events: none; }
+.fleet-art > *, .la-art > * { animation: demo-in .8s var(--ease) both; }
+@keyframes demo-in { from { opacity: 0; } }
+/* narrow: the phone rises from the bottom and runs off the right; in a phone column it comes in whole, centred */
+@media (max-width: 900px) { .la-art { right: max(-90px, calc(50% - 300px)); bottom: auto; top: 30%; } }
+@media (max-width: 560px) { .la-art { right: 50%; transform: translateX(50%); top: 34%; } }
+
 /* FleetDesk */
 .t-fleet { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
-.t-fleet h2 { font-size: clamp(24px, 2.4vw, 36px); }
+.t-fleet h2 { font-size: clamp(24px, 2.4vw, 36px); margin-top: 8px; }
 .t-fleet h2 + p { color: var(--ink-2); margin-top: 8px; max-width: 30em; }
 .t-fleet .mono { color: var(--ink-2); line-height: 1.8; }
 .t-fleet .mono span { color: var(--ink-3); }
 
 /* toolkit */
 .t-tools { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
-.t-tools ul { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; list-style: none; }
-.t-tools li { display: grid; place-items: center; height: 44px; border-radius: 14px; background: rgba(var(--cell), .04); transition: background .25s, transform .4s var(--ease); }
+/* the icon grid takes the whole tile: cells stretch to fill the height and carry their names */
+.t-tools ul { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; gap: 8px; list-style: none; }
+.t-tools li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 52px; border-radius: 14px; background: rgba(var(--cell), .04); transition: background .25s, transform .4s var(--ease); }
 .t-tools li:hover { background: rgba(var(--cell), .09); transform: translateY(-3px); }
-.t-tools img { width: 46%; height: auto; }
-.t-tools li span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.t-tools img { width: 24px; height: 24px; }
+.t-tools li span { font: 10px/1 var(--mono); letter-spacing: .04em; color: var(--ink-3); white-space: nowrap; transition: color .25s; }
+.t-tools li:hover span { color: var(--ink); }
 :root:not([data-theme="light"]) .t-tools img.ink { filter: invert(1); }
 
 /* links */
@@ -257,7 +273,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .gh-side { justify-content: flex-start; }
   .gh-who { flex: 1 0 100%; }
   .t-work { grid-row: auto; grid-template-columns: 1fr; }
-  .shot-box { height: clamp(220px, 60vw, 420px); }
+  .shot-box { height: clamp(440px, 110vw, 560px); }
   .panel { border-left: 0; border-top: 1px solid var(--line); }
   .hm i { border-radius: 2px; }
 }
