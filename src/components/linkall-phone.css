@@ -1,0 +1,13 @@
+/* Link All's Android app beside the Mac screenshots: real captures inside a drawn phone */
+.la .ss-stage { background: transparent; overflow: visible; }
+.la-phone { position: absolute; top: 12px; left: 5px; box-shadow: 0 30px 50px -20px rgba(0, 0, 0, .55); }
+
+/* the captures fill the whole screen, status bar included */
+.la .ss-phone__content { position: absolute; inset: 0; padding: 0; }
+.la-screens { position: absolute; inset: 0; background: #000; }
+.la-screens img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top;
+  opacity: 0; transition: opacity .7s ease;
+}
+/* the screen coming in sits over the one leaving, so the phone never dips to black */
+.la-screens img[data-on] { opacity: 1; z-index: 1; }
