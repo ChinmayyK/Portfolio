@@ -8,6 +8,9 @@ const STEP_MS = 3400;
 export default function Shots({ files, alt }: { files: string[]; alt: string }) {
   const box = useRef<HTMLDivElement>(null);
   const [n, setN] = useState(0);
+  // screens are fetched one ahead of the one showing, never all at once
+  const [reach, setReach] = useState(1);
+  useEffect(() => setReach((r) => Math.max(r, n + 1)), [n]);
 
   useEffect(() => {
     const el = box.current;
@@ -23,10 +26,10 @@ export default function Shots({ files, alt }: { files: string[]; alt: string }) 
 
   return (
     <div className="shots" ref={box}>
-      {files.map((f, i) => (
+      {files.map((f, i) => i <= reach && (
         <div key={f} className={i === n ? "on" : ""}>
-          <img className="on-light" src={`/img/${f}`} alt={i === 0 ? alt : ""} loading={i ? "lazy" : undefined} />
-          <img className="on-dark" src={`/img/${f.replace(/\.webp$/, "-dark.webp")}`} alt="" loading="lazy" />
+          <img className="on-light" src={`/img/${f}`} alt={i === 0 ? alt : ""} loading="lazy" decoding="async" />
+          <img className="on-dark" src={`/img/${f.replace(/\.webp$/, "-dark.webp")}`} alt="" loading="lazy" decoding="async" />
         </div>
       ))}
     </div>

@@ -5,3 +5,9 @@
 /Chinmay_Kudalkar_Resume.pdf
   Content-Type: application/pdf
   Content-Disposition: inline; filename="Chinmay_Kudalkar_Resume.pdf"
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+/icons/*
+  Cache-Control: public, max-age=2592000
+/img/*
+  Cache-Control: public, max-age=2592000
