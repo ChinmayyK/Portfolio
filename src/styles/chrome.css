@@ -66,3 +66,8 @@
 @media not ((hover: hover) and (pointer: fine)) { .cursor { display: none; } }
 
 .magnetic { display: inline-block; will-change: transform; }
+/* six destinations have to fit any screen height */
+.menu .menu-link { font-size: min(var(--t-h1), 9.2vh); }
+.menu-list { grid-template-columns: 1fr; }
+@media (min-width: 64rem) { .menu-list { grid-template-columns: 1fr 1fr; column-gap: 4rem; } }
+.over-dark .menu-button { background: var(--color-lime); color: var(--color-ink); }

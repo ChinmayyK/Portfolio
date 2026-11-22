@@ -39,8 +39,25 @@ export function Choreographer() {
 
   useEffect(() => {
     document.documentElement.classList.add("motion-ready");
-    if (reducedMotion()) return;
     const { gsap, ScrollTrigger, SplitText } = motion();
+
+    // The contact footer waits under the page. Keep it transparent (still focusable) until the page's end is a screen
+    // away, so it never counts as the first screen's content and costs nothing until needed.
+    const footer = document.querySelector<HTMLElement>(".contact");
+    const page = document.querySelector<HTMLElement>(".page");
+    const near = footer && page ? ScrollTrigger.create({
+      trigger: page, start: "bottom 200%",
+      onUpdate: (st) => footer.classList.toggle("is-near", st.progress > 0),
+      onRefresh: (st) => footer.classList.toggle("is-near", st.progress > 0),
+    }) : null;
+    // once the page has slid off the footer, the dark menu button would vanish into it: swap its colour
+    const over = page ? ScrollTrigger.create({
+      trigger: page, start: "bottom 90px",
+      onUpdate: (st) => document.documentElement.classList.toggle("over-dark", st.progress > 0),
+      onRefresh: (st) => document.documentElement.classList.toggle("over-dark", st.progress > 0),
+    }) : null;
+    const stop = () => { near?.kill(); over?.kill(); document.documentElement.classList.remove("over-dark"); };
+    if (reducedMotion()) return stop;
     const base = transitionState.enterDelay;
     const delayOf = (el: Element) => base + parseFloat((el as HTMLElement).dataset.delay ?? "0");
     const trigger = (el: Element, start = "top 88%") => ({ trigger: el, start, once: true });
@@ -52,6 +69,7 @@ export function Choreographer() {
           mask: "lines",
           linesClass: "split-line",
           autoSplit: true,
+          aria: "none", // the lines still hold the real text, so no aria-label (not allowed on <p>)
           onSplit(self) {
             gsap.set(el, { visibility: "visible" });
             return gsap.from(self.lines, { yPercent: 110, duration: DUR.slow, ease: EASE.out, stagger: STAGGER, delay: delayOf(el), scrollTrigger: trigger(el) });
@@ -88,7 +106,7 @@ export function Choreographer() {
     const refresh = () => ScrollTrigger.refresh();
     document.fonts.ready.then(refresh);
     window.addEventListener("load", refresh, { once: true });
-    return () => { window.removeEventListener("load", refresh); ctx.revert(); };
+    return () => { window.removeEventListener("load", refresh); ctx.revert(); stop(); };
   }, [pathname]);
 
   return null;

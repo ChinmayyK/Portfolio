@@ -48,4 +48,4 @@
 .xray-grid i { background: color-mix(in oklab, var(--color-ink) 7%, transparent); border-inline: 1px solid color-mix(in oklab, var(--color-ink) 14%, transparent); }
 .xray-cross { position: absolute; left: var(--lx); top: var(--ly); width: 26px; height: 26px; translate: -50% -50%;
   background: linear-gradient(var(--color-ink), var(--color-ink)) center / 1px 100% no-repeat, linear-gradient(var(--color-ink), var(--color-ink)) center / 100% 1px no-repeat; }
-.xray-coords { position: absolute; left: var(--lx); top: var(--ly); translate: 18px 18px; color: var(--color-ink); white-space: pre; font-variant-numeric: tabular-nums; }
+.hero .xray-coords { z-index: 3; pointer-events: none; opacity: 0; transition: opacity .25s; position: absolute; left: var(--lx); top: var(--ly); translate: 18px 18px; color: var(--color-lime); background: var(--color-ink); padding: .3rem .5rem; line-height: 1.5; white-space: pre; font-variant-numeric: tabular-nums; }

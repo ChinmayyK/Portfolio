@@ -39,6 +39,7 @@
 .cs-notes dd { color: var(--color-grey); font-size: .9375rem; }
 
 .cs-list { display: grid; }
+.cs-list h3 { max-width: 22ch; }
 .cs-list li { display: grid; gap: .6rem; padding-block: 2rem; border-top: 1px solid var(--line); }
 .cs-list li p { color: var(--color-grey); max-width: 60ch; font-size: 1.0625rem; }
 .cs-decisions { display: grid; }
@@ -78,3 +79,7 @@
 .dg-link { position: relative; height: 4.5rem; margin-inline: auto; border-left: 1px dashed var(--color-ink); }
 .dg-link .dg-bind { white-space: normal; width: min(26rem, 70vw); }
 @media (max-width: 47.99rem) { .dg-row--4 .dg-node:nth-child(-n+2) .dg-wire { display: none; } .dg-row--4 { row-gap: 1rem; } }
+
+/* ── 404 ──────────────────────────────────────────────────────────────── */
+.nf { min-height: 100svh; display: grid; align-content: center; gap: 2rem; padding-block: 8rem 4rem; }
+.nf-lead { max-width: 28ch; color: var(--color-grey); }
