@@ -54,12 +54,14 @@ export default function Hero() {
     const xray = wrap.querySelector<HTMLElement>(".is-xray")!;
     const { gsap } = motion();
     const L = lens.current;
+    let spec = ""; // the measured spec of whatever the lens is over
     const paint = () => {
       wrap.style.clipPath = `circle(${L.r}px at ${L.x}px ${L.y}px)`;
       wrap.style.setProperty("--lx", `${L.x}px`);
       wrap.style.setProperty("--ly", `${L.y}px`);
-      const coords = wrap.querySelector(".xray-coords");
-      if (coords) coords.textContent = `x ${Math.round(L.x)}  y ${Math.round(L.y)}`;
+      const coords = el.querySelector<HTMLElement>(".xray-coords");
+      if (coords) { coords.style.setProperty("--lx", `${L.x + L.r * 0.62}px`); coords.style.setProperty("--ly", `${L.y + L.r * 0.62}px`); coords.style.opacity = L.r > 40 ? "1" : "0"; }
+      if (coords) coords.textContent = `x ${Math.round(L.x)}  y ${Math.round(L.y)}${spec ? `\n${spec}` : ""}`;
     };
 
     // write real measurements into the x-ray labels
@@ -130,6 +132,10 @@ export default function Hero() {
       if (isOpen) return;
       const h = host();
       hovering = true;
+      const under = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>(".hero-layer:not(.is-xray) [data-spec]");
+      const all = Array.from(el.querySelectorAll<HTMLElement>(".hero-layer:not(.is-xray) [data-spec]"));
+      const twin = under ? xray.querySelectorAll<HTMLElement>("[data-spec]")[all.indexOf(under)] : null;
+      spec = twin?.dataset.spec ?? "";
       gsap.to(L, { x: e.clientX - h.left, y: e.clientY - h.top, duration: e.pointerType === "mouse" ? 0.55 : 0.2, ease: "power3.out", overwrite: "auto", onUpdate: paint });
       if (L.r < rest() * 0.9) gsap.to(L, { r: rest(), duration: 0.7, ease: EASE.out, onUpdate: paint });
     };
@@ -152,8 +158,8 @@ export default function Hero() {
       <div className="hero-xray-wrap" aria-hidden="true">
         <Layer xray />
         <span className="xray-cross" />
-        <span className="xray-coords t-label" />
       </div>
+      <span className="xray-coords t-label" aria-hidden="true" />
       <button
         type="button"
         className="hero-inspect t-label"
