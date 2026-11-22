@@ -70,3 +70,4 @@
 .menu .menu-link { font-size: min(var(--t-h1), 9.2vh); }
 .menu-list { grid-template-columns: 1fr; }
 @media (min-width: 64rem) { .menu-list { grid-template-columns: 1fr 1fr; column-gap: 4rem; } }
+.over-dark .menu-button { background: var(--color-lime); color: var(--color-ink); }

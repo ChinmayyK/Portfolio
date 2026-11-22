@@ -127,3 +127,5 @@
 @media (min-width: 64rem) { .contact-end { align-items: flex-end; } }
 .back-top { cursor: pointer; }
 @media (max-width: 47.99rem) { .contact-disc { right: 0; } }
+.js .contact:not(.is-near):not(:focus-within) { opacity: 0; }
+.hero .hero-inspect { color: var(--color-ink); }
