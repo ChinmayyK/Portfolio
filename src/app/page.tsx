@@ -1,22 +1,19 @@
-import { commitsAtBuild } from "@/lib/commits";
-import { repoAtBuild } from "@/lib/repo";
-import Nav from "@/components/Nav";
-import Board from "@/components/Board";
-import { LAND_INLINE } from "@/components/landing";
+import Hero from "@/components/hero/Hero";
+import Intro from "@/components/home/Intro";
+import Work from "@/components/home/Work";
+import About from "@/components/home/About";
+import Contact from "@/components/home/Contact";
 
-export default async function Home() {
-  const [days, repo] = await Promise.all([commitsAtBuild(), repoAtBuild()]);
-
+export default function Home() {
   return (
     <>
-      <Nav />
-      <Board initial={days} repo={repo} />
-      {/* starts the landing intro as soon as the board is in the HTML, before the bundle loads */}
-      <script dangerouslySetInnerHTML={{ __html: LAND_INLINE }} />
-      <footer className="wrap foot mono">
-        <span>Chinmay Kudalkar, 2026</span>
-        <a href="#top">Back to top ↑</a>
-      </footer>
+      <main id="main" tabIndex={-1} className="page">
+        <Hero />
+        <Intro />
+        <Work />
+        <About />
+      </main>
+      <Contact />
     </>
   );
 }

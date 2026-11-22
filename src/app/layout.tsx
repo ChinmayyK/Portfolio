@@ -1,42 +1,37 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Host_Grotesk } from "next/font/google";
+import { SITE } from "@/content/site";
+import Chrome from "@/components/chrome/Chrome";
 import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
-const geistMono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-geist-mono" });
+// Host Grotesk at regular weight carries the whole site; size and spacing do the work, not boldness.
+const host = Host_Grotesk({ subsets: ["latin"], variable: "--font-host", display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chinmaykudalkar.com"),
-  title: "Chinmay Kudalkar",
-  description: "Chinmay Kudalkar, full-stack developer. Projects, experience and contact.",
+  metadataBase: new URL(SITE.url),
+  title: { default: `${SITE.name} — Software engineer`, template: `%s — ${SITE.name}` },
+  description: SITE.description,
   alternates: { canonical: "/" },
-  openGraph: {
-    title: "Chinmay Kudalkar",
-    description: "Full-stack developer. Projects, experience and contact.",
-    url: "https://chinmaykudalkar.com",
-    type: "website",
-  },
+  openGraph: { title: SITE.name, description: SITE.description, url: SITE.url, siteName: SITE.name, type: "website" },
   twitter: { card: "summary_large_image" },
 };
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F4F4F5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B0B0C" },
-  ],
-};
+export const viewport: Viewport = { themeColor: "#efeeea", colorScheme: "light" };
 
-// Runs before paint: marks JS as available and applies the saved or system theme,
-// so the page never flashes the wrong colours.
-const THEME_BOOT = `(function(){var d=document.documentElement;d.classList.add("js");var t;try{t=localStorage.getItem("theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";d.dataset.theme=t})()`;
+// Runs before paint. Marks JS as present so reveals can start hidden; if motion never initialises
+// (a script error, a very slow network), the class comes off after 4s and everything shows.
+const BOOT = `(function(){var d=document.documentElement;d.classList.add("js");setTimeout(function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")},4000)})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={host.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <a className="skip" href="#main">Skip to content</a>
+        <Chrome>{children}</Chrome>
+      </body>
     </html>
   );
 }
