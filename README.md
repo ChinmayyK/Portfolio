@@ -1,14 +1,25 @@
 # chinmaykudalkar.com
 
-My portfolio, built with Next.js (App Router) and exported as a static site.
+My portfolio. Next.js (App Router, static export), TypeScript, Tailwind CSS v4, GSAP with ScrollTrigger and SplitText, and Lenis.
 
 ```bash
 npm install
-npm run dev      # local development
-npm run build    # static export to out/
+npm run dev        # http://localhost:3006
+npm run build      # static export to out/
+npm run lint
+npm run typecheck
 ```
 
-Content (projects, tools, email) lives in `src/lib/content.ts`; screenshots in `public/img/`.
+## Where things live
+
+- `src/content/site.ts`: name, links, experience, tools.
+- `src/content/projects.ts`: projects and the case-study text, which renders `/work/[slug]`.
+- `public/img/`: real product captures (light theme).
+- `src/components/chrome/`: shared frame (menu, page transitions, smooth scroll, motion choreographer, cursor, magnetic buttons).
+- `src/components/hero/Hero.tsx`: the hero and its inspector lens.
+- `src/styles/`: component styles; tokens are in `src/app/globals.css`.
+
+Pages stay server-rendered and declare motion with data attributes (`data-split`, `data-reveal`, `data-stagger`, `data-parallax`, `data-draw`). One client component, `Choreographer`, wires them up on each route. Everything respects `prefers-reduced-motion`.
 
 ## Deploying on Cloudflare
 
