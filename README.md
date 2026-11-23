@@ -17,7 +17,6 @@ npm run typecheck
 - `public/img/`: real product captures (light theme).
 - `src/components/chrome/`: shared frame (menu, page transitions, smooth scroll, motion choreographer, cursor, magnetic buttons).
 - `src/components/hero/Hero.tsx`: the hero and its inspector lens.
-- `src/components/hero/stage.ts`: once the page has drawn (on phones, on the first touch or scroll), three.js turns the name into extruded 3D letters at exactly the HTML letters' positions, lit from the cursor. `public/fonts/name.json` holds the name's glyphs; regenerate it with `npm run name-font`.
 - `src/styles/`: component styles; tokens are in `src/app/globals.css`.
 
 Pages stay server-rendered and declare motion with data attributes (`data-split`, `data-reveal`, `data-stagger`, `data-parallax`, `data-draw`). One client component, `Choreographer`, wires them up on each route. Everything respects `prefers-reduced-motion`.
