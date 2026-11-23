@@ -17,6 +17,7 @@
 
 .hero-name { padding-inline: calc(var(--gutter) * .6); margin-bottom: clamp(1.5rem, 4vh, 3rem); white-space: nowrap; }
 .hero-line-2 { padding-left: 21vw; }
+@media (max-width: 47.99rem) { .hero, .hero-layer { min-height: 80svh; } }
 @media (max-width: 47.99rem) { .hero .hero-name { font-size: 21.5vw; margin-bottom: 4.5rem; } .hero-line-2 { padding-left: 7vw; } }
 
 .hero-meta { display: grid; grid-template-columns: 1fr; gap: .5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
