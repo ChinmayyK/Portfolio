@@ -4,6 +4,17 @@ import { TLink } from "@/components/chrome/Transition";
 import Disc from "@/components/chrome/Disc";
 import RouteIllustration from "@/components/work/RouteIllustration";
 import { FleetDiagram, LinkAllDiagram } from "./Diagrams";
+import CaseProgress from "./CaseProgress";
+
+const SECTIONS = [
+  { n: "01", title: "The problem" },
+  { n: "02", title: "My role" },
+  { n: "03", title: "Architecture" },
+  { n: "04", title: "Hard parts" },
+  { n: "05", title: "Decisions and trade-offs" },
+  { n: "06", title: "Lessons" },
+  { n: "07", title: "Where it stands" },
+];
 
 function Section({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
   return (
@@ -62,15 +73,15 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
       {p.notice && <p className="cs-notice frame t-small" data-reveal>{p.notice}</p>}
 
       <div className="cs-sections frame">
-        <Section n="01" title="The problem">
+        <Section {...SECTIONS[0]}>
           {p.problem.map((t, i) => <p key={i} className={i === 0 ? "t-lead" : ""} data-reveal>{t}</p>)}
         </Section>
 
-        <Section n="02" title="My role">
+        <Section {...SECTIONS[1]}>
           <p className="t-lead" data-reveal>{p.role}</p>
         </Section>
 
-        <Section n="03" title="Architecture">
+        <Section {...SECTIONS[2]}>
           <p className="t-lead" data-reveal>{p.architecture.intro}</p>
           <div data-reveal>{p.slug === "link-all" ? <LinkAllDiagram /> : <FleetDiagram />}</div>
           <dl className="cs-notes" data-stagger>
@@ -80,7 +91,7 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
           </dl>
         </Section>
 
-        <Section n="04" title="Hard parts">
+        <Section {...SECTIONS[3]}>
           <ol className="cs-list">
             {p.challenges.map((c, i) => (
               <li key={c.title} data-reveal>
@@ -92,7 +103,7 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
           </ol>
         </Section>
 
-        <Section n="05" title="Decisions and trade-offs">
+        <Section {...SECTIONS[4]}>
           <ul className="cs-decisions">
             {p.decisions.map((d) => (
               <li key={d.title} data-reveal>
@@ -104,7 +115,7 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
           </ul>
         </Section>
 
-        <Section n="06" title="Lessons">
+        <Section {...SECTIONS[5]}>
           <ul className="cs-list cs-list--plain">
             {p.lessons.map((l) => (
               <li key={l.title} data-reveal><h3 className="t-h3">{l.title}</h3><p>{l.body}</p></li>
@@ -112,7 +123,7 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
           </ul>
         </Section>
 
-        <Section n="07" title="Where it stands">
+        <Section {...SECTIONS[6]}>
           <ul className="cs-outcomes" data-stagger>
             {p.outcomes.map((o) => <li key={o}>{o}</li>)}
           </ul>
@@ -127,6 +138,7 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
         </TLink>
         <div className="cs-next-disc"><Disc href="/#work" label="Work">All work</Disc></div>
       </nav>
+      <CaseProgress sections={SECTIONS} />
     </article>
   );
 }

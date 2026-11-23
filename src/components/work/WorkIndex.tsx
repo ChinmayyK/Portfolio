@@ -61,7 +61,7 @@ export default function WorkIndex({ items }: { items: WorkItem[] }) {
               <span className="work-cat">{it.category}</span>
               <span className="work-kind t-small">{it.kind}</span>
               <span className="work-years t-small">{it.years}</span>
-              <span className="work-thumb" aria-hidden="true" style={{ background: it.tint }}><Preview item={it} /></span>
+              <span className="work-thumb" aria-hidden="true" style={{ background: it.tint }} data-zoom><Preview item={it} /></span>
             </>
           );
           return (

@@ -1,6 +1,5 @@
 import { ALSO, PROJECTS, SHOTS } from "@/content/projects";
 import WorkIndex, { type WorkItem } from "@/components/work/WorkIndex";
-import Showcase from "./Showcase";
 
 export default function Work() {
   const [linkAll, fleet] = PROJECTS;
@@ -17,7 +16,6 @@ export default function Work() {
         <p className="t-label work-head-meta">Name / Type / Role / Year</p>
       </div>
       <WorkIndex items={items} />
-      <Showcase />
     </section>
   );
 }

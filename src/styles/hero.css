@@ -17,7 +17,12 @@
 
 .hero-name { padding-inline: calc(var(--gutter) * .6); margin-bottom: clamp(1.5rem, 4vh, 3rem); white-space: nowrap; }
 .hero-line-2 { padding-left: 21vw; }
-@media (max-width: 47.99rem) { .hero, .hero-layer { min-height: 80svh; } }
+/* phones: the hero is only as tall as its content, so the work starts on the first screen */
+@media (max-width: 47.99rem) {
+  .hero, .hero-layer { min-height: 0; }
+  .hero-layer { grid-template-rows: auto auto auto; padding-top: 7.5rem; }
+  .hero .hero-name { margin-top: 4.5rem; }
+}
 @media (max-width: 47.99rem) { .hero .hero-name { font-size: 21.5vw; margin-bottom: 4.5rem; } .hero-line-2 { padding-left: 7vw; } }
 
 .hero-meta { display: grid; grid-template-columns: 1fr; gap: .5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
@@ -51,9 +56,4 @@
   background: linear-gradient(var(--color-ink), var(--color-ink)) center / 1px 100% no-repeat, linear-gradient(var(--color-ink), var(--color-ink)) center / 100% 1px no-repeat; }
 .hero .xray-coords { z-index: 3; pointer-events: none; opacity: 0; transition: opacity .25s; position: absolute; left: var(--lx); top: var(--ly); translate: 18px 18px; color: var(--color-lime); background: var(--color-ink); padding: .3rem .5rem; line-height: 1.5; white-space: pre; font-variant-numeric: tabular-nums; }
 
-/* ── The name in 3D ───────────────────────────────────────────────────── */
-.hero-gl { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0; }
-.gl-on .hero-gl { opacity: 1; }
-.gl-on .hero-layer:not(.is-xray) .hero-name { color: transparent; }
-.gl-on .is-xray .hero-name { -webkit-text-stroke-color: transparent; }
-.hero-top, .hero-meta { position: relative; z-index: 2; } /* the letters' shadows fall under the small text, not over it */
+
