@@ -33,6 +33,7 @@ export function SmoothScroll() {
  *   data-parallax="n"   drifts against the scroll by n (0.1 is subtle)
  *   data-draw           SVG paths with pathLength="1" draw themselves in
  *   data-slide="n"      a row centred with margin-left: 50% slides sideways by n% of its width while on screen
+ *   data-zoom           the element's contents settle from slightly zoomed in as it scrolls up the screen
  *   data-delay="s"      extra delay for any of the above
  */
 export function Choreographer() {
@@ -111,6 +112,10 @@ export function Choreographer() {
         const curve = page.querySelector(".page-curve");
         if (curve) gsap.fromTo(curve, { height: "9vw" }, { height: 0, ease: "none", scrollTrigger: uncover });
       }
+
+      gsap.utils.toArray<HTMLElement>("[data-zoom]").forEach((el) => {
+        gsap.fromTo(el.children, { scale: 1.14 }, { scale: 1, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "center 45%", scrub: true } });
+      });
 
       gsap.utils.toArray<SVGElement>("[data-draw]").forEach((el) => {
         const paths = el.querySelectorAll("[pathLength]");

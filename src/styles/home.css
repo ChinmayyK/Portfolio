@@ -18,6 +18,10 @@
   .disc--ink:hover .disc-text { color: var(--color-ink); }
 }
 @media (max-width: 47.99rem) { .disc { width: 8.5rem; height: 8.5rem; } }
+/* on touch, a press answers straight away */
+.disc { transition: scale .35s var(--ease-expo); }
+.disc:active { scale: .93; }
+@media (hover: none) { .work-link:active .work-title { opacity: .55; } .work-link .work-title { transition: opacity .3s; } }
 
 /* ── Work index ───────────────────────────────────────────────────────── */
 .work { padding-block: calc(var(--section) * .75) var(--section); }
