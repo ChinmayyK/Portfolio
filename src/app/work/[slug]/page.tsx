@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PROJECTS, projectBySlug } from "@/content/projects";
 import CaseStudy from "@/components/case/CaseStudy";
+import Curve from "@/components/chrome/Curve";
 import Contact from "@/components/home/Contact";
 
 export const dynamicParams = false;
@@ -30,6 +31,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     <>
       <main id="main" tabIndex={-1} className="page">
         <CaseStudy project={project} next={next} />
+        <Curve />
       </main>
       <Contact />
     </>
