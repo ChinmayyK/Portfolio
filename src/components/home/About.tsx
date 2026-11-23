@@ -10,15 +10,8 @@ export default function About() {
       </p>
 
       <div className="about-cols">
-        <div className="about-copy" data-stagger>
-          <p>
-            A clipboard shared by a phone and a laptop. A booking that has to make sense to an employee, an admin and a driver. A file that
-            arrives whole after the Wi-Fi drops. That&apos;s the kind of problem I keep choosing.
-          </p>
-          <p>
-            I&apos;m finishing a B.Tech in Computer Technology in Mumbai, interning at ideaForge, and looking for a full-time role from 2027.
-          </p>
-          <div><Disc href={SITE.resume} size="md">Résumé</Disc></div>
+        <div className="about-copy" data-reveal>
+          <Disc href={SITE.resume} size="md">Résumé</Disc>
         </div>
 
         <div className="about-lists">
@@ -29,14 +22,12 @@ export default function About() {
                 <span className="about-org t-h3">{x.org}</span>
                 <span className="about-role">{x.role}</span>
                 <span className="about-when t-small">{x.when}</span>
-                <span className="about-line t-small">{x.line}</span>
               </li>
             ))}
             <li className="about-row" data-reveal>
               <span className="about-org t-h3">RT-MSSU</span>
               <span className="about-role">{EDUCATION.degree}</span>
               <span className="about-when t-small">{EDUCATION.when}</span>
-              <span className="about-line t-small">{EDUCATION.school}</span>
             </li>
           </ol>
 

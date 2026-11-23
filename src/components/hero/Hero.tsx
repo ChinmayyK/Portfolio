@@ -4,21 +4,23 @@ import { useEffect, useRef, useState } from "react";
 import LocalTime from "@/components/chrome/LocalTime";
 import { DUR, EASE, motion, reducedMotion } from "@/lib/motion";
 import { transitionState } from "@/lib/transition";
+import type { Stage } from "./stage";
 
 /**
  * The hero is drawn twice. The surface is what you read; underneath sits the same page as an
  * engineer sees it — outlines, boxes, the grid and the real type specs, measured live. A lens
  * follows the pointer and shows the layer underneath; "Inspect" opens it across the whole hero.
+ * Once the page has drawn, the name becomes real 3D type lit from the cursor (see stage.ts);
+ * under the lens it shows as wireframe.
  */
 function Layer({ xray = false }: { xray?: boolean }) {
   return (
     <div className={`hero-layer ${xray ? "is-xray" : ""}`} aria-hidden={xray || undefined}>
       {xray && <div className="xray-grid frame" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>}
+      <canvas className="hero-gl" aria-hidden="true" />
       <div className="hero-top frame">
         <p className="hero-role t-lead" data-spec="">
-          <span className="hero-mask"><span className="hero-rise">Software engineer.</span></span>
-          <span className="hero-mask"><span className="hero-rise">I build apps, systems</span></span>
-          <span className="hero-mask"><span className="hero-rise">and tools that hold up.</span></span>
+          <span className="hero-mask"><span className="hero-rise">Software engineer</span></span>
         </p>
         <span className="hero-arrow" aria-hidden="true" data-spec="">↘</span>
       </div>
@@ -35,8 +37,8 @@ function Layer({ xray = false }: { xray?: boolean }) {
       )}
       <ul className="hero-meta frame t-small" data-spec="">
         <li><span className="t-label">Based in</span><span>Mumbai, <LocalTime /></span></li>
-        <li><span className="t-label">Now</span><span>Interning at ideaForge</span></li>
-        <li><span className="t-label">Next</span><span>Full-time roles from 2027</span></li>
+        <li><span className="t-label">Now</span><span>Intern at ideaForge</span></li>
+        <li><span className="t-label">Next</span><span>Full-time from 2027</span></li>
       </ul>
     </div>
   );
@@ -81,7 +83,8 @@ export default function Hero() {
     ro.observe(el);
 
     const reduced = reducedMotion();
-    const rest = () => Math.max(110, Math.min(220, el.clientWidth * 0.11));
+    // smaller once the name is 3D, so the lens doesn't hide the letters rising under the cursor
+    const rest = () => el.classList.contains("gl-on") ? Math.max(70, Math.min(120, el.clientWidth * 0.07)) : Math.max(110, Math.min(220, el.clientWidth * 0.11));
     const full = () => Math.hypot(el.clientWidth, el.clientHeight);
     let isOpen = false;
     const to = (vars: Partial<typeof L>, duration = 0.9, ease: string = EASE.out) =>
@@ -95,7 +98,37 @@ export default function Hero() {
       },
     };
 
-    if (reduced) return () => ro.disconnect();
+    // ── the name in 3D: loads after the page has drawn, then takes over from the HTML letters ──
+    let stage: Stage | null = null, dead = false, introDone = reduced, revealed = false;
+    const reveal = () => {
+      if (!stage || !introDone || revealed) return;
+      revealed = true;
+      el.classList.add("gl-on");
+      stage.reveal(!reduced);
+    };
+    (async () => {
+      await document.fonts.ready;
+      // phones wake it on the first touch or scroll, so the first screen loads light; others when idle
+      if (matchMedia("(pointer: coarse)").matches)
+        await new Promise<void>((r) => {
+          const go = () => { ["pointerdown", "scroll", "keydown"].forEach((t) => window.removeEventListener(t, go)); r(); };
+          ["pointerdown", "scroll", "keydown"].forEach((t) => window.addEventListener(t, go, { once: true, passive: true }));
+        });
+      else await new Promise((r) => ("requestIdleCallback" in window ? requestIdleCallback(r, { timeout: 1200 }) : setTimeout(r, 200)));
+      if (dead) return;
+      const { createStage } = await import("./stage");
+      const [canvas, xrayCanvas] = Array.from(el.querySelectorAll<HTMLCanvasElement>(".hero-gl"));
+      const made = await createStage({
+        host: el, surface: el.querySelector<HTMLElement>(".hero-layer:not(.is-xray)")!, name: el.querySelector<HTMLElement>("#hero-name")!,
+        canvas, xrayCanvas, lensOpen: () => L.r > 1, reduced,
+      }).catch(() => null);
+      if (dead) { made?.destroy(); return; }
+      stage = made;
+      reveal();
+    })();
+    const stopStage = () => { dead = true; stage?.destroy(); el.classList.remove("gl-on"); };
+
+    if (reduced) return () => { ro.disconnect(); stopStage(); };
 
     // entrance, applied to both layers so they stay in register
     const delay = 0.15 + transitionState.enterDelay;
@@ -105,7 +138,8 @@ export default function Hero() {
       .from(el.querySelectorAll(".hero-name .hero-rise"), { yPercent: 105, duration: DUR.slow * 1.15, ease: EASE.out, stagger: 0.12 }, 0)
       .from(el.querySelectorAll(".hero-role .hero-rise"), { yPercent: 105, duration: DUR.slow, ease: EASE.out, stagger: 0.07 }, 0.35)
       .from(el.querySelectorAll(".hero-arrow, .hero-meta li"), { autoAlpha: 0, y: 14, duration: DUR.base, ease: EASE.out, stagger: 0.06 }, 0.6)
-      .from(el.querySelectorAll(".hero-inspect"), { autoAlpha: 0, duration: 0.6 }, 1);
+      .from(el.querySelectorAll(".hero-inspect"), { autoAlpha: 0, duration: 0.6 }, 1)
+      .add(() => { introDone = true; reveal(); }, 1.45); // the HTML name has settled: hand over to 3D
     });
 
     // then the lens introduces itself once: it opens over the name, crosses it, and closes
@@ -145,7 +179,7 @@ export default function Hero() {
     el.addEventListener("pointercancel", leave);
 
     return () => {
-      ro.disconnect(); ctx.revert();
+      ro.disconnect(); ctx.revert(); stopStage();
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerleave", leave);
       el.removeEventListener("pointercancel", leave);
