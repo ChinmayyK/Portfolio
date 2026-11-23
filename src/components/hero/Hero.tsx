@@ -4,26 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import LocalTime from "@/components/chrome/LocalTime";
 import { DUR, EASE, motion, reducedMotion } from "@/lib/motion";
 import { transitionState } from "@/lib/transition";
-import { SINCE, UNTIL, describeDay, draw, fit, hit, latestCell, layout, type Field } from "./days";
 
 /**
  * The hero is drawn twice. The surface is what you read; underneath sits the same page as an
  * engineer sees it — outlines, boxes, the grid and the real type specs, measured live. A lens
  * follows the pointer and shows the layer underneath; "Inspect" opens it across the whole hero.
- * The name itself is set in my GitHub contributions: one dot each, oldest first, older work lighter.
  */
 function Layer({ xray = false }: { xray?: boolean }) {
   return (
     <div className={`hero-layer ${xray ? "is-xray" : ""}`} aria-hidden={xray || undefined}>
       {xray && <div className="xray-grid frame" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>}
-      <canvas className="hero-days" aria-hidden="true" />
-      {!xray && <span className="days-latest" aria-hidden="true" />}
       <div className="hero-top frame">
-        <div className="hero-key t-small" data-spec="">
-          <p>My name, set in my work: one dot for <span data-days-per>every contribution</span> I&apos;ve pushed to GitHub since {SINCE}.</p>
-          <p className="hero-key-scale"><span aria-hidden="true"><i /><i /><i /><i /></span>Older work is lighter</p>
-          <p className="hero-key-latest"><i aria-hidden="true" />Up to {UNTIL}</p>
-        </div>
         <p className="hero-role t-lead" data-spec="">
           <span className="hero-mask"><span className="hero-rise">Software engineer.</span></span>
           <span className="hero-mask"><span className="hero-rise">I build apps, systems</span></span>
@@ -61,7 +52,6 @@ export default function Hero() {
     const el = root.current!;
     const wrap = el.querySelector<HTMLElement>(".hero-xray-wrap")!;
     const xray = wrap.querySelector<HTMLElement>(".is-xray")!;
-    const surface = el.querySelector<HTMLElement>(".hero-layer:not(.is-xray)")!;
     const { gsap } = motion();
     const L = lens.current;
     let spec = ""; // the measured spec of whatever the lens is over
@@ -76,6 +66,7 @@ export default function Hero() {
 
     // write real measurements into the x-ray labels
     const specs = () => {
+      const surface = el.querySelector<HTMLElement>(".hero-layer:not(.is-xray)")!;
       const from = surface.querySelectorAll<HTMLElement>("[data-spec]");
       const to = xray.querySelectorAll<HTMLElement>("[data-spec]");
       from.forEach((s, i) => {
@@ -104,50 +95,10 @@ export default function Hero() {
       },
     };
 
-    // ── the name in days ───────────────────────────────────────────────
-    const delay = 0.15 + transitionState.enterDelay;
-    const canvases = Array.from(el.querySelectorAll<HTMLCanvasElement>(".hero-days"));
-    const latest = el.querySelector<HTMLElement>(".days-latest")!;
-    let field: Field | null = null, ctxs: CanvasRenderingContext2D[] = [], hover = -1, ready = false, dead = false;
-    const shown = { v: 0 };
-    const render = () => { if (field) ctxs.forEach((c, i) => draw(c, field!, shown.v, i === 1, hover)); };
-    const build = () => {
-      field = layout(surface.querySelector(".hero-name")!, surface);
-      if (!field) return;
-      ctxs = canvases.map(fit);
-      const c = latestCell(field);
-      latest.style.cssText = `--dx:${c.x}px;--dy:${c.y}px;--dr:${Math.max(9, field.pitch * 1.9)}px`;
-      el.classList.add("days-on");
-      el.querySelectorAll("[data-days-per]").forEach((n) => { n.textContent = field!.per === 1 ? "every contribution" : `every ${field!.per} contributions`; });
-      render();
-    };
-    let rebuild = 0, width = el.clientWidth;
-    const resized = () => {
-      if (!ready || el.clientWidth === width) return;
-      width = el.clientWidth;
-      cancelAnimationFrame(rebuild);
-      rebuild = requestAnimationFrame(build);
-    };
-    const ro2 = new ResizeObserver(resized);
-    ro2.observe(el);
-    const started = performance.now();
-    document.fonts.ready.then(() => {
-      if (dead) return;
-      ready = true; width = el.clientWidth;
-      build();
-      if (reduced) { shown.v = 1e9; render(); latest.classList.add("is-on"); return; }
-      // the days fill in from the first to the most recent, so the name writes itself in order
-      gsap.to(shown, {
-        v: field ? field.dayOf.length * 1.06 + 60 : 0, duration: 3, ease: "power2.inOut", onUpdate: render,
-        delay: Math.max(0, delay + 0.2 - (performance.now() - started) / 1000),
-        onComplete: () => latest.classList.add("is-on"),
-      });
-    });
-    const stopDays = () => { dead = true; ro2.disconnect(); cancelAnimationFrame(rebuild); gsap.killTweensOf(shown); };
-
-    if (reduced) return () => { ro.disconnect(); stopDays(); };
+    if (reduced) return () => ro.disconnect();
 
     // entrance, applied to both layers so they stay in register
+    const delay = 0.15 + transitionState.enterDelay;
     let intro!: gsap.core.Timeline;
     const ctx = gsap.context(() => {
       intro = gsap.timeline({ delay })
@@ -175,7 +126,7 @@ export default function Hero() {
         .to(L, { r: rest(), duration: 0.8, ease: EASE.out })
         .to(L, { x: n.left - h.left + n.width * 0.78, y: n.top - h.top + n.height * 0.72, duration: 1.8, ease: "power2.inOut" }, 0.2)
         .to(L, { r: hovering ? rest() : 0, duration: 0.7, ease: EASE.inOut, onStart() { if (hovering) this.kill(); } });
-    }, 3.3); // once the name has finished writing itself
+    }, 1.1);
 
     const move = (e: PointerEvent) => {
       if (isOpen) return;
@@ -185,19 +136,16 @@ export default function Hero() {
       const all = Array.from(el.querySelectorAll<HTMLElement>(".hero-layer:not(.is-xray) [data-spec]"));
       const twin = under ? xray.querySelectorAll<HTMLElement>("[data-spec]")[all.indexOf(under)] : null;
       spec = twin?.dataset.spec ?? "";
-      const day = field ? hit(field, e.clientX - h.left, e.clientY - h.top) : -1;
-      if (day >= 0) spec = describeDay(day);
-      if (day !== hover) { hover = day; render(); }
       gsap.to(L, { x: e.clientX - h.left, y: e.clientY - h.top, duration: e.pointerType === "mouse" ? 0.55 : 0.2, ease: "power3.out", overwrite: "auto", onUpdate: paint });
       if (L.r < rest() * 0.9) gsap.to(L, { r: rest(), duration: 0.7, ease: EASE.out, onUpdate: paint });
     };
-    const leave = () => { hovering = false; hover = -1; render(); if (!isOpen) to({ r: 0 }, 0.6, EASE.inOut); };
+    const leave = () => { hovering = false; if (!isOpen) to({ r: 0 }, 0.6, EASE.inOut); };
     el.addEventListener("pointermove", move);
     el.addEventListener("pointerleave", leave);
     el.addEventListener("pointercancel", leave);
 
     return () => {
-      ro.disconnect(); ctx.revert(); stopDays();
+      ro.disconnect(); ctx.revert();
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerleave", leave);
       el.removeEventListener("pointercancel", leave);
