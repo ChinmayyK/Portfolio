@@ -67,8 +67,7 @@ export default function Header() {
     <>
       <header className="topbar frame">
         <TLink href="/" label="Index" className="topbar-mark" aria-label={`${SITE.name}, home`}>
-          <span>{SITE.name}</span>
-          <span className="mark-sub" aria-hidden="true">— {SITE.role}</span>
+          <span aria-hidden="true">CK</span>
         </TLink>
         <nav aria-label="Primary" className="topbar-nav">
           {NAV.map((n) => (
