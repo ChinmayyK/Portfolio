@@ -4,12 +4,20 @@
  * so the swap from flat text to geometry is invisible. Then the letters rise out of the page.
  *
  * A light follows the pointer: from the cursor's side, lower (longer shadows) the further out it
- * goes, and the letters nearest the cursor rise taller. When the pointer rests, the light circles
- * slowly on its own. Scrolling away lowers the letters back into the page.
- * Three.js loads only once the page has drawn, and only if WebGL is there.
+ * goes, and the letters nearest the cursor rise taller. On a phone a finger dragged across the
+ * hero does the same, and on Android tilting the phone moves the light. When nothing is
+ * steering it, the light circles slowly on its own. Scrolling away lowers the letters back into the page.
+ * Hero.tsx imports this module only once the page has drawn, and it does nothing without WebGL.
+ * Named imports keep the three.js bundle to the parts used here.
  */
 
-import type * as T from "three";
+import {
+  DirectionalLight, HemisphereLight, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, PerspectiveCamera, PlaneGeometry,
+  PMREMGenerator, SRGBColorSpace, Scene, ShadowMaterial, Vector3, VSMShadowMap, WebGLRenderer, type Material,
+} from "three";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 export type Stage = { reveal: (animate: boolean) => void; destroy: () => void };
 
@@ -51,6 +59,8 @@ function measure(name: HTMLElement, surface: HTMLElement): Glyph[] {
 }
 
 const INK = 0x141413;
+/** hand the main thread back between heavy steps, so loading never blocks a tap or a scroll for long */
+const breathe = () => new Promise<void>((r) => setTimeout(r, 0));
 const RAD = Math.PI / 180;
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 
@@ -58,40 +68,34 @@ export async function createStage(o: Options): Promise<Stage | null> {
   const probe = document.createElement("canvas");
   if (!(probe.getContext("webgl2") || probe.getContext("webgl"))) return null;
 
-  const [THREE, { FontLoader }, { TextGeometry }, { RoomEnvironment }, json] = await Promise.all([
-    import("three"),
-    import("three/examples/jsm/loaders/FontLoader.js"),
-    import("three/examples/jsm/geometries/TextGeometry.js"),
-    import("three/examples/jsm/environments/RoomEnvironment.js"),
-    fetch("/fonts/name.json").then((r) => r.json()),
-  ]);
+  const json = await fetch("/fonts/name.json").then((r) => r.json());
   const font = new FontLoader().parse(json);
   const coarse = matchMedia("(pointer: coarse)").matches;
 
-  const renderer = new THREE.WebGLRenderer({ canvas: o.canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, coarse ? 1.5 : 2));
+  const renderer = new WebGLRenderer({ canvas: o.canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.VSMShadowMap; // soft, blurred penumbra
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  let xr: T.WebGLRenderer | null = null; // the x-ray's wireframe, made when the lens first opens
+  renderer.shadowMap.type = VSMShadowMap; // soft, blurred penumbra
+  renderer.outputColorSpace = SRGBColorSpace;
+  let xr: WebGLRenderer | null = null; // the x-ray's wireframe, made when the lens first opens
 
-  const scene = new THREE.Scene();
+  const scene = new Scene();
   // a soft studio for the lacquer to reflect
-  const pmrem = new THREE.PMREMGenerator(renderer);
+  const pmrem = new PMREMGenerator(renderer);
   const room = new RoomEnvironment();
   scene.environment = pmrem.fromScene(room, 0.04).texture;
   scene.environmentIntensity = 0.2;
   room.dispose(); pmrem.dispose();
-  const camera = new THREE.PerspectiveCamera(30, 1, 10, 10_000);
+  const camera = new PerspectiveCamera(30, 1, 10, 10_000);
   const DIST = 2400;
 
   // the page: invisible except for the shadows that fall on it
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShadowMaterial({ color: INK, opacity: 0.17 }));
+  const ground = new Mesh(new PlaneGeometry(1, 1), new ShadowMaterial({ color: INK, opacity: 0.17 }));
   ground.receiveShadow = true;
   scene.add(ground);
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d6cf, 0.35));
-  const key = new THREE.DirectionalLight(0xfffaf0, 2.6);
+  scene.add(new HemisphereLight(0xffffff, 0xd8d6cf, 0.35));
+  const key = new DirectionalLight(0xfffaf0, 2.6);
   key.castShadow = true;
   key.shadow.mapSize.set(coarse ? 1024 : 2048, coarse ? 1024 : 2048);
   key.shadow.bias = -0.0004;
@@ -101,14 +105,14 @@ export async function createStage(o: Options): Promise<Stage | null> {
   scene.add(key, key.target);
 
   // black lacquer: a clear coat over a dark base, so edges and faces catch the light and the studio
-  const material = new THREE.MeshPhysicalMaterial({ color: 0x0e0e0d, roughness: 0.34, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.12 });
-  const wire = new THREE.MeshBasicMaterial({ color: INK, wireframe: true, transparent: true, opacity: 0.55 });
+  const material = new MeshPhysicalMaterial({ color: 0x0e0e0d, roughness: 0.34, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.12 });
+  const wire = new MeshBasicMaterial({ color: INK, wireframe: true, transparent: true, opacity: 0.55 });
 
-  type Letter = { mesh: T.Mesh; cx: number; cy: number; enter: number; lift: number };
+  type Letter = { mesh: Mesh; cx: number; cy: number; enter: number; lift: number };
   let letters: Letter[] = [];
   let W = 1, H = 1, size = 100;
 
-  const build = () => {
+  const build = async () => {
     W = o.surface.clientWidth; H = o.surface.clientHeight;
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
@@ -125,7 +129,10 @@ export async function createStage(o: Options): Promise<Stage | null> {
 
     const was = letters;
     letters.forEach((l) => { scene.remove(l.mesh); l.mesh.geometry.dispose(); });
-    letters = measure(o.name, o.surface).map((g, i) => {
+    const next: Letter[] = [];
+    const glyphs = measure(o.name, o.surface);
+    for (let i = 0; i < glyphs.length; i++) {
+      const g = glyphs[i];
       size = g.size;
       const geo = new TextGeometry(g.ch, {
         font, size: g.size, depth: g.size * 0.16, curveSegments: 12,
@@ -135,24 +142,29 @@ export async function createStage(o: Options): Promise<Stage | null> {
       const b = geo.boundingBox!;
       const cx = (b.min.x + b.max.x) / 2;
       geo.translate(-cx, 0, -b.min.z); // pivot at the foot of the letter, back face on the page
-      const mesh = new THREE.Mesh(geo, material);
+      const mesh = new Mesh(geo, material);
       mesh.castShadow = true;
       mesh.position.set(g.x + cx, -g.baseline, 0);
       scene.add(mesh);
-      return { mesh, cx: g.x + cx, cy: g.baseline - g.size * 0.35, enter: was[i]?.enter ?? 0.0001, lift: 0 };
-    });
+      next.push({ mesh, cx: g.x + cx, cy: g.baseline - g.size * 0.35, enter: was[i]?.enter ?? 0.0001, lift: 0 });
+      if (i % 3 === 2) await breathe(); // extruding a bevelled letter is the slow part
+    }
+    letters = next;
   };
-  build();
+  await breathe();
+  await build();
+  await renderer.compileAsync(scene, camera);
 
   // ── the light ───────────────────────────────────────────────────────
   const light = { az: 200 * RAD, el: 34 * RAD };
   const aim = { az: light.az, el: light.el };
   const pointer = { x: -1, y: -1, inside: false, last: 0 };
+  let tiltAt = -1e9;
   let scroll = 0;
   let idle = true;
 
   const place = () => {
-    const R = 4000, c = new THREE.Vector3(W / 2, -H / 2, 0);
+    const R = 4000, c = new Vector3(W / 2, -H / 2, 0);
     key.position.set(c.x + R * Math.cos(light.el) * Math.cos(light.az), c.y + R * Math.cos(light.el) * Math.sin(light.az), R * Math.sin(light.el));
   };
 
@@ -169,6 +181,18 @@ export async function createStage(o: Options): Promise<Stage | null> {
   o.host.addEventListener("pointermove", onMove);
   o.host.addEventListener("pointerdown", onMove);
   o.host.addEventListener("pointerleave", onLeave);
+  o.host.addEventListener("pointercancel", onLeave);
+
+  // tilting the phone steers the light where the browser allows it without asking (Android)
+  const onTilt = (e: DeviceOrientationEvent) => {
+    if (e.gamma === null || e.beta === null || pointer.inside) return;
+    const x = clamp(e.gamma / 30, -1, 1), y = clamp((50 - e.beta) / 30, -1, 1); // held at about 50°
+    aim.az = Math.atan2(y, x);
+    aim.el = (62 - 48 * clamp(Math.hypot(x, y), 0, 1)) * RAD;
+    tiltAt = performance.now();
+  };
+  const canTilt = coarse && "DeviceOrientationEvent" in window && !("requestPermission" in DeviceOrientationEvent);
+  if (canTilt) window.addEventListener("deviceorientation", onTilt);
 
   // ── the loop ────────────────────────────────────────────────────────
   let visible = true, raf = 0, revealed = false;
@@ -177,7 +201,7 @@ export async function createStage(o: Options): Promise<Stage | null> {
 
   const step = (dt: number) => {
     const now = performance.now();
-    idle = !pointer.inside || now - pointer.last > 2500;
+    idle = (!pointer.inside || now - pointer.last > 2500) && now - tiltAt > 1500;
     if (idle && !o.reduced) { aim.az += dt * 0.35; aim.el = 26 * RAD; }
     // ease the light towards its aim, the short way round
     let da = aim.az - light.az; da = Math.atan2(Math.sin(da), Math.cos(da));
@@ -200,7 +224,7 @@ export async function createStage(o: Options): Promise<Stage | null> {
     renderer.render(scene, camera);
 
     if (o.lensOpen()) {
-      if (!xr) { xr = new THREE.WebGLRenderer({ canvas: o.xrayCanvas, alpha: true, antialias: true }); xr.setPixelRatio(renderer.getPixelRatio()); }
+      if (!xr) { xr = new WebGLRenderer({ canvas: o.xrayCanvas, alpha: true, antialias: true }); xr.setPixelRatio(renderer.getPixelRatio()); }
       xr.setSize(W, H, false);
       scene.overrideMaterial = wire; ground.visible = false;
       xr.render(scene, camera);
@@ -227,7 +251,7 @@ export async function createStage(o: Options): Promise<Stage | null> {
     if (o.host.clientWidth === width) return;
     width = o.host.clientWidth;
     cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(() => { build(); loop(); });
+    frame = requestAnimationFrame(() => { build().then(loop); });
   });
   ro.observe(o.host);
 
@@ -262,11 +286,13 @@ export async function createStage(o: Options): Promise<Stage | null> {
       o.host.removeEventListener("pointermove", onMove);
       o.host.removeEventListener("pointerdown", onMove);
       o.host.removeEventListener("pointerleave", onLeave);
+      o.host.removeEventListener("pointercancel", onLeave);
+      if (canTilt) window.removeEventListener("deviceorientation", onTilt);
       o.host.removeEventListener("pointermove", redraw);
       window.removeEventListener("scroll", redraw);
       document.removeEventListener("visibilitychange", onVisibility);
       letters.forEach((l) => l.mesh.geometry.dispose());
-      ground.geometry.dispose(); (ground.material as T.Material).dispose();
+      ground.geometry.dispose(); (ground.material as Material).dispose();
       scene.environment?.dispose();
       material.dispose(); wire.dispose();
       renderer.dispose(); xr?.dispose();

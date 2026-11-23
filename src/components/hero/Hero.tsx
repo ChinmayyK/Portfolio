@@ -108,13 +108,9 @@ export default function Hero() {
     };
     (async () => {
       await document.fonts.ready;
-      // phones wake it on the first touch or scroll, so the first screen loads light; others when idle
-      if (matchMedia("(pointer: coarse)").matches)
-        await new Promise<void>((r) => {
-          const go = () => { ["pointerdown", "scroll", "keydown"].forEach((t) => window.removeEventListener(t, go)); r(); };
-          ["pointerdown", "scroll", "keydown"].forEach((t) => window.addEventListener(t, go, { once: true, passive: true }));
-        });
-      else await new Promise((r) => ("requestIdleCallback" in window ? requestIdleCallback(r, { timeout: 1200 }) : setTimeout(r, 200)));
+      // after the page has loaded and gone quiet; stage.ts builds in small steps from there
+      if (document.readyState !== "complete") await new Promise((r) => window.addEventListener("load", r, { once: true }));
+      await new Promise((r) => ("requestIdleCallback" in window ? requestIdleCallback(r, { timeout: 1500 }) : setTimeout(r, 300)));
       if (dead) return;
       const { createStage } = await import("./stage");
       const [canvas, xrayCanvas] = Array.from(el.querySelectorAll<HTMLCanvasElement>(".hero-gl"));
@@ -163,6 +159,8 @@ export default function Hero() {
     }, 1.1);
 
     const move = (e: PointerEvent) => {
+      // a finger on the 3D name steers its light; the lens would only cover it
+      if (e.pointerType === "touch" && el.classList.contains("gl-on")) return;
       if (isOpen) return;
       const h = host();
       hovering = true;
