@@ -32,7 +32,6 @@ export function SmoothScroll() {
  *   data-stagger        the element's children reveal one after another
  *   data-parallax="n"   drifts against the scroll by n (0.1 is subtle)
  *   data-draw           SVG paths with pathLength="1" draw themselves in
- *   data-slide="n"      a row centred with margin-left: 50% slides sideways by n% of its width while on screen
  *   data-zoom           the element's contents settle from slightly zoomed in as it scrolls up the screen
  *   data-delay="s"      extra delay for any of the above
  */
@@ -100,10 +99,6 @@ export function Choreographer() {
       });
 
 
-      gsap.utils.toArray<HTMLElement>("[data-slide]").forEach((el) => {
-        const d = parseFloat(el.dataset.slide || "10");
-        gsap.fromTo(el, { xPercent: -50 - d / 2, translate: "none" }, { xPercent: -50 + d / 2, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true } });
-      });
 
       // the footer rises into place as the page uncovers it, and the page's bowed edge flattens
       if (footer && page) {
