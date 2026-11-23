@@ -17,7 +17,6 @@ npm run typecheck
 - `public/img/`: real product captures (light theme).
 - `src/components/chrome/`: shared frame (menu, page transitions, smooth scroll, motion choreographer, cursor, magnetic buttons).
 - `src/components/hero/Hero.tsx`: the hero and its inspector lens.
-- `src/components/hero/Sunlight.tsx`, `sun.ts`, `shadow.ts`: the hero's type casts a shadow from where the sun (or, after dark, the moon) is over Mumbai at that moment, computed in the browser. The dial lets you drag the sun through the day.
 - `src/styles/`: component styles; tokens are in `src/app/globals.css`.
 
 Pages stay server-rendered and declare motion with data attributes (`data-split`, `data-reveal`, `data-stagger`, `data-parallax`, `data-draw`). One client component, `Choreographer`, wires them up on each route. Everything respects `prefers-reduced-motion`.
