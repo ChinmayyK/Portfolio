@@ -4,16 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import LocalTime from "@/components/chrome/LocalTime";
 import { DUR, EASE, motion, reducedMotion } from "@/lib/motion";
 import { transitionState } from "@/lib/transition";
+import { SunDial, useNow, useSunlight } from "./Sunlight";
 
 /**
  * The hero is drawn twice. The surface is what you read; underneath sits the same page as an
  * engineer sees it — outlines, boxes, the grid and the real type specs, measured live. A lens
  * follows the pointer and shows the layer underneath; "Inspect" opens it across the whole hero.
+ * The type is lit by the real sky over Mumbai (see Sunlight); the x-ray shows its shadow as a hatch.
  */
 function Layer({ xray = false }: { xray?: boolean }) {
   return (
     <div className={`hero-layer ${xray ? "is-xray" : ""}`} aria-hidden={xray || undefined}>
       {xray && <div className="xray-grid frame" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div>}
+      <canvas className="hero-shadow" aria-hidden="true" />
       <div className="hero-top frame">
         <p className="hero-role t-lead" data-spec="">
           <span className="hero-mask"><span className="hero-rise">Software engineer.</span></span>
@@ -47,6 +50,10 @@ export default function Hero() {
   const [open, setOpen] = useState(false);
   const lens = useRef({ x: 0, y: 0, r: 0 });
   const api = useRef<{ setOpen: (v: boolean) => void } | null>(null);
+  const now = useNow();
+  const [scrub, setScrub] = useState<number | null>(null);
+  const time = scrub ?? now;
+  useSunlight(root, time);
 
   useEffect(() => {
     const el = root.current!;
@@ -169,6 +176,7 @@ export default function Hero() {
         <span className="hero-inspect-dot" aria-hidden="true" />
         {open ? "Close inspector" : "Inspect this page"}
       </button>
+      <SunDial time={time} pinned={scrub !== null} onScrub={setScrub} />
     </section>
   );
 }
