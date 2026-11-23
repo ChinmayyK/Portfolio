@@ -8,6 +8,7 @@ npm run dev        # http://localhost:3006
 npm run build      # static export to out/
 npm run lint
 npm run typecheck
+npm run days       # refresh the contribution snapshot the hero is drawn from (needs gh, signed in)
 ```
 
 ## Where things live
@@ -17,6 +18,7 @@ npm run typecheck
 - `public/img/`: real product captures (light theme).
 - `src/components/chrome/`: shared frame (menu, page transitions, smooth scroll, motion choreographer, cursor, magnetic buttons).
 - `src/components/hero/Hero.tsx`: the hero and its inspector lens.
+- `src/components/hero/days.ts`, `src/content/days.json`: the hero name is drawn as one dot per GitHub contribution since July 2025, oldest first. `scripts/days.mjs` writes the snapshot (daily counts only, no repository names); the build never calls GitHub.
 - `src/styles/`: component styles; tokens are in `src/app/globals.css`.
 
 Pages stay server-rendered and declare motion with data attributes (`data-split`, `data-reveal`, `data-stagger`, `data-parallax`, `data-draw`). One client component, `Choreographer`, wires them up on each route. Everything respects `prefers-reduced-motion`.
