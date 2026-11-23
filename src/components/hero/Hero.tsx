@@ -20,9 +20,7 @@ function Layer({ xray = false }: { xray?: boolean }) {
       <canvas className="hero-gl" aria-hidden="true" />
       <div className="hero-top frame">
         <p className="hero-role t-lead" data-spec="">
-          <span className="hero-mask"><span className="hero-rise">Software engineer.</span></span>
-          <span className="hero-mask"><span className="hero-rise">I build apps, systems</span></span>
-          <span className="hero-mask"><span className="hero-rise">and tools that hold up.</span></span>
+          <span className="hero-mask"><span className="hero-rise">Software engineer</span></span>
         </p>
         <span className="hero-arrow" aria-hidden="true" data-spec="">↘</span>
       </div>
@@ -39,8 +37,8 @@ function Layer({ xray = false }: { xray?: boolean }) {
       )}
       <ul className="hero-meta frame t-small" data-spec="">
         <li><span className="t-label">Based in</span><span>Mumbai, <LocalTime /></span></li>
-        <li><span className="t-label">Now</span><span>Interning at ideaForge</span></li>
-        <li><span className="t-label">Next</span><span>Full-time roles from 2027</span></li>
+        <li><span className="t-label">Now</span><span>Intern at ideaForge</span></li>
+        <li><span className="t-label">Next</span><span>Full-time from 2027</span></li>
       </ul>
     </div>
   );

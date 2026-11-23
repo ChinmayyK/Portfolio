@@ -3,10 +3,7 @@
 export const SITE = {
   name: "Chinmay Kudalkar",
   url: "https://chinmaykudalkar.com",
-  role: "Software engineer",
-  city: "Mumbai",
   timeZone: "Asia/Kolkata",
-  status: "Interning at ideaForge. Open to full-time roles from 2027.",
   description:
     "Chinmay Kudalkar, software engineer. Cross-platform apps, developer tools and production systems: Link All, iF FleetDesk and more.",
   email: "chinmayy.kudalkar@gmail.com",
@@ -21,20 +18,18 @@ export const NAV = [
   { label: "Contact", href: "/#contact" },
 ] as const;
 
-export type Role = { org: string; role: string; when: string; line: string };
+export type Role = { org: string; role: string; when: string };
 
 export const EXPERIENCE: Role[] = [
   {
     org: "ideaForge",
     role: "Web & Mobile App Developer Intern",
     when: "Aug 2026 – now",
-    line: "Building iF FleetDesk, the company's fleet and employee-transport platform, on web and mobile.",
   },
   {
     org: "Mintskill HR Solutions",
     role: "Software Engineering Intern",
     when: "Dec 2025 – Apr 2026",
-    line: "Node.js services and integrations that connect hiring tools to CRMs. Led a small intern team.",
   },
 ];
 

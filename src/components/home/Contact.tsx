@@ -1,5 +1,4 @@
 import { SITE } from "@/content/site";
-import LocalTime from "@/components/chrome/LocalTime";
 import Disc from "@/components/chrome/Disc";
 import CopyEmail from "./CopyEmail";
 import BackToTop from "./BackToTop";
@@ -21,8 +20,6 @@ export default function Contact() {
           <CopyEmail email={SITE.email} />
         </div>
         <div className="contact-foot">
-          <div><span className="t-label">Local time</span><p>{SITE.city}, <LocalTime /></p></div>
-          <div><span className="t-label">Status</span><p>Open to full-time roles, 2027</p></div>
           <nav aria-label="Elsewhere">
             <span className="t-label">Elsewhere</span>
             <p className="contact-links">

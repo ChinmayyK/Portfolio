@@ -32,7 +32,6 @@ export function SmoothScroll() {
  *   data-stagger        the element's children reveal one after another
  *   data-parallax="n"   drifts against the scroll by n (0.1 is subtle)
  *   data-draw           SVG paths with pathLength="1" draw themselves in
- *   data-fill           words go from grey to ink as the element scrolls through
  *   data-slide="n"      a row centred with margin-left: 50% slides sideways by n% of its width while on screen
  *   data-delay="s"      extra delay for any of the above
  */
@@ -99,14 +98,6 @@ export function Choreographer() {
         gsap.fromTo(el, { yPercent: s / 2 }, { yPercent: -s / 2, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true } });
       });
 
-      gsap.utils.toArray<HTMLElement>("[data-fill]").forEach((el) => {
-        SplitText.create(el, {
-          type: "words",
-          aria: "none",
-          // from a grey that still passes contrast for large text, to ink
-          onSplit: (self) => gsap.fromTo(self.words, { color: "#858480" }, { color: "#141413", ease: "none", stagger: 0.1, scrollTrigger: { trigger: el, start: "top 82%", end: "bottom 50%", scrub: 0.6 } }),
-        });
-      });
 
       gsap.utils.toArray<HTMLElement>("[data-slide]").forEach((el) => {
         const d = parseFloat(el.dataset.slide || "10");
