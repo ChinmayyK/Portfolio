@@ -4,8 +4,9 @@
   display: flex; justify-content: space-between; align-items: center; gap: 1rem;
   padding-block: 1.75rem; font-size: .9375rem;
 }
-.topbar-mark { display: inline-grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid currentColor; font-size: .8125rem; letter-spacing: .02em; transition: background-color .4s, color .4s; }
-@media (hover: hover) { .topbar-mark:hover { background: var(--color-ink); color: var(--color-paper); } }
+.topbar-mark { display: block; width: 2.9rem; height: 2.9rem; margin: -.4rem 0; }
+.topbar-mark img { width: 100%; height: 100%; display: block; transition: transform .7s var(--ease-expo); }
+@media (hover: hover) { .topbar-mark:hover img { transform: rotate(-8deg) scale(1.06); } }
 .topbar-nav { display: none; gap: 2.25rem; }
 @media (min-width: 48rem) { .topbar-nav { display: flex; } }
 .topbar-nav a { display: inline-block; padding: .35rem 0; }

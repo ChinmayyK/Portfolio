@@ -66,8 +66,9 @@ export default function Header() {
   return (
     <>
       <header className="topbar frame">
-        <TLink href="/" label="Index" className="topbar-mark" aria-label={`CK, ${SITE.name}, home`}>
-          <span aria-hidden="true">CK</span>
+        <TLink href="/" label="Index" className="topbar-mark" aria-label={`${SITE.name}, home`}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- static export, 2x webp */}
+          <img src="/img/logo.webp" alt="" width={88} height={88} />
         </TLink>
         <nav aria-label="Primary" className="topbar-nav">
           {NAV.map((n) => (
