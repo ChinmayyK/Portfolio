@@ -3,17 +3,17 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 // The card shown when the site is shared or featured (LinkedIn, Slack, X). LinkedIn often shows it
-// only 160 to 400 px wide, so it holds three things, large and high-contrast: the logo, the name
-// and the role, on the site's paper. Host Grotesk SemiBold is under the SIL OFL (src/assets/fonts/OFL.txt).
+// only 160 to 400 px wide, and prints the full name under it, so the card says hello: a first name,
+// large, one line about the work, and the logo, on the site's paper. Host Grotesk SemiBold is under the SIL OFL (src/assets/fonts/OFL.txt).
 const asset = (f: string) => readFileSync(join(process.cwd(), "src/assets", f));
 const logo = `data:image/png;base64,${asset("og/logo.png").toString("base64")}`;
 
 export const dynamic = "force-static";
-export const alt = "Chinmay Kudalkar, software engineer";
+export const alt = "Hi, I'm Chinmay. I build apps and the systems behind them.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const INK = "#141413", PAPER = "#EFEEEA", LIME = "#D4F25A";
+const INK = "#141413", PAPER = "#EFEEEA", LIME = "#B9D93A", GREY = "#55544F";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -22,10 +22,10 @@ export default function OpengraphImage() {
         <img src={logo} width={128} height={128} alt="" style={{ position: "absolute", top: 64, right: 84 }} />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 196, fontWeight: 600, lineHeight: 0.92, letterSpacing: -8 }}>
-            <span>Chinmay</span>
-            <span>Kudalkar</span>
+            <span>Hi, I&apos;m</span>
+            <span style={{ display: "flex" }}>Chinmay<span style={{ color: LIME }}>.</span></span>
           </div>
-          <span style={{ display: "flex", alignSelf: "flex-start", fontSize: 56, fontWeight: 600, background: LIME, color: INK, marginTop: 34, padding: "10px 30px 14px", borderRadius: 999, letterSpacing: -1 }}>Software engineer</span>
+          <span style={{ fontSize: 50, fontWeight: 600, color: GREY, marginTop: 36, letterSpacing: -1 }}>I build apps and the systems behind them.</span>
         </div>
       </div>
     ),
