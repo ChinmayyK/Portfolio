@@ -119,3 +119,4 @@
 .cs-progress-list button[aria-current] { background: color-mix(in oklab, var(--color-paper) 10%, transparent); }
 .cs-progress-list button[aria-current] .t-label { color: var(--color-lime); }
 .cs-progress :focus-visible { outline-color: var(--color-lime); }
+.cs-vault { background: var(--color-paper-2); padding: clamp(1.5rem, 5vw, 5rem) clamp(1rem, 4vw, 4rem); }

@@ -8,7 +8,6 @@ import { DUR, EASE, STAGGER, motion, reducedMotion } from "@/lib/motion";
 import { lenis } from "@/lib/scroll";
 import { TLink } from "./Transition";
 import Magnetic from "./Magnetic";
-import Logo from "./Logo";
 
 /**
  * The top bar scrolls away with the page. Past the first screen a round menu button takes over,
@@ -68,7 +67,9 @@ export default function Header() {
     <>
       <header className="topbar frame">
         <TLink href="/" label="Index" className="topbar-mark" aria-label={`${SITE.name}, home`}>
-          <Logo />
+          {/* the CK. monogram, the same file as the favicon */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- static export, SVG */}
+          <img src="/icon.svg" alt="" width={64} height={64} />
         </TLink>
         <nav aria-label="Primary" className="topbar-nav">
           {NAV.map((n) => (

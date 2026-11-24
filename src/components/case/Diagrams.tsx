@@ -52,3 +52,24 @@ export function FleetDiagram() {
     </figure>
   );
 }
+
+export function BlockVaultDiagram() {
+  return (
+    <figure className="dg" aria-label="BlockVault architecture">
+      <ul className="dg-row dg-row--2">
+        <li className="dg-node"><span className="dg-name">Web app</span><span className="dg-sub">React · encrypts files in a Web Worker</span><span className="dg-wire"><span className="dg-bind">REST</span></span></li>
+        <li className="dg-node"><span className="dg-name">Wallet</span><span className="dg-sub">signs in by signing a one-time nonce</span><span className="dg-wire"><span className="dg-bind">signature</span></span></li>
+      </ul>
+      <div className="dg-node dg-node--core">
+        <span className="dg-name">API and workers</span>
+        <span className="dg-sub">Flask · Celery · MongoDB · Redis · files in MinIO</span>
+      </div>
+      <ul className="dg-row dg-row--3 dg-row--below">
+        <li className="dg-node"><span className="dg-wire dg-wire--up" /><span className="dg-name">Redactor</span><span className="dg-sub">FastAPI · Presidio · spaCy · OCR</span></li>
+        <li className="dg-node"><span className="dg-wire dg-wire--up" /><span className="dg-name">Crypto service</span><span className="dg-sub">Rust · AES-256-GCM · Argon2id</span></li>
+        <li className="dg-node"><span className="dg-wire dg-wire--up" /><span className="dg-name">Proofs and anchoring</span><span className="dg-sub">Circom · snarkjs · IPFS · Solidity registry</span></li>
+      </ul>
+      <figcaption className="t-small">The API hands heavy or sensitive work to small services and background workers.</figcaption>
+    </figure>
+  );
+}

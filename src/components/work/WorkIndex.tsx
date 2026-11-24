@@ -5,6 +5,7 @@ import { TLink } from "@/components/chrome/Transition";
 import { finePointer, motion, reducedMotion } from "@/lib/motion";
 import type { Shot } from "@/content/projects";
 import RouteIllustration from "./RouteIllustration";
+import RedactionIllustration from "./RedactionIllustration";
 
 export type WorkItem = {
   title: string;
@@ -13,12 +14,13 @@ export type WorkItem = {
   years: string;
   href: string;
   external?: boolean;
-  preview: { kind: "shot"; shot: Shot } | { kind: "route" };
+  preview: { kind: "shot"; shot: Shot } | { kind: "route" } | { kind: "redaction" };
   tint: string;
 };
 
 function Preview({ item }: { item: WorkItem }) {
   if (item.preview.kind === "route") return <RouteIllustration progress={0.55} />;
+  if (item.preview.kind === "redaction") return <RedactionIllustration labels={false} />;
   const s = item.preview.shot;
   // eslint-disable-next-line @next/next/no-img-element -- static export, pre-sized webp
   return <img src={s.src} alt="" width={s.w} height={s.h} loading="lazy" decoding="async" />;
