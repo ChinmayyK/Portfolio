@@ -132,3 +132,17 @@
 /* ── The page's lower edge bows over the footer, and flattens as it leaves ── */
 .page-curve { position: absolute; left: 0; right: 0; top: 100%; height: 9vw; overflow: hidden; pointer-events: none; }
 .page-curve span { position: absolute; left: -25%; width: 150%; height: 750%; bottom: 0; border-radius: 0 0 50% 50%; background: var(--color-paper); box-shadow: 0 30px 60px -30px rgb(0 0 0 / .45); }
+
+/* ── Redaction illustration (BlockVault) ──────────────────────────────── */
+.redaction-svg { width: 100%; height: auto; display: block; color: var(--color-ink); font-family: var(--font-sans); }
+.rd-block { fill: var(--color-white); stroke: var(--color-ink); stroke-width: 2; }
+.rd-secret { fill: var(--color-lime); stroke: var(--color-ink); stroke-width: 2; }
+.rd-blacked { fill: var(--color-ink); }
+.rd-eq { stroke: var(--color-ink); stroke-opacity: .35; stroke-width: 2; stroke-dasharray: 4 6; }
+.rd-bit { font-size: 26px; fill: var(--color-grey); }
+.rd-bit.is-on { fill: var(--color-ink); font-weight: 500; }
+.rd-fold { fill: none; stroke: var(--color-ink); stroke-width: 2; }
+.rd-root { fill: var(--color-paper); stroke: var(--color-ink); stroke-width: 2; }
+.rd-root-t { font-size: 24px; fill: var(--color-ink); }
+.rd-label text { font-size: 22px; fill: var(--color-grey); letter-spacing: .02em; }
+.work-float-cell .redaction-svg, .work-thumb .redaction-svg { width: 88%; }

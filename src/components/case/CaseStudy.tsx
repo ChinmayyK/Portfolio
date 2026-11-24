@@ -3,7 +3,8 @@ import { SHOTS } from "@/content/projects";
 import { TLink } from "@/components/chrome/Transition";
 import Disc from "@/components/chrome/Disc";
 import RouteIllustration from "@/components/work/RouteIllustration";
-import { FleetDiagram, LinkAllDiagram } from "./Diagrams";
+import RedactionIllustration from "@/components/work/RedactionIllustration";
+import { BlockVaultDiagram, FleetDiagram, LinkAllDiagram } from "./Diagrams";
 import CaseProgress from "./CaseProgress";
 
 const SECTIONS = [
@@ -39,6 +40,14 @@ function Visual({ project }: { project: Project }) {
           <span className="cs-shot-phone" data-parallax="0.18"><Img shot={SHOTS.androidHome} /></span>
         </div>
         <figcaption className="t-small">Link All on macOS and Android. Real captures.</figcaption>
+      </figure>
+    );
+  }
+  if (project.slug === "blockvault") {
+    return (
+      <figure className="cs-visual cs-visual--vault" data-reveal="clip">
+        <div className="cs-vault" data-media><RedactionIllustration /></div>
+        <figcaption className="t-small">What the redaction proof checks, drawn small: 16 blocks stand in for a chunk&apos;s 256. An illustration, not a screenshot.</figcaption>
       </figure>
     );
   }
@@ -83,7 +92,7 @@ export default function CaseStudy({ project: p, next }: { project: Project; next
 
         <Section {...SECTIONS[2]}>
           <p className="t-lead" data-reveal>{p.architecture.intro}</p>
-          <div data-reveal>{p.slug === "link-all" ? <LinkAllDiagram /> : <FleetDiagram />}</div>
+          <div data-reveal>{p.slug === "link-all" ? <LinkAllDiagram /> : p.slug === "blockvault" ? <BlockVaultDiagram /> : <FleetDiagram />}</div>
           <dl className="cs-notes" data-stagger>
             {p.architecture.notes.map((n) => (
               <div key={n.title}><dt>{n.title}</dt><dd>{n.body}</dd></div>
