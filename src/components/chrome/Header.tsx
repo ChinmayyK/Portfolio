@@ -8,6 +8,7 @@ import { DUR, EASE, STAGGER, motion, reducedMotion } from "@/lib/motion";
 import { lenis } from "@/lib/scroll";
 import { TLink } from "./Transition";
 import Magnetic from "./Magnetic";
+import Logo from "./Logo";
 
 /**
  * The top bar scrolls away with the page. Past the first screen a round menu button takes over,
@@ -67,8 +68,7 @@ export default function Header() {
     <>
       <header className="topbar frame">
         <TLink href="/" label="Index" className="topbar-mark" aria-label={`${SITE.name}, home`}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- static export, 2x webp */}
-          <img src="/img/logo.webp" alt="" width={88} height={88} />
+          <Logo />
         </TLink>
         <nav aria-label="Primary" className="topbar-nav">
           {NAV.map((n) => (
