@@ -21,7 +21,7 @@ export default function OpengraphImage() {
     (
       <div style={{ width: "100%", height: "100%", display: "flex", background: PAPER, color: INK, fontFamily: "Host Grotesk", position: "relative" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "52px 0 52px 64px", width: 620 }}>
-          <img src={dataUri("logo.png")} width={96} height={96} alt="" style={{ marginLeft: -10 }} />
+          <img src={dataUri("logo.png")} width={88} height={88} alt="" />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", flexDirection: "column", fontSize: 128, lineHeight: 0.92, letterSpacing: -6 }}>
               <span>Chinmay</span>
